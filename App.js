@@ -7,16 +7,16 @@ import {
 
 import FirstScreen from './screens/FirstScreen'
 import Signin from './screens/Signin'
-import ProfileScreen from './screens/ProfileScreen'
+import LoadingScreen from './screens/LoadingScreen'
 import HomeScreen from './screens/HomeScreen'
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
+
 const AuthStack = createStackNavigator({
   FirstScreen: {screen: FirstScreen},
-  Signin: {screen: Signin},
-  ProfileScreen: {screen: ProfileScreen},
+  Signin: {screen: Signin}
 });
 
 const AppStack = createStackNavigator({
@@ -27,11 +27,12 @@ const AppStack = createStackNavigator({
 const App = createAppContainer( 
 createSwitchNavigator(
     {
+      AuthLoading: LoadingScreen,
       AuthStack: AuthStack,
       AppStack: AppStack,
     },
     {
-      initialRouteName: 'AuthStack',
+      initialRouteName: 'AuthLoading',
     }
   )
 );
