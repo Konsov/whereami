@@ -32,8 +32,6 @@ class LoadingScreen extends Component {
     this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
   };
   
-
-
   render(){
     return (
         <View>
