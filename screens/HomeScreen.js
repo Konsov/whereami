@@ -11,9 +11,10 @@ import firebase from '../services/firebase';
 
 export default class HomeScreen extends Component {
 
-  static navigationOptions = {
-    header: null,
-  };
+  logOut () {
+    firebase.auth().signOut();
+    this.props.navigation.navigate('AuthStack');
+  }
 
   render() {
     return (
@@ -31,7 +32,7 @@ export default class HomeScreen extends Component {
 
           <Button
             title="Log out"
-            onPress={() => firebase.auth().signOut()}
+            onPress={() => this.logOut()}
           />
 
 
