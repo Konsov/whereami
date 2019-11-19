@@ -18,9 +18,6 @@ import {
 import FBLoginButton from '../services/FBLoginButton';
 
 export default class FirstScreen extends Component {
-  static navigationOptions = {
-         header: null,
-  };
   render(){
     const {navigate} = this.props.navigation;
     return (
