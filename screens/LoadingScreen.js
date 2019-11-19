@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  ImageBackground,  
+  ImageBackground,
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
@@ -13,13 +13,19 @@ import firebase from '../services/firebase'
 const user = firebase.auth().currentUser;
 
 class LoadingScreen extends Component {
- 
+
   static navigationOptions = {
-         header: null,
+    header: null,
   };
-  
+
   componentDidMount() {
-    
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
+        console.log('user logged')
+      }
+    });
     console.log("sadasdasd");
     console.log(user);
     this._bootstrapAsync();
@@ -31,13 +37,13 @@ class LoadingScreen extends Component {
     // screen will be unmounted and thrown away.
     this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
   };
-  
-  render(){
+
+  render() {
     return (
-        <View>
-           <ActivityIndicator />
-              <StatusBar barStyle="default" />
-        </View>
+      <View>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
+      </View>
     );
   }
-}export default LoadingScreen;
+} export default LoadingScreen;
