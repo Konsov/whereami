@@ -10,10 +10,6 @@ import {
 
 export default class HomeScreen extends Component {
 
-static navigationOptions = {
-         header: null,
-  };
-
   render(){
     return (
      <ImageBackground source={require('../files/hom.png')} style={{width: '100%', height: '100%'}}>

@@ -9,14 +9,26 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 
-const AuthStack = createStackNavigator({
+const AuthStack = createStackNavigator(
+  {
   FirstScreen: {screen: FirstScreen},
-  Signin: {screen: Signin}
-});
+  Signin: {screen: Signin},
+  },{
+    defaultNavigationOptions: {
+      header: null
+    },
+  }
+);
 
-const AppStack = createStackNavigator({
+const AppStack = createStackNavigator(
+  {
   HomeScreen: {screen: HomeScreen},
-})
+  },{
+    defaultNavigationOptions: {
+      header: null
+    },
+  }
+);
 
 
 const AppNavigator = createAppContainer( 
