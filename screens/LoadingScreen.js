@@ -21,14 +21,11 @@ class LoadingScreen extends Component {
   componentDidMount() {
 
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+      
         this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
         console.log('user logged')
-      }
+      
     });
-    console.log("sadasdasd");
-    console.log(user);
-    this._bootstrapAsync();
   }
 
   // Fetch the token from storage then navigate to our appropriate place

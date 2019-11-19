@@ -15,6 +15,8 @@ import {
   Input,
 } from 'native-base';
 
+import FBLoginButton from '../services/FBLoginButton';
+
 export default class FirstScreen extends Component {
   static navigationOptions = {
          header: null,
@@ -30,10 +32,7 @@ export default class FirstScreen extends Component {
           onPress={() => navigate('Signin')}
           />
 
-          <Button
-          title="Facebook Login"
-          onPress={() => navigate('ProfileScreen')}
-          />
+          <FBLoginButton />
         </View>
         
       </ImageBackground>
