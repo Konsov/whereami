@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import firebase from '../services/firebase';
+import { LoginManager } from "react-native-fbsdk";
 
 
 export default class HomeScreen extends Component {
@@ -14,6 +15,7 @@ export default class HomeScreen extends Component {
   logOut () {
     firebase.auth().signOut();
     this.props.navigation.navigate('AuthStack');
+    LoginManager.getInstance().logOut();
   }
 
   render() {

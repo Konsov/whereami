@@ -19,7 +19,7 @@ class LoadingScreen extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       
         this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
-        console.log('user logged')
+        
       
     });
   }

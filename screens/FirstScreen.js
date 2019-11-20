@@ -14,10 +14,21 @@ import {
   Label,
   Input,
 } from 'native-base';
+import firebase from '../services/firebase'
 
 import FBLoginButton from '../services/FBLoginButton';
 
 export default class FirstScreen extends Component {
+  componentDidMount() {
+
+    firebase.auth().onAuthStateChanged((user) => {
+      
+        this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
+      
+    });
+  }
+
+
   render(){
     const {navigate} = this.props.navigation;
     return (
