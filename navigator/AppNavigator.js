@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
-import FirstScreen from '../screens/FirstScreen'
-import Signin from '../screens/Signin'
+import LoginMethodScreen from '../screens/LoginMethodScreen'
+import EmailSignInScreen from '../screens/EmailSignInScreen'
+import EmailSignOutScreen from '../screens/EmailSignOutScreen'
 import LoadingScreen from '../screens/LoadingScreen'
 import HomeScreen from '../screens/HomeScreen'
-import Gioca from '../screens/Gioca'
+
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -12,8 +13,9 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 const AuthStack = createStackNavigator(
   {
-  FirstScreen: {screen: FirstScreen},
-  Signin: {screen: Signin},
+  LoginMethodScreen:  {screen: LoginMethodScreen},
+  EmailSignInScreen:  {screen: EmailSignInScreen},
+  EmailSignOutScreen: {screen: EmailSignInScreen}
   },{
     defaultNavigationOptions: {
       header: null
@@ -24,7 +26,6 @@ const AuthStack = createStackNavigator(
 const AppStack = createStackNavigator(
   {
   HomeScreen: {screen: HomeScreen},
-  Gioca: {screen: Gioca}
   },{
     defaultNavigationOptions: {
       header: null

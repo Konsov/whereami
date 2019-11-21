@@ -10,19 +10,23 @@ import {
 import firebase from '../services/firebase'
 
 
-const user = firebase.auth().currentUser;
 
 class LoadingScreen extends Component {
 
   componentDidMount() {
-
-    firebase.auth().onAuthStateChanged((user) => {
+    try {
+      const user = firebase.auth().currentUser;
       
+      firebase.auth().onAuthStateChanged((user) => {
         this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
-        
+          
+      });
+    } catch (error) {
+      console.log(error.toString())
+    }
+  } 
       
-    });
-  }
+  
 
   render() {
     return (

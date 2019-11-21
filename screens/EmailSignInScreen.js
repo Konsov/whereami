@@ -18,9 +18,8 @@ import {
 } from 'native-base';
 
 import firebase from '../services/firebase'
-console.log(firebase.name);
 
-export default class Signin extends Component{
+export default class EmailSignInScreen extends Component{
 
   constructor(props){
     super(props)
@@ -33,25 +32,29 @@ export default class Signin extends Component{
 
   signUpUser = (email, password) => {
     try {
-      
-      if(this.state.password.length < 6){
-        alert("Please insert at least 6 characters")
-        return;
-      }
-
-      firebase.auth().createUserWithEmailAndPassword(email,password)
+      firebase.auth().createUserWithEmailAndPassword(email,password).then(() => {
+        const { currentUser } = firebase.auth();
+          try {
+            firebase.database().ref(`/users/${currentUser.uid}/`)
+            .set({
+                name: 'gianpietro',
+                userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      })
     } catch (error) {
       console.log(error.toString())
     }
   }
 
   loginUser = (email, password) => {
-    const {navigate} = this.props.navigation;
     try {
         firebase.auth().signInWithEmailAndPassword(email,password).then(function(user){
           if(user){
             console.log(user);
-            navigate('AppStack')
+            this.props.navigate.navigate('AppStack')
           }
         })
     } catch (error) {

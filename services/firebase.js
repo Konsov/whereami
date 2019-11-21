@@ -12,7 +12,5 @@ const config = {
     measurementId: "G-0J0W0JKY1J"
 };
 
- const admin = require('firebase-admin');
- admin.initializeApp();
 
 export default !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
