@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import LoginMethodScreen from '../screens/LoginMethodScreen'
 import EmailSignInScreen from '../screens/EmailSignInScreen'
-import EmailSignOutScreen from '../screens/EmailSignOutScreen'
+import EmailSignUpScreen from '../screens/EmailSignUpScreen'
 import LoadingScreen from '../screens/LoadingScreen'
 import HomeScreen from '../screens/HomeScreen'
 
@@ -15,7 +15,7 @@ const AuthStack = createStackNavigator(
   {
   LoginMethodScreen:  {screen: LoginMethodScreen},
   EmailSignInScreen:  {screen: EmailSignInScreen},
-  EmailSignOutScreen: {screen: EmailSignInScreen}
+  EmailSignUpScreen: {screen: EmailSignUpScreen}
   },{
     defaultNavigationOptions: {
       header: null
