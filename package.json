@@ -11,7 +11,12 @@
   },
   "dependencies": {
     "firebase": "^7.3.0",
+    "firebase-admin": "^8.8.0",
+    "firebase-functions": "^3.3.0",
+    "firebase-tools": "^7.8.1",
+    "fs": "0.0.1-security",
     "native-base": "^2.13.8",
+    "path": "^0.12.7",
     "react": "16.9.0",
     "react-native": "0.61.4",
     "react-native-fbsdk": "^1.1.1",

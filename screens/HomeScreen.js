@@ -15,7 +15,17 @@ export default class HomeScreen extends Component {
   logOut () {
     firebase.auth().signOut();
     this.props.navigation.navigate('AuthStack');
-    LoginManager.getInstance().logOut();
+    LoginManager.logOut();
+  }
+
+  gioca(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref('waitingRoom/' + user.uid).set(
+      {
+        user: user.uid
+      }
+    )
+    this.props.navigation.navigate('Gioca')
   }
 
   render() {
@@ -26,6 +36,7 @@ export default class HomeScreen extends Component {
 
           <Button
             title="Gioca"
+            onPress={() => this.gioca()}
           />
 
           <Button

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 const firebase = require('firebase')
 
@@ -11,6 +11,8 @@ export default class FBLoginButton extends Component {
             <View>
                 <LoginButton 
                     permissions={["email", "user_friends", "public_profile"]}
+                    disabled = {false}
+                    style= {styles.button}
                     onLoginFinished={
                         (error, result) => {
                             if (error) {
@@ -22,12 +24,9 @@ export default class FBLoginButton extends Component {
                                 AccessToken.getCurrentAccessToken()
                                 .then((data) => {
                                 
-                                const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);;
+                                const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
                                 
-                                firebase.auth().signInWithCredential(credential).then(credential => {
-                                    
-                                    console.log(credential.user.email, credential.user.photoURL, credential.user.displayName);
-                                });
+                                firebase.auth().signInWithCredential(credential)
 
                                 });
                             }
@@ -38,5 +37,11 @@ export default class FBLoginButton extends Component {
         );
     }
 };
+
+const styles = StyleSheet.create({
+    button: {
+      opacity: 0.0,
+    },
+  });
 
 module.exports = FBLoginButton;

@@ -4,6 +4,7 @@ import FirstScreen from '../screens/FirstScreen'
 import Signin from '../screens/Signin'
 import LoadingScreen from '../screens/LoadingScreen'
 import HomeScreen from '../screens/HomeScreen'
+import Gioca from '../screens/Gioca'
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -23,6 +24,7 @@ const AuthStack = createStackNavigator(
 const AppStack = createStackNavigator(
   {
   HomeScreen: {screen: HomeScreen},
+  Gioca: {screen: Gioca}
   },{
     defaultNavigationOptions: {
       header: null
