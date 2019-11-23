@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "firebase": "^7.3.0",
+    "firebase": "^7.5.0",
     "fs": "0.0.1-security",
     "native-base": "^2.13.8",
     "path": "^0.12.7",
