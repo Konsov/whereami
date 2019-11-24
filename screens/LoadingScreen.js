@@ -14,11 +14,12 @@ import firebase from '../services/firebase'
 class LoadingScreen extends Component {
 
   componentDidMount() {
-    try {
+   
+   try {
+
       const user = firebase.auth().currentUser;
-      
       firebase.auth().onAuthStateChanged((user) => {
-        this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
+      this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
           
       });
     } catch (error) {

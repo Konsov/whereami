@@ -26,7 +26,7 @@ export default class FBLoginButton extends Component {
                         try {
                             firebase.database().ref(`/users/${re.user.uid}/`)
                             .set({
-                                name: name,
+                                username: name,
                                 userpic: fbImage,
                                 });
                             } catch (error) {

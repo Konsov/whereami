@@ -28,7 +28,7 @@ export default class LoginMethodScreen extends Component {
         <View style={styles.container}>
           <Button
             title="Email Login"
-            onPress={() => this.props.navigation.navigate('EmailSigninScreen')}
+            onPress={() => {this.props.navigation.navigate('EmailSignInScreen')}}
           />       
 
           <FBLoginButton />
