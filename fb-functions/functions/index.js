@@ -3,35 +3,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-exports.cleanWaitingRoom = functions.region('europe-west1').database
-        .ref('/Games/{GameID}')
-        .onCreate((snaposhot,context) => {
-            const play1 = snaposhot.val().player1          
-
-            console.log(play1)
-            const play2 = snaposhot.val().player2
-            console.log(play2)
-
-            snaposhot.ref.parent.parent.child('waitingRoom').child(play1).remove().then(function() {
-                console.log("Remove Player 1.")
-              })
-              .catch(function(error) {
-                console.log("Remove failed: " + error.message)
-              });
-
-            snaposhot.ref.parent.parent.child('waitingRoom').child(play2).remove().then(function() {
-                console.log("Remove Player 2.")
-              })
-              .catch(function(error) {
-                console.log("Remove failed: " + error.message)
-              });
-              
-
-              return null
-
-        })
-
-
 
 
 
@@ -52,17 +23,27 @@ exports.createRandomGame = functions.region('europe-west1').database
             } else {
 
                 for (var c in res.toJSON()) {
-                    if (c === ID) {
-                        console.log('trovato')
-
-                    } else {
+                    if (c != ID) {
                         const ID2 = c
+                        res.ref.child(ID).remove().then(function() {
+                            console.log("Remove Player 1.")
+                          })
+                          .catch(function(error) {
+                            console.log("Remove failed: " + error.message)
+                          });
+            
+                        res.ref.child(ID2).remove().then(function() {
+                            console.log("Remove Player 2.")
+                          })
+                          .catch(function(error) {
+                            console.log("Remove failed: " + error.message)
+                          });
                         return res.ref.parent.child('Games').child(ID + ID2).set({
                             player1:ID, 
                             player2: ID2
                         });
 
-                    }
+                    } 
                 }
             }
 
