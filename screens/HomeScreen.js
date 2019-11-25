@@ -19,13 +19,17 @@ export default class HomeScreen extends Component {
   }
 
   gioca(){
+    this.props.navigation.navigate('GameStack')
+  }
+
+  giocaConAmici(){
     const user = firebase.auth().currentUser;
     firebase.database().ref('waitingRoom/' + user.uid).set(
       {
         user: user.uid
       }
     )
-    this.props.navigation.navigate('Gioca')
+    this.props.navigation.navigate('GameStack')
   }
 
   render() {
@@ -41,6 +45,7 @@ export default class HomeScreen extends Component {
 
           <Button
             title="Gioca con amici"
+            onPress={() => this.giocaConAmici()}
           />
 
           <Button

@@ -5,6 +5,7 @@ import EmailSignInScreen from '../screens/EmailSignInScreen'
 import EmailSignUpScreen from '../screens/EmailSignUpScreen'
 import LoadingScreen from '../screens/LoadingScreen'
 import HomeScreen from '../screens/HomeScreen'
+import PlayScreen from '../screens/PlayScreen'
 
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -23,9 +24,23 @@ const AuthStack = createStackNavigator(
   }
 );
 
+
+const GameStack = createStackNavigator(
+  {
+    PlayScreen: {screen: PlayScreen}
+  },{
+    defaultNavigationOptions: {
+      header: null
+    },
+  }
+);
+
+
+
 const AppStack = createStackNavigator(
   {
   HomeScreen: {screen: HomeScreen},
+  
   },{
     defaultNavigationOptions: {
       header: null
@@ -40,6 +55,7 @@ createSwitchNavigator(
       AuthLoading: LoadingScreen,
       AuthStack: AuthStack,
       AppStack: AppStack,
+      GameStack: GameStack
     },
     {
       initialRouteName: 'AuthLoading',
