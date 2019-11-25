@@ -7,40 +7,48 @@ admin.initializeApp(functions.config().firebase);
 
 
 exports.createRandomGame = functions.region('europe-west1').database
-    .ref('/waitingRoom/{userID}')
-    .onCreate((snaposhot, context) => {
+.ref('/waitingRoom/{userID}')
+.onCreate((snaposhot, context) => {
 
-        const ID = context.params.userID
+    const playerOne = context.params.userID
 
+    return snaposhot.ref.parent.once('value').then(snapWaitingRoom => {
+       
+        var playersInWaitingRoom = snapWaitingRoom.toJSON()
+        console.log('Players in Wating Room: ', playersInWaitingRoom)
 
-        return snaposhot.ref.parent.once('value').then(res => {
+        var numberPlayersInWatingRoom = snapWaitingRoom.numChildren()
+        console.log('Numbers Player In Wating Room ' + numberPlayersInWatingRoom)
+        
 
-            console.log('numChildren')
-            console.log(res.numChildren())
-
-            if (res.numChildren() < 2) {
+            if (numberPlayersInWatingRoom < 2) {
                 return null
             } else {
 
-                for (var c in res.toJSON()) {
-                    if (c != ID) {
-                        const ID2 = c
-                        res.ref.child(ID).remove().then(function() {
-                            console.log("Remove Player 1.")
+                for (var player in playersInWaitingRoom) {
+                 
+                    if (player != playerOne) {
+                        const playerTwo = player
+                        
+                        snapWaitingRoom.ref.child(playerOne).remove().then(function() {
+                            console.log(`${playerOne} removed from the waiting room`)
                           })
                           .catch(function(error) {
-                            console.log("Remove failed: " + error.message)
+                            console.log(`Removed of ${playerOne} failed:` + error.message)
                           });
             
-                        res.ref.child(ID2).remove().then(function() {
-                            console.log("Remove Player 2.")
+                        snapWaitingRoom.ref.child(playerTwo).remove().then(function() {
+                            console.log(`${playerTwo} removed from the waiting room`)
                           })
                           .catch(function(error) {
-                            console.log("Remove failed: " + error.message)
+                            console.log(`Removed of ${playerTwo} failed:` + error.message)
                           });
-                        return res.ref.parent.child('Games').child(ID + ID2).set({
-                            player1:ID, 
-                            player2: ID2
+
+
+                        return snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
+                            player1:playerOne, 
+                            player2: playerTwo,
+                            coordinates: ''
                         });
 
                     } 
@@ -48,48 +56,8 @@ exports.createRandomGame = functions.region('europe-west1').database
             }
 
 
-        }).catch(err => {
-
-        });
-
-        // const uppercase = original.toUpperCase();
-
-
-
-
-        //const playersInWatingRoom = snaposhot.numChildren()
-
-
-        /*
-            const playersInWatingRoom = snapshot.ref.parent.once('value', (datasnapshot) => {
-                const numberOfChildren = datasnapshot.numChildren()
-                return numberOfChildren
-            });
-            console.log(playersInWatingRoom)
-        
-        
-            const player = snapshot.val()
-            const ID = player.user
-         
-            return snapshot.ref.parent.parent.child('games').child('game_1').set({
-                        player1: ID,
-                        player2: 'eeeh chissà come si fa',
-                    });
-                    
-        
-        
-          return snapshot.ref.parent.once('value').then((datasnapshot) => {
-                const numberOfChildren = datasnapshot.numChildren()
-                return numberOfChildren
-            }).then((usersInWaitingRoom) => {
-                console.log(usersInWaitingRoom)    
-                if(usersInWaitingRoom > 100)
-                  // Do Something
-                else
-                  // Do Something Else
-            }); 
-        
-        
-        */
-
+    }).catch(err => {
+        console.log('Error to get WaitingRoom: ' + err)
     });
+
+});
