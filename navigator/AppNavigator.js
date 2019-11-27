@@ -6,6 +6,7 @@ import EmailSignUpScreen from '../screens/EmailSignUpScreen'
 import LoadingScreen from '../screens/LoadingScreen'
 import HomeScreen from '../screens/HomeScreen'
 import PlayScreen from '../screens/PlayScreen'
+import InsertMarker from '../screens/InsertMarker'
 
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -27,7 +28,8 @@ const AuthStack = createStackNavigator(
 
 const GameStack = createStackNavigator(
   {
-    PlayScreen: {screen: PlayScreen}
+    PlayScreen: {screen: PlayScreen},
+    InsertMarker: {screen: InsertMarker}
   },{
     defaultNavigationOptions: {
       header: null
