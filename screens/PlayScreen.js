@@ -8,21 +8,36 @@ import StreetView from 'react-native-streetview'
 import Icon from 'react-native-vector-icons/Octicons';
 import { geometry, point } from '@turf/turf';
 var randomPointsOnPolygon = require('random-points-on-polygon');
+import InsertMarker from './InsertMarker'
 var turf = require('@turf/turf');
+import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 export default class PlayScreen extends Component {
 
-  setLocation(){
-    this.props.navigation.navigate('InsertMarker')
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      round: 1,
+      score: 0
+    };
+  }
+
+  refresh = (data) => {
+    this.setState({
+      round: this.state.round + 1,
+      score: data,
+    })
+  }
+  componentDidUpdate() {
+    console.log(this.state.round)
+    console.log(this.state.score)
+    if (this.state.round > 3){
+      alert("Partita finita, score " + this.state.score)
+    }
   }
 
   render() {
-
-    const send_button = (
-      <Icon.Button name="rocket" backgroundColor="#3b5998" size={20} onPress={() => { this.setLocation() }}>
-        <Text style={{ fontFamily: 'Arial', fontSize: 15, color: '#fff' }}>Give the answer</Text>
-      </Icon.Button>
-    );
 
     var numberOfPoints = 1;
     var australiaPoly = turf.polygon([[
@@ -58,10 +73,19 @@ export default class PlayScreen extends Component {
           coordinate={{ latitude: y, longitude: x, radius: 100000 }}
         />
 
-        <View style={styles.button}>
-          <TouchableOpacity>
-            {send_button}
-          </TouchableOpacity>
+        <View>
+          <AwesomeButton
+            type="primary"
+            style={styles.button}
+            progress
+            onPress={next => {
+              this.props.navigation.navigate('InsertMarker', { lat: y, long: x, score1: this.state.score, onGoBack: this.refresh })
+              next();
+
+            }}
+          > Give the Answer
+        </AwesomeButton>
+
         </View>
 
       </View>
@@ -87,8 +111,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 250,
-    height: 20,
-    width: 100,
     right: 100,
     zIndex: 2
   }

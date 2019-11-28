@@ -23,6 +23,7 @@
     "react-native-fbsdk": "^1.1.1",
     "react-native-gesture-handler": "^1.5.0",
     "react-native-maps": "git+https://git@github.com/react-native-community/react-native-maps.git",
+    "react-native-really-awesome-button": "^1.5.0",
     "react-native-streetview": "^0.2.1",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.0.10",

@@ -38,7 +38,6 @@ const GameStack = createStackNavigator(
 );
 
 
-
 const AppStack = createStackNavigator(
   {
   HomeScreen: {screen: HomeScreen},
