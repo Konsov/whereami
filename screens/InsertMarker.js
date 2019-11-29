@@ -9,17 +9,11 @@ import { Marker, ProviderPropType } from 'react-native-maps';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 const { width, height } = Dimensions.get('window');
-
-const ASPECT_RATIO = width / height;
 const LATITUDE = 47.275904;
 const LONGITUDE = -25.705134;
 const LATITUDE_DELTA = 50;
 const LONGITUDE_DELTA = 50;
 const SPACE = 0.01;
-
-function log(eventName, e) {
-    console.log(eventName, e.nativeEvent);
-}
 
 
 export default class InsertMarker extends Component {
@@ -87,7 +81,7 @@ export default class InsertMarker extends Component {
                     progress
                     onPress={next => {
                         var x = Math.round(this.state.distance) + this.props.navigation.getParam('score1')
-                       
+
                         this.props.navigation.state.params.onGoBack(x);
                         this.props.navigation.goBack();
                         next();
@@ -95,6 +89,10 @@ export default class InsertMarker extends Component {
                     }}
                 > Make the Guess
                 </AwesomeButton>
+               
+
+
+
             </View>
         );
 
@@ -115,8 +113,8 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     button: {
-        left: 140,
-        top: 650,
+        left: width - 245,
+        top: height - 100,
         justifyContent: 'center',
     }
 });

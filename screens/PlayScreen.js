@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Text, TouchableOpacity,
+  View, Dimensions
 } from 'react-native';
-import StreetView from 'react-native-streetview'
-import Icon from 'react-native-vector-icons/Octicons';
-import { geometry, point } from '@turf/turf';
-var randomPointsOnPolygon = require('random-points-on-polygon');
-import InsertMarker from './InsertMarker'
+import StreetView from 'react-native-streetview';
+import firebase from '../services/firebase';
+
+import CountdownCircle from 'react-native-countdown-circle';
 var turf = require('@turf/turf');
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+
+const { width, height } = Dimensions.get('window');
 
 export default class PlayScreen extends Component {
 
@@ -19,9 +20,49 @@ export default class PlayScreen extends Component {
 
     this.state = {
       round: 1,
-      score: 0
+      score: 0,
+      player: 0,
+      loadingCoordinate: false,
+      latitude: 0,
+      longitude: 0
     };
   }
+
+  loadView() {
+    if (!this.state.loadingCoordinate) {
+      this.loadCoordinate();
+      return <ActivityIndicator />;
+    } else {
+      return (
+        <StreetView
+          style={styles.streetView}
+          allGesturesEnabled={true}
+          coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 100000 }}
+        />
+      );
+    }
+  }
+  loadCoordinate() {
+    var user = firebase.auth().currentUser;
+    firebase.database().ref('/Games').orderByChild('player2').equalTo(user.uid).once('value').then(function(snapshot) {
+    var game = snapshot.toJSON()
+      for (var id in game) {
+        var x = game[id]['coordinates']['latitude'];
+        var y = game[id]['coordinates']['longitude'];
+      }
+      console.log(x);
+      console.log(y);
+      console.log(this.state.loadingCoordinate)
+      this.setState({
+        latitude:x,
+        longitude:y,
+        loadingCoordinate:true
+      })
+      console.log(this.state.loadingCoordinate)
+      console.log(this.state.latitude)
+    }.bind(this)).then(()=> this.loadView());
+
+}
 
   refresh = (data) => {
     this.setState({
@@ -32,46 +73,16 @@ export default class PlayScreen extends Component {
   componentDidUpdate() {
     console.log(this.state.round)
     console.log(this.state.score)
-    if (this.state.round > 3){
+    if (this.state.round > 3) {
       alert("Partita finita, score " + this.state.score)
     }
   }
 
   render() {
 
-    var numberOfPoints = 1;
-    var australiaPoly = turf.polygon([[
-      [114.4335938, -24.2864945],
-      [116.9296990, -34.1660824],
-      [129.9375115, -30.9838216],
-      [134.4375032, -32.2796030],
-      [135.8437532, -33.9862254],
-      [137.4082147, -32.7000220],
-      [140.5722772, -37.3026713],
-      [146.2851678, -37.6512262],
-      [149.9765740, -35.3925767],
-      [152.8769647, -28.8522143],
-      [151.3828240, -24.6971179],
-      [147.1640740, -20.8098443],
-      [144.7910272, -18.3270360],
-      [139.0781365, -18.3270360],
-      [133.2773553, -14.1108503],
-      [122.7304803, -18.9097468],
-      [114.5566522, -23.0909197],
-      [114.4335938, -24.2864945],
-    ]])
-
-    var points = randomPointsOnPolygon(numberOfPoints, australiaPoly);
-    var x = points[0]["geometry"]["coordinates"][0];
-    var y = points[0]["geometry"]["coordinates"][1];
-    console.log(y, x);
     return (
       <View style={styles.container}>
-        <StreetView
-          style={styles.streetView}
-          allGesturesEnabled={true}
-          coordinate={{ latitude: y, longitude: x, radius: 100000 }}
-        />
+        {this.loadView()}
 
         <View>
           <AwesomeButton
@@ -85,7 +96,18 @@ export default class PlayScreen extends Component {
             }}
           > Give the Answer
         </AwesomeButton>
-
+        </View>
+        <View >
+          <CountdownCircle
+            style={styles.timer}
+            seconds={50}
+            radius={30}
+            borderWidth={8}
+            color="#ff003f"
+            bgColor="#fff"
+            textStyle={{ fontSize: 20 }}
+            onTimeElapsed={() => console.log('Elapsed!')}
+          />
         </View>
 
       </View>
@@ -110,8 +132,13 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     top: 20,
-    left: 250,
+    left: width - 150,
     right: 100,
     zIndex: 2
+  },
+  timer: {
+    position: 'absolute',
+    left: 100,
+    top: 1000
   }
 });
