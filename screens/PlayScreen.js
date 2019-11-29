@@ -21,31 +21,73 @@ export default class PlayScreen extends Component {
     this.state = {
       round: 1,
       score: 0,
-      player: 0,
+      player: '',
       loadingCoordinate: false,
       latitude: 0,
       longitude: 0
     };
   }
-
   loadView() {
-    if (!this.state.loadingCoordinate) {
-      this.loadCoordinate();
+
+    if (this.state.player == '') {
+      this.getPlayerNumber();
       return <ActivityIndicator />;
     } else {
-      return (
-        <StreetView
-          style={styles.streetView}
-          allGesturesEnabled={true}
-          coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 100000 }}
-        />
-      );
+
+      if (!this.state.loadingCoordinate) {
+        this.loadCoordinate();
+        return <ActivityIndicator />;
+      } else {
+        return (
+          <StreetView
+            style={styles.streetView}
+            allGesturesEnabled={true}
+            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 100000 }}
+          />
+        );
+      }
     }
   }
+
+  getPlayerNumber() {
+    const user = firebase.auth().currentUser
+
+    var ref = firebase.database().ref('/Games');
+    ref.orderByChild('player1').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+
+      if (snapshot.exists()) {
+        this.setState({ player: 'player1' })
+        console.log(this.state.player)
+        return this.state.player
+      } else {
+        return this.state.player
+      }
+
+    }.bind(this)).then(function (data) {
+      if (data == 1) {
+        return this.setState.player
+      } else {
+        ref.orderByChild('player2').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+
+          if (snapshot.exists()) {
+            this.setState({ player: 'player2' })
+            console.log(this.state.player)
+            return this.state.player
+          } else {
+            return this.state.player
+          }
+        }.bind(this))
+      }
+    }.bind(this))
+  }
+
   loadCoordinate() {
-    var user = firebase.auth().currentUser;
-    firebase.database().ref('/Games').orderByChild('player2').equalTo(user.uid).once('value').then(function(snapshot) {
-    var game = snapshot.toJSON()
+
+    const user = firebase.auth().currentUser
+
+
+    firebase.database().ref('/Games').orderByChild(`${this.state.player}`).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+      var game = snapshot.toJSON()
       for (var id in game) {
         var x = game[id]['coordinates']['latitude'];
         var y = game[id]['coordinates']['longitude'];
@@ -54,15 +96,15 @@ export default class PlayScreen extends Component {
       console.log(y);
       console.log(this.state.loadingCoordinate)
       this.setState({
-        latitude:x,
-        longitude:y,
-        loadingCoordinate:true
+        latitude: x,
+        longitude: y,
+        loadingCoordinate: true
       })
       console.log(this.state.loadingCoordinate)
       console.log(this.state.latitude)
-    }.bind(this)).then(()=> this.loadView());
+    }.bind(this));
 
-}
+  }
 
   refresh = (data) => {
     this.setState({
@@ -70,6 +112,7 @@ export default class PlayScreen extends Component {
       score: data,
     })
   }
+
   componentDidUpdate() {
     console.log(this.state.round)
     console.log(this.state.score)
@@ -90,7 +133,7 @@ export default class PlayScreen extends Component {
             style={styles.button}
             progress
             onPress={next => {
-              this.props.navigation.navigate('InsertMarker', { lat: y, long: x, score1: this.state.score, onGoBack: this.refresh })
+              this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, score1: this.state.score, onGoBack: this.refresh })
               next();
 
             }}

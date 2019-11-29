@@ -29,7 +29,7 @@ export default class HomeScreen extends Component {
         user: user.uid
       }
     )
-    this.props.navigation.navigate('GameStack',)
+    this.props.navigation.navigate('GameStack')
   }
 
   render() {
