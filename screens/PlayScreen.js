@@ -2,16 +2,14 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions
+  View, Dimensions, ActivityIndicator
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
-
-import CountdownCircle from 'react-native-countdown-circle';
-var turf = require('@turf/turf');
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import {PacmanIndicator} from 'react-native-indicators';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default class PlayScreen extends Component {
 
@@ -30,13 +28,21 @@ export default class PlayScreen extends Component {
   loadView() {
 
     if (this.state.player == '') {
+      setTimeout(function(){this.getPlayerNumber()}.bind(this),7000)
       this.getPlayerNumber();
-      return <ActivityIndicator />;
+      var x = 100;
+      return <PacmanIndicator size = {x} />;
+    } else if (this.state.player == "partita non ancora caricata") {
+      setTimeout(function(){
+        this.setState({player: ''});
+        () => loadView();
+      }.bind(this), 2000)
     } else {
 
       if (!this.state.loadingCoordinate) {
         this.loadCoordinate();
-        return <ActivityIndicator />;
+        var x = 100;
+        return <PacmanIndicator size = {x} />;
       } else {
         return (
           <StreetView
@@ -51,7 +57,7 @@ export default class PlayScreen extends Component {
 
   getPlayerNumber() {
     const user = firebase.auth().currentUser
-
+  
     var ref = firebase.database().ref('/Games');
     ref.orderByChild('player1').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
@@ -64,8 +70,8 @@ export default class PlayScreen extends Component {
       }
 
     }.bind(this)).then(function (data) {
-      if (data == 1) {
-        return this.setState.player
+      if (data == 'player1') {
+        return this.state.player
       } else {
         ref.orderByChild('player2').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
@@ -74,6 +80,7 @@ export default class PlayScreen extends Component {
             console.log(this.state.player)
             return this.state.player
           } else {
+            this.setState({player:"partita non ancora caricata"})
             return this.state.player
           }
         }.bind(this))
@@ -109,16 +116,21 @@ export default class PlayScreen extends Component {
   refresh = (data) => {
     this.setState({
       round: this.state.round + 1,
-      score: data,
+      score: data
     })
+
+    
   }
 
   componentDidUpdate() {
+    const user = firebase.auth().currentUser
     console.log(this.state.round)
     console.log(this.state.score)
     if (this.state.round > 3) {
       alert("Partita finita, score " + this.state.score)
     }
+    
+
   }
 
   render() {
@@ -140,18 +152,7 @@ export default class PlayScreen extends Component {
           > Give the Answer
         </AwesomeButton>
         </View>
-        <View >
-          <CountdownCircle
-            style={styles.timer}
-            seconds={50}
-            radius={30}
-            borderWidth={8}
-            color="#ff003f"
-            bgColor="#fff"
-            textStyle={{ fontSize: 20 }}
-            onTimeElapsed={() => console.log('Elapsed!')}
-          />
-        </View>
+        
 
       </View>
 

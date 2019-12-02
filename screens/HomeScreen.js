@@ -7,22 +7,29 @@ import {
   StyleSheet,
 } from 'react-native';
 import firebase from '../services/firebase';
+import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 import { LoginManager } from "react-native-fbsdk";
 
 
 export default class HomeScreen extends Component {
 
-  logOut () {
+  logOut() {
     firebase.auth().signOut();
     this.props.navigation.navigate('AuthStack');
     LoginManager.logOut();
   }
 
-  gioca(){
-    this.props.navigation.navigate('PlayScreen')
+  gioca() {
+    const user = firebase.auth().currentUser;
+    firebase.database().ref('Games/').child(`${user.uid}`).set(
+      {
+        player1 : user.uid,
+        player2: ''
+      }
+    ).then(this.props.navigation.navigate('GameStack'))    
   }
 
-  giocaConAmici(){
+  giocaConAmici() {
     const user = firebase.auth().currentUser;
     firebase.database().ref('waitingRoom/' + user.uid).set(
       {
@@ -37,21 +44,40 @@ export default class HomeScreen extends Component {
       <ImageBackground source={require('../files/hom.png')} style={{ width: '100%', height: '100%' }}>
 
         <View style={styles.container}>
-
-          <Button
-            title="Gioca"
+          <View style = {styles.buttonContainer}>
+          <AwesomeButton
+            type="primary"
+            style={styles.button}
+            
+            stretch = "true"
             onPress={() => this.gioca()}
-          />
+          >Gioca</AwesomeButton>
 
-          <Button
-            title="Gioca con amici"
+          <AwesomeButton
+            type="primary"
+            style={styles.button}
+            
+            stretch = "true"
             onPress={() => this.giocaConAmici()}
-          />
+          >Gioca con Amici</AwesomeButton>
 
-          <Button
-            title="Log out"
+          <AwesomeButton
+            type="primary"
+            style={styles.button}
+           
+            stretch = "true"
+            onPress={() => this.props.navigation.navigate('UserProfileScreen')}
+          >Profile</AwesomeButton>
+
+
+          <AwesomeButton
+            type="primary"
+            style={styles.button}
+            
+            stretch = "true"
             onPress={() => this.logOut()}
-          />
+          >Log Out</AwesomeButton>
+        </View>
 
 
         </View>
@@ -67,4 +93,14 @@ const styles = StyleSheet.create({
     marginTop: '80%',
     marginLeft: '28%',
   },
+
+  button: {
+    position: 'relative',
+    marginTop:10,
+  },
+
+  buttonContainer : {
+    width:150,
+    alignSelf: "center",
+    marginTop: -100  }
 })

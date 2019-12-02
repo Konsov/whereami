@@ -7,6 +7,7 @@ import LoadingScreen from '../screens/LoadingScreen'
 import HomeScreen from '../screens/HomeScreen'
 import PlayScreen from '../screens/PlayScreen'
 import InsertMarker from '../screens/InsertMarker'
+import UserProfileScreen from '../screens/UserProfileScreen'
 
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -41,6 +42,7 @@ const GameStack = createStackNavigator(
 const AppStack = createStackNavigator(
   {
   HomeScreen: {screen: HomeScreen},
+  UserProfileScreen : {screen: UserProfileScreen}
   
   },{
     defaultNavigationOptions: {

@@ -47,6 +47,7 @@ exports.createRandomGame = functions.region('europe-west1').database
                         return snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
                             player1:playerOne, 
                             player2: playerTwo,
+                            round: 1
                         });
 
                     } 

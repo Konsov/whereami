@@ -41,6 +41,11 @@ export default class EmailSignUpScreen extends Component{
                 username: username,
                 userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
             });
+            currentUser.updateProfile({
+              displayName: username,
+              photoURL: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png'              
+            })
+
         } catch (error) {
           console.log(error);
         }

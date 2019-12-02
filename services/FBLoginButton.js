@@ -14,7 +14,7 @@ export default class FBLoginButton extends Component {
                 
                 const token = data.accessToken
                 const credential = firebase.auth.FacebookAuthProvider.credential(token);
-                fetch('https://graph.facebook.com/v2.8/me?fields=id,first_name,last_name,gender,birthday&access_token=' + token)
+                fetch('https://graph.facebook.com/v2.8/me?fields=id,first_name,last_name,email,gender,birthday&access_token=' + token)
                 .then((response) => response.json()).then((json) => {
                 
                     const imageSize = 120
