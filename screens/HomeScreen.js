@@ -24,9 +24,14 @@ export default class HomeScreen extends Component {
     firebase.database().ref('Games/').child(`${user.uid}`).set(
       {
         player1 : user.uid,
-        player2: ''
+        player2: '',
+        round: 0
       }
-    ).then(this.props.navigation.navigate('GameStack'))    
+    ).then(firebase.database().ref('Games/').child(`${user.uid}`).update(
+      {
+        round:1
+      }
+    ).then(this.props.navigation.navigate('GameStack')))  
   }
 
   giocaConAmici() {

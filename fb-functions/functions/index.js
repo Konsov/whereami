@@ -44,11 +44,19 @@ exports.createRandomGame = functions.region('europe-west1').database
                           });
 
 
-                        return snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
+                        snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
                             player1:playerOne, 
                             player2: playerTwo,
+                            round: 0
+                        });
+
+                        snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).update({
                             round: 1
                         });
+
+                        return null;
+
+
 
                     } 
                 }
@@ -62,8 +70,8 @@ exports.createRandomGame = functions.region('europe-west1').database
 });
 
 exports.addCoordinate = functions.region('europe-west1').database
-.ref('/Games/{gameID}')
-.onCreate((snaposhot, context) => {
+.ref('/Games/{gameID}/round')
+.onUpdate((snaposhot, context) => {
         
     var continent = getRandomContinent()
 
@@ -73,7 +81,7 @@ exports.addCoordinate = functions.region('europe-west1').database
     var y = points[0]["geometry"]["coordinates"][0];
     
 
-    return snaposhot.ref.child('coordinates').set({
+    return snaposhot.after.ref.parent.child('coordinates').set({
         latitude: x, 
         longitude: y
         }) 

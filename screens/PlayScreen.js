@@ -26,22 +26,20 @@ export default class PlayScreen extends Component {
     };
   }
   loadView() {
-
+    var x = 100;
     if (this.state.player == '') {
-      setTimeout(function(){this.getPlayerNumber()}.bind(this),7000)
-      this.getPlayerNumber();
-      var x = 100;
+      setTimeout(function(){this.getPlayerNumber()}.bind(this),9000);
+      
       return <PacmanIndicator size = {x} />;
     } else if (this.state.player == "partita non ancora caricata") {
       setTimeout(function(){
         this.setState({player: ''});
         () => loadView();
       }.bind(this), 2000)
+      return <PacmanIndicator size = {x} />;
     } else {
 
       if (!this.state.loadingCoordinate) {
-        this.loadCoordinate();
-        var x = 100;
         return <PacmanIndicator size = {x} />;
       } else {
         return (
@@ -71,14 +69,14 @@ export default class PlayScreen extends Component {
 
     }.bind(this)).then(function (data) {
       if (data == 'player1') {
-        return this.state.player
+        return this.loadCoordinate();
       } else {
         ref.orderByChild('player2').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
           if (snapshot.exists()) {
             this.setState({ player: 'player2' })
             console.log(this.state.player)
-            return this.state.player
+            return this.loadCoordinate();
           } else {
             this.setState({player:"partita non ancora caricata"})
             return this.state.player
@@ -91,7 +89,6 @@ export default class PlayScreen extends Component {
   loadCoordinate() {
 
     const user = firebase.auth().currentUser
-
 
     firebase.database().ref('/Games').orderByChild(`${this.state.player}`).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
       var game = snapshot.toJSON()
@@ -114,10 +111,12 @@ export default class PlayScreen extends Component {
   }
 
   refresh = (data) => {
+    const user = firebase.auth().currentUser
     this.setState({
       round: this.state.round + 1,
       score: data
     })
+
 
     
   }
