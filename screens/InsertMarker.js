@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import {
     StyleSheet,
-    View, Dimensions
+    View, Dimensions,
+    Button
 } from 'react-native';
 import MapView from 'react-native-maps';
-import { Marker, ProviderPropType } from 'react-native-maps';
+import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import firebase from '../services/firebase';
 
 const { width, height } = Dimensions.get('window');
 const LATITUDE = 47.275904;
@@ -18,21 +20,34 @@ const SPACE = 0.01;
 
 export default class InsertMarker extends Component {
 
-    constructor(props) {
-        super(props);
+  
 
-        this.state = {
-            a: {
+        state = {
+             a: {
                 latitude: LATITUDE - SPACE,
-                longitude: LONGITUDE - SPACE,
-                distance: 0
+                longitude: LONGITUDE - SPACE
             },
-        };
-    }
+            distance: 0,
+            roundFinished: false,
+            showingAnswerMarker: false,
+            marker: null,
+            score: 0
+        }
+    
+    
 
-    calculateDistance(e) {
+
+    calculateScore(e) {
         var lat1 = e.nativeEvent.coordinate.latitude;
         var lon1 = e.nativeEvent.coordinate.longitude;
+        this.setState({
+            a: {
+                latitude: e.nativeEvent.coordinate.latitude,
+                longitude: e.nativeEvent.coordinate.longitude
+            },
+            marker: e.nativeEvent.coordinate
+        })
+
         var lat2 = this.props.navigation.getParam('lat');
         var lon2 = this.props.navigation.getParam('long');
 
@@ -47,11 +62,79 @@ export default class InsertMarker extends Component {
             Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        var d = (R * c) / 1000;
+        var distance = Math.round((R * c) / 1000);
 
-        this.setState({ distance: d })
+        var tempScore = distance + this.props.navigation.getParam('score')
+        console.log('punti round prima: ' + this.props.navigation.getParam('score'))
+        console.log('punti round corrente: '  + distance)
+        
+        this.setState({
+            score: tempScore,
+            distance: distance
+            })
     }
 
+
+
+    getAnswer(){
+        alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')    
+        this.setState({
+            showingAnswerMarker: true,
+            roundFinished: true
+            })
+    }
+
+    renderGetAnswerMarker(){
+        if(!this.state.showingAnswerMarker){
+            return null
+            }else{
+                return (<View style={styles.container}>
+                        <Marker
+                        coordinate={{latitude: this.props.navigation.getParam('lat') , longitude: this.props.navigation.getParam('long')}}
+                        />
+                        <Polyline
+                        coordinates={[
+                            { latitude: this.props.navigation.getParam('lat'), longitude: this.props.navigation.getParam('long') },
+			                { latitude: this.state.a.latitude, longitude: this.state.a.longitude} ]}
+                        />
+
+                        </View>);
+                    }
+    }
+
+                        
+
+    renderButton(){
+        if(this.state.roundFinished){      
+            return( <AwesomeButton
+                    type="primary"
+                    style={styles.button}
+                    progress
+                    onPress={() => {
+                            console.log('score '+ this.state.score)
+                            var nRound = this.props.navigation.getParam('round')
+                            if(nRound<6){
+                                this.props.navigation.navigate('PlayScreen', {score: this.state.score})
+                            }else{
+                                this.props.navigation.navigate('AppStack')
+                            }
+                        }
+                    }
+                > Next Round
+                </AwesomeButton>);
+        }else{
+            return( <AwesomeButton
+                    type="primary"
+                    style={styles.button}
+                    progress
+                    onPress={() => this.getAnswer()}
+                > Make the Guess
+                </AwesomeButton>);
+        }
+
+
+
+    }
     render() {
 
         return (
@@ -65,31 +148,17 @@ export default class InsertMarker extends Component {
                         latitudeDelta: LATITUDE_DELTA,
                         longitudeDelta: LONGITUDE_DELTA,
                     }}
-                >
-                    <Marker
-                        coordinate={this.state.a}
-                        onDragEnd={e => this.calculateDistance(e)}
+                    onPress={(e) => {
+                        if(!this.state.showingAnswerMarker)
+                            this.calculateScore(e)
+                        }}>{this.state.marker && <Marker coordinate={this.state.marker} />}
+                     
+                    {this.renderGetAnswerMarker()}   
 
-                        draggable
-                    >
-                    </Marker>
                 </MapView>
 
-                <AwesomeButton
-                    type="primary"
-                    style={styles.button}
-                    progress
-                    onPress={next => {
-                        var x = Math.round(this.state.distance) + this.props.navigation.getParam('score1')
-
-                        this.props.navigation.state.params.onGoBack(x);
-                        this.props.navigation.goBack();
-                        next();
-
-                    }}
-                > Make the Guess
-                </AwesomeButton>
                
+                  {this.renderButton()}
 
 
 
@@ -107,7 +176,6 @@ InsertMarker.propTypes = {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-
     },
     map: {
         ...StyleSheet.absoluteFillObject,
