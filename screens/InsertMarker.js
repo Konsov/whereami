@@ -90,6 +90,7 @@ export default class InsertMarker extends Component {
             }else{
                 return (<View style={styles.container}>
                         <Marker
+                        pinColor = {'#474744'}
                         coordinate={{latitude: this.props.navigation.getParam('lat') , longitude: this.props.navigation.getParam('long')}}
                         />
                         <Polyline
@@ -109,7 +110,6 @@ export default class InsertMarker extends Component {
             return( <AwesomeButton
                     type="primary"
                     style={styles.button}
-                    progress
                     onPress={() => {
                             console.log('score '+ this.state.score)
                             var nRound = this.props.navigation.getParam('round')
@@ -126,7 +126,6 @@ export default class InsertMarker extends Component {
             return( <AwesomeButton
                     type="primary"
                     style={styles.button}
-                    progress
                     onPress={() => this.getAnswer()}
                 > Make the Guess
                 </AwesomeButton>);
