@@ -9,6 +9,7 @@ import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
+import CountDown from 'react-native-countdown-component'
 
 const { width, height } = Dimensions.get('window');
 const LATITUDE = 47.275904;
@@ -20,34 +21,20 @@ const SPACE = 0.01;
 
 export default class InsertMarker extends Component {
 
-  
-
         state = {
-             a: {
-                latitude: LATITUDE - SPACE,
-                longitude: LONGITUDE - SPACE
-            },
             distance: 0,
             roundFinished: false,
             showingAnswerMarker: false,
-            marker: null,
+            marker: {"latitude": 45.742972, "longitude": 9.188209},
             score: 0
         }
-    
-    
 
 
-    calculateScore(e) {
-        var lat1 = e.nativeEvent.coordinate.latitude;
-        var lon1 = e.nativeEvent.coordinate.longitude;
-        this.setState({
-            a: {
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude
-            },
-            marker: e.nativeEvent.coordinate
-        })
-
+    calculateScore() {
+        
+        var lat1= this.state.marker.latitude
+        var lon1=this.state.marker.longitude
+        
         var lat2 = this.props.navigation.getParam('lat');
         var lon2 = this.props.navigation.getParam('long');
 
@@ -64,12 +51,14 @@ export default class InsertMarker extends Component {
 
         var distance = Math.round((R * c) / 1000);
 
-        var tempScore = distance + this.props.navigation.getParam('score')
+        var tempScore = (20000 - distance)
+        var score = tempScore + this.props.navigation.getParam('score')
         console.log('punti round prima: ' + this.props.navigation.getParam('score'))
-        console.log('punti round corrente: '  + distance)
+        console.log('punti round corrente: '  + tempScore)
+        console.log('punti totali: ' + score)
         
         this.setState({
-            score: tempScore,
+            score: score,
             distance: distance
             })
     }
@@ -77,11 +66,13 @@ export default class InsertMarker extends Component {
 
 
     getAnswer(){
+        this.calculateScore()
         alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')    
         this.setState({
             showingAnswerMarker: true,
             roundFinished: true
             })
+        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).update({score:this.state.score})
     }
 
     renderGetAnswerMarker(){
@@ -95,7 +86,7 @@ export default class InsertMarker extends Component {
                         <Polyline
                         coordinates={[
                             { latitude: this.props.navigation.getParam('lat'), longitude: this.props.navigation.getParam('long') },
-			                { latitude: this.state.a.latitude, longitude: this.state.a.longitude} ]}
+			                { latitude: this.state.marker.latitude, longitude: this.state.marker.longitude} ]}
                         />
 
                         </View>);
@@ -109,13 +100,12 @@ export default class InsertMarker extends Component {
             return( <AwesomeButton
                     type="primary"
                     style={styles.button}
-                    progress
                     onPress={() => {
-                            console.log('score '+ this.state.score)
                             var nRound = this.props.navigation.getParam('round')
                             if(nRound<6){
                                 this.props.navigation.navigate('PlayScreen', {score: this.state.score})
                             }else{
+                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({finished:true})
                                 this.props.navigation.navigate('AppStack')
                             }
                         }
@@ -126,7 +116,6 @@ export default class InsertMarker extends Component {
             return( <AwesomeButton
                     type="primary"
                     style={styles.button}
-                    progress
                     onPress={() => this.getAnswer()}
                 > Make the Guess
                 </AwesomeButton>);
@@ -135,10 +124,30 @@ export default class InsertMarker extends Component {
 
 
     }
+
+    setPinColor(){
+        if(this.props.navigation.getParam('player') == 'player1'){
+            return 'yellow'
+        }
+    }
+
     render() {
 
         return (
             <View style={styles.container}>
+
+
+                <CountDown
+                size={15}
+                style={styles.timer}
+                until={45}
+                onFinish={() => alert('Finished')}
+                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625'}}
+                digitTxtStyle={{color: '#1CC625'}}
+                timeToShow={['S']}   
+                />
+
+
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
@@ -150,8 +159,10 @@ export default class InsertMarker extends Component {
                     }}
                     onPress={(e) => {
                         if(!this.state.showingAnswerMarker)
-                            this.calculateScore(e)
-                        }}>{this.state.marker && <Marker coordinate={this.state.marker} />}
+                            this.setState({
+                                marker: e.nativeEvent.coordinate
+                                })
+                        }}>{this.state.marker && <Marker pinColor={this.setPinColor()} coordinate={this.state.marker} />}
                      
                     {this.renderGetAnswerMarker()}   
 
@@ -184,5 +195,10 @@ const styles = StyleSheet.create({
         left: width - 245,
         top: height - 100,
         justifyContent: 'center',
+    },
+    timer: {
+        position: 'absolute',
+        left: 100,
+        top: 20
     }
 });

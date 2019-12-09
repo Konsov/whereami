@@ -13,11 +13,33 @@ const { width } = Dimensions.get('window');
 
 export default class PlayScreen extends Component {
 
+   state = {
+    player: '',
+    gameID: '',
+    loadingCoordinate: false,
+    preclatitude: 0,
+    preclongitude:0,
+    latitude: 0,
+    longitude: 0,
+    round: 1
+    }
+
+  componentDidMount(){
+  this.IsNumberOne();
+  this.IsNumberTwo();
+  }
+
+  componentDidUpdate(){
+    if(!this.state.loadingCoordinate && this.state.round < 6){
+      this.loadCoordinate();
+    }
+  }  
+
   loadCoordinate() {
 
     const user = firebase.auth().currentUser
 
-    firebase.database().ref('/Games').orderByChild(this.state.player).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+    firebase.database().ref('/Games').orderByChild(`${this.state.player}/user`).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
       var game = snapshot.toJSON()
             
       for (var id in game) {
@@ -42,34 +64,11 @@ export default class PlayScreen extends Component {
 
    }
 
-
-  state = {
-    player: '',
-    gameID: '',
-    loadingCoordinate: false,
-    preclatitude: 0,
-    preclongitude:0,
-    latitude: 0,
-    longitude: 0,
-    round: 1
-    }
-
-componentDidMount(){
-  this.IsNumberOne();
-  this.IsNumberTwo();
-}
-
-componentDidUpdate(){
-  if(!this.state.loadingCoordinate && this.state.round < 6){
-    this.loadCoordinate();
-  }
-}
-
  IsNumberTwo() {
     const user = firebase.auth().currentUser
   
     var ref = firebase.database().ref('/Games');
-    ref.orderByChild('player2').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+    ref.orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
       if (snapshot.exists()) {
         var game = snapshot.toJSON()
@@ -90,7 +89,7 @@ componentDidUpdate(){
     const user = firebase.auth().currentUser
   
     var ref = firebase.database().ref('/Games');
-    ref.orderByChild('player1').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+    ref.orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
       if (snapshot.exists()) {
         var game = snapshot.toJSON()
@@ -117,7 +116,7 @@ componentDidUpdate(){
         }else{
           var score = this.props.navigation.getParam('score')
         }
-        this.props.navigation.navigate('InsertMarker', {lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score})
+        this.props.navigation.navigate('InsertMarker', {lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player})
       
         this.setState({
                   round: this.state.round + 1,

@@ -7,40 +7,51 @@ const firebase = require('firebase')
 
 
 export default class FBLoginButton extends Component {
-    
+
    loginUser = () => {
-        try {                        
+        try {
             AccessToken.getCurrentAccessToken().then((data) => {
-                
+
                 const token = data.accessToken
                 const credential = firebase.auth.FacebookAuthProvider.credential(token);
                 fetch('https://graph.facebook.com/v2.8/me?fields=id,first_name,last_name,email,gender,birthday&access_token=' + token)
                 .then((response) => response.json()).then((json) => {
-                
+
                     const imageSize = 120
                     const facebookID = json.id
                     const name = json.first_name + ' ' + json.last_name
                     const fbImage = `https://graph.facebook.com/${facebookID}/picture?height=${imageSize}`
-                                                            
+
                     firebase.auth().signInWithCredential(credential).then(function(re){
                         try {
-                            firebase.database().ref(`/users/${re.user.uid}/`)
-                            .set({
-                                username: name,
-                                userpic: fbImage,
-                                });
+
+                            var ref = firebase.database().ref(`/users/${re.user.uid}`)
+                            ref.once('value').then(snapUser => {
+                                if(!snapUser.exists()){
+                                    ref.set({
+                                        username: name,
+                                        userpic: fbImage,
+                                        statistics:{
+                                            nGames:0,
+                                            avgScore: 0,
+                                            maxScore: 0
+                                            }
+                                        });
+                                }
+                             })
+                           
                             } catch (error) {
                             console.log(error.toString());
                         }
                     })
                 })
             })
-   
+
         } catch (error) {
         console.log(error.toString())
         }
     }
-    
+
     render() {
         return (
         <View>

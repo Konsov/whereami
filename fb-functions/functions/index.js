@@ -46,9 +46,16 @@ exports.createRandomGame = functions.region('europe-west1').database
 
 
                         snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
-                            player1:playerOne, 
-                            player2: playerTwo,
-                            round: 0
+                            player1: {
+                                user: playerOne,
+                                score: 0
+                            },
+                            player2:{
+                                user: playerTwo,
+                                score: 0
+                            },
+                            round: 0,
+                            finished: false
                         });
 
                         snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).update({
@@ -70,21 +77,110 @@ exports.createRandomGame = functions.region('europe-west1').database
 
 });
 
+
+exports.delGameUpStats = functions.region('europe-west1').database
+.ref('/Games/{gameID}/finished')
+.onUpdate((snapshot, context) => {
+
+    return snapshot.after.ref.parent.once('value').then(snapGame =>{
+
+        var snapGameJson = snapGame.toJSON();
+        var playerOneID = snapGameJson['player1']['user'] 
+        var playerOneScore = snapGameJson['player1']['score']
+        
+
+        snapGame.ref.parent.parent.child('users').child(playerOneID).child('statistics').once('value').then(snpaStats => {
+            
+            var snapStatsJson = snpaStats.toJSON()
+            var maxScore = snapStatsJson['maxScore']
+            var avgScore = snapStatsJson['avgScore']
+            var nGames = snapStatsJson['nGames']
+
+            snpaStats.ref.update({nGames: nGames + 1})
+            
+            if(avgScore==0){
+                snpaStats.ref.update({avgScore: playerOneScore})
+            }else{
+                var newAvg = (avgScore + playerOneScore)/2
+                snpaStats.ref.update({avgScore: newAvg})
+            }
+
+            if(playerOneScore > maxScore){
+                snpaStats.ref.update({maxScore: playerOneScore})
+            }
+
+        }).then(snapshot.after.ref.parent.remove())
+
+    })  
+    
+});
+
+
+
 exports.addCoordinate = functions.region('europe-west1').database
 .ref('/Games/{gameID}/round')
 .onUpdate((snaposhot, context) => {
 
-    var nRound = snaposhot.after.val()
-    
-    if(nRound == 6){
-        snaposhot.after.ref.parent.remove()
-        return null
-    }
-
-    var continent = turf.polygon([[[366.2402344, 43.4066368], [368.7011719, 44.4825215], [376.1059570, 39.4204083], [377.1826172, 41.0309976],[373.2055664, 42.5691892], [371.7553711, 45.3230230], [377.9296875, 52.3645201], [366.0205078, 52.7519573],
-    [361.6479492, 49.7975975],
-    [359.1430664, 44.0102669],
-    [366.2402344, 43.4066368]]]);
+    var continent = turf.polygon([
+    [
+      [
+        -0.4833984,
+        43.8362074
+      ],
+      [
+        8.7890625,
+        44.872865
+      ],
+      [
+        16.2158203,
+        39.1329535
+      ],
+      [
+        17.4023438,
+        40.7164341
+      ],
+      [
+        11.8212891,
+        45.6460001
+      ],
+      [
+        19.9951172,
+        42.1655077
+      ],
+      [
+        28.7402344,
+        46.5900715
+      ],
+      [
+        21.0498047,
+        54.8251734
+      ],
+      [
+        11.7773438,
+        53.8518914
+      ],
+      [
+        10.9423828,
+        56.8957635
+      ],
+      [
+        7.8662109,
+        56.4855996
+      ],
+      [
+        7.9980469,
+        54.0844901
+      ],
+      [
+        -3.9990234,
+        48.1080718
+      ],
+      [
+        -0.4833984,
+        43.8362074
+      ]
+    ]
+  ]);
 
     var points = randomPointsOnPolygon(1, continent);
     

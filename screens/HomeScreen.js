@@ -23,9 +23,12 @@ export default class HomeScreen extends Component {
     const user = firebase.auth().currentUser;
     firebase.database().ref('Games/').child(`${user.uid}`).set(
       {
-        player1: user.uid,
-        player2: '' ,
-        round: 0
+        player1: {
+          user: user.uid,
+          score: 0
+        },
+        round: 0,
+        finished: false
       }
     ).then(firebase.database().ref('Games/').child(`${user.uid}`).update(
       {

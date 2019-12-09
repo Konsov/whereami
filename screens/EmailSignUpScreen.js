@@ -40,6 +40,11 @@ export default class EmailSignUpScreen extends Component{
             .set({
                 username: username,
                 userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
+                statistics:{
+                  nGames:0,
+                  avgScore: 0,
+                  maxScore: 0
+                  }
             });
             currentUser.updateProfile({
               displayName: username,
