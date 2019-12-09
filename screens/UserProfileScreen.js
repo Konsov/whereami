@@ -6,39 +6,94 @@ import {
     Image,
 } from 'react-native';
 import firebase from '../services/firebase';
+import {PacmanIndicator} from 'react-native-indicators'; 
 
 export default class UserProfileScreen extends Component {
-    
-    render() {
+
+    state = {
+        player: '',
+        loadingInformation: false,
+        userPic: '',
+        avgScore: 0,
+        maxScore: 0,
+        nGame: 0
+    }
+
+    componentDidMount() {
+        this.loadInfo();
+    }
+
+    loadInfo() {
         const user = firebase.auth().currentUser;
-        console.log(user)
-        return (
-            <View style={styles.container}>
-                <View style={styles.header}>
-                <View style={styles.headerContent}>
-                    <Image style={styles.avatar}
-                        source={{ uri: user.photoURL }} />
-                    <Text style={styles.name}>{user.displayName} </Text>
-                    <Text style={styles.userInfo}>{user.email} </Text>
-                </View>
-                </View>
-                <View style={styles.body}>
-                    <View style={styles.item}>
-                        <View style={styles.iconContent}>
-                            <Image style={styles.icon} source={{ uri: "https://img.icons8.com/material-rounded/24/000000/home.png" }} />
+        console.log(user.uid)
+        firebase.database().ref('/users').child(`${user.uid}`).once('value').then(snapshot => {
+            var profile = snapshot.toJSON();
+            console.log(profile)
+            var avg = profile['statistics']['avgScore']
+            var max = profile['statistics']['maxScore']
+            var nGames = profile['statistics']['nGames']
+            var name = profile['username']
+            var pic = profile['userpic']
+            this.setState({
+                player: name,
+                avgScore: avg,
+                maxScore: max,
+                userPic: pic,
+                nGame: nGames
+            })
+        }).then(    
+            this.setState({
+                loadingInformation : true
+            })
+        )
+    }
+
+    renderView() {
+        if (this.state.player == '' || this.loadingInformation == false) {
+            return <PacmanIndicator size={100} />
+        } else {
+            return (
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <View style={styles.headerContent}>
+                            <Image style={styles.avatar}
+                                source={{ uri: this.state.userPic }} />
+                            <Text style={styles.name}>{this.state.player} </Text>
+                            <Text style={styles.userInfo}>Numero di partite: {this.state.nGame} </Text>
+                            <Text style={styles.userInfo}>Punteggio medio: {this.state.avgScore} </Text>
+                            <Text style={styles.userInfo}>Punteggio massimo: {this.state.maxScore} </Text>
                         </View>
-                        <View style={styles.infoContent}>
-                            <Text style={styles.info} onPress={() => { this.props.navigation.goBack() }}>Home</Text>
+                    </View>
+                    <View style={styles.body}>
+                        <View style={styles.item}>
+                            <View style={styles.iconContent}>
+                                <Image style={styles.icon} source={{ uri: "https://img.icons8.com/material-rounded/24/000000/home.png" }} />
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.info} onPress={() => { this.props.navigation.goBack() }}>Home</Text>
+                            </View>
                         </View>
                     </View>
                 </View>
+            )
+        }
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                {this.renderView()}
             </View>
         )
+
+
     }
 
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
     header: {
         backgroundColor: "#DCDCDC",
     },
