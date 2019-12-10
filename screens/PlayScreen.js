@@ -2,38 +2,43 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, ActivityIndicator,Text
+  View, Dimensions, ActivityIndicator, Text
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
-import {PacmanIndicator} from 'react-native-indicators';
+import { PacmanIndicator } from 'react-native-indicators';
 
 const { width } = Dimensions.get('window');
 
 export default class PlayScreen extends Component {
 
-   state = {
+  state = {
     player: '',
     gameID: '',
     loadingCoordinate: false,
     preclatitude: 0,
-    preclongitude:0,
+    preclongitude: 0,
     latitude: 0,
     longitude: 0,
-    round: 1
-    }
-
-  componentDidMount(){
-  this.IsNumberOne();
-  this.IsNumberTwo();
+    round: 1,
+    started: false
   }
 
-  componentDidUpdate(){
-    if(!this.state.loadingCoordinate && this.state.round < 6){
+  componentDidMount() {
+    
+    this.IsNumberTwo();
+  }
+
+  componentDidUpdate() {
+    if (!this.state.started) {
+      setTimeout(() => { this.IsNumberTwo(), console.log("wait") }, 5000);
+      
+    
+    } else if (!this.state.loadingCoordinate && this.state.round < 6) {
       this.loadCoordinate();
     }
-  }  
+  }
 
   loadCoordinate() {
 
@@ -41,11 +46,11 @@ export default class PlayScreen extends Component {
 
     firebase.database().ref('/Games').orderByChild(`${this.state.player}/user`).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
       var game = snapshot.toJSON()
-            
+
       for (var id in game) {
-        
-        if(game[id]['coordinates'] == null || game[id]['coordinates']['latitude'] == this.state.preclatitude ){
-          this.setState({loadingCoordinate: false})
+
+        if (game[id]['coordinates'] == null || game[id]['coordinates']['latitude'] == this.state.preclatitude) {
+          this.setState({ loadingCoordinate: false })
           return null
         }
         var x = game[id]['coordinates']['latitude'];
@@ -53,7 +58,7 @@ export default class PlayScreen extends Component {
       }
       console.log(x);
       console.log(y);
-      console.log(this.state.loadingCoordinate)  
+      console.log(this.state.loadingCoordinate)
       this.setState({
         latitude: x,
         longitude: y,
@@ -62,24 +67,26 @@ export default class PlayScreen extends Component {
       console.log(this.state.loadingCoordinate)
     }.bind(this));
 
-   }
+  }
 
- IsNumberTwo() {
+  IsNumberTwo() {
     const user = firebase.auth().currentUser
-  
+
     var ref = firebase.database().ref('/Games');
     ref.orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
       if (snapshot.exists()) {
         var game = snapshot.toJSON()
-      	for (var id in game) {
+        for (var id in game) {
           var gameID = id
         }
-        console.log(gameID)
         this.setState({
           player: 'player2',
-          gameID: gameID
-          })
+          gameID: gameID,
+          started : true
+        })
+      } else {
+        this.IsNumberOne();
       }
     }.bind(this))
   }
@@ -87,67 +94,72 @@ export default class PlayScreen extends Component {
 
   IsNumberOne() {
     const user = firebase.auth().currentUser
-  
+
     var ref = firebase.database().ref('/Games');
     ref.orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
 
       if (snapshot.exists()) {
         var game = snapshot.toJSON()
-      	for (var id in game) {
+        for (var id in game) {
           var gameID = id
         }
         this.setState({
           player: 'player1',
-          gameID: gameID
-          })
-     }
+          gameID: gameID,
+          started: true
+        })
+      } else {
+        this.setState({
+          started: false
+        })
+      }
     }.bind(this))
   }
 
-  goToMarker(){
+  goToMarker() {
 
     firebase.database().ref('Games/').child(`${this.state.gameID}`).update(
       {
         round: this.state.round + 1
       }
-    ).then(function(){
-        if(this.props.navigation.getParam('score') == null){
-          var score = 0
-        }else{
-          var score = this.props.navigation.getParam('score')
-        }
-        this.props.navigation.navigate('InsertMarker', {lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player})
-      
-        this.setState({
-                  round: this.state.round + 1,
-                  loadingCoordinate: false,
-    	            preclatitude: this.state.latitude,
-                  preclongitude: this.state.longitude
-                  })
+    ).then(function () {
+      if (this.props.navigation.getParam('score') == null) {
+        var score = 0
+      } else {
+        var score = this.props.navigation.getParam('score')
+      }
+      this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player })
+
+      this.setState({
+        round: this.state.round + 1,
+        loadingCoordinate: false,
+        preclatitude: this.state.latitude,
+        preclongitude: this.state.longitude
+      })
     }.bind(this))
   }
 
-  renderView(){
-    if(this.state.player == '' || this.loadingCoordinate == false){
-      return <PacmanIndicator size = {100} />
-    }else{
-      return(
+  renderView() {
+    if (this.state.player == '' || this.loadingCoordinate == false) {
+      return <PacmanIndicator size={100} />
+    } else {
+      return (
         <View style={styles.container}>
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
-            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 100000 }}/>
-              <View>
-               <AwesomeButton
-                type="primary"
-                style={styles.button}
-                onPress={()=>this.goToMarker()}
-                > Give the Answer
+            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 100000 }} />
+          <View>
+            <AwesomeButton
+              type="primary"
+              style={styles.button}
+              onPress={() => this.goToMarker()}
+            > Give the Answer
                </AwesomeButton>
-              </View>        
-        </View>  
+          </View>
+        </View>
 
-        );
+      );
     }
   }
 

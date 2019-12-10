@@ -55,24 +55,21 @@ export default class HomeScreen extends Component {
           <View style = {styles.buttonContainer}>
           <AwesomeButton
             type="primary"
-            style={styles.button}
-            
+            style={styles.button}            
             stretch = "true"
             onPress={() => this.gioca()}
           >Gioca</AwesomeButton>
 
           <AwesomeButton
             type="primary"
-            style={styles.button}
-            
+            style={styles.button}            
             stretch = "true"
             onPress={() => this.giocaConAmici()}
           >Gioca con Amici</AwesomeButton>
 
           <AwesomeButton
             type="primary"
-            style={styles.button}
-           
+            style={styles.button}           
             stretch = "true"
             onPress={() => this.props.navigation.navigate('UserProfileScreen')}
           >Profile</AwesomeButton>
@@ -80,8 +77,7 @@ export default class HomeScreen extends Component {
 
           <AwesomeButton
             type="primary"
-            style={styles.button}
-            
+            style={styles.button}            
             stretch = "true"
             onPress={() => this.logOut()}
           >Log Out</AwesomeButton>
