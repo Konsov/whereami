@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, ActivityIndicator, Text
+  View, Dimensions, ActivityIndicator, Image
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import AwesomeButtonSocial from "react-native-really-awesome-button/src/index";
+
 import { PacmanIndicator } from 'react-native-indicators';
 
 const { width } = Dimensions.get('window');
@@ -26,29 +28,22 @@ export default class PlayScreen extends Component {
   }
 
   componentDidMount() {
-    
     this.IsNumberTwo();
   }
 
   componentDidUpdate() {
     if (!this.state.started) {
       setTimeout(() => { this.IsNumberTwo(), console.log("wait") }, 5000);
-      
-    
     } else if (!this.state.loadingCoordinate && this.state.round < 6) {
       this.loadCoordinate();
     }
   }
 
   loadCoordinate() {
-
     const user = firebase.auth().currentUser
-
     firebase.database().ref('/Games').orderByChild(`${this.state.player}/user`).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
       var game = snapshot.toJSON()
-
       for (var id in game) {
-
         if (game[id]['coordinates'] == null || game[id]['coordinates']['latitude'] == this.state.preclatitude) {
           this.setState({ loadingCoordinate: false })
           return null
@@ -71,10 +66,8 @@ export default class PlayScreen extends Component {
 
   IsNumberTwo() {
     const user = firebase.auth().currentUser
-
     var ref = firebase.database().ref('/Games');
     ref.orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-
       if (snapshot.exists()) {
         var game = snapshot.toJSON()
         for (var id in game) {
@@ -83,7 +76,7 @@ export default class PlayScreen extends Component {
         this.setState({
           player: 'player2',
           gameID: gameID,
-          started : true
+          started: true
         })
       } else {
         this.IsNumberOne();
@@ -94,10 +87,8 @@ export default class PlayScreen extends Component {
 
   IsNumberOne() {
     const user = firebase.auth().currentUser
-
     var ref = firebase.database().ref('/Games');
     ref.orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-
       if (snapshot.exists()) {
         var game = snapshot.toJSON()
         for (var id in game) {
@@ -117,59 +108,75 @@ export default class PlayScreen extends Component {
   }
 
   goToMarker() {
+    if (this.state.player == 'player1') {
+      firebase.database().ref('Games/').child(`${this.state.gameID}`).update(
+        {
+          round: this.state.round + 1
+        }
+      )
+    }
 
-    firebase.database().ref('Games/').child(`${this.state.gameID}`).update(
-      {
-        round: this.state.round + 1
-      }
-    ).then(function () {
-      if (this.props.navigation.getParam('score') == null) {
-        var score = 0
-      } else {
-        var score = this.props.navigation.getParam('score')
-      }
-      this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player })
+    if (this.props.navigation.getParam('score') == null) {
+      var score = 0
+    } else {
+      var score = this.props.navigation.getParam('score')
+    }
+    this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player })
 
-      this.setState({
-        round: this.state.round + 1,
-        loadingCoordinate: false,
-        preclatitude: this.state.latitude,
-        preclongitude: this.state.longitude
-      })
-    }.bind(this))
+    this.setState({
+      round: this.state.round + 1,
+      loadingCoordinate: false,
+      preclatitude: this.state.latitude,
+      preclongitude: this.state.longitude
+    })
   }
 
   renderView() {
+
     if (this.state.player == '' || this.loadingCoordinate == false) {
       return <PacmanIndicator size={100} />
     } else {
+      console.log("entra")
       return (
         <View style={styles.container}>
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
-            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 100000 }} />
+            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10000 }} />
           <View>
             <AwesomeButton
               type="primary"
-              style={styles.button}
+              style={styles.button1}
               onPress={() => this.goToMarker()}
             > Give the Answer
                </AwesomeButton>
+            {console.log(this.props.coordinate)}   
+            <AwesomeButton
+              type="primary"
+              width={50}
+              height={50}
+              borderRadius={25}
+              style={styles.button2}
+              onPress={() => <StreetView
+                style={styles.streetView}
+                allGesturesEnabled={true}
+                coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10 }} />}
+             > 
+              <Image source={require('../files/gps.png')} />
+
+
+            </AwesomeButton>
           </View>
         </View>
-
       );
     }
   }
 
   render() {
-
     return (
       <View style={styles.container}>
         {this.renderView()}
       </View>
-
     );
   }
 }
@@ -178,7 +185,6 @@ export default class PlayScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-
   },
   streetView: {
     position: 'absolute',
@@ -187,13 +193,20 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  button: {
+  button1: {
     position: 'absolute',
     top: 20,
     left: width - 150,
     right: 100,
     zIndex: 2
   },
+  button2: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 2
+  },
+
   timer: {
     position: 'absolute',
     left: 100,

@@ -16,6 +16,7 @@ import {
   Button,
   Input,
 } from 'native-base';
+import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 import firebase from '../services/firebase'
 
@@ -90,14 +91,12 @@ export default class EmailSignUpScreen extends Component{
             onChangeText={(password) => this.setState({password})}
             />
           </Item>
-          
-          <Button style={{marginTop:10}}
-            full
-            rounded
-            primary
-            onPress={()=> this.signUpUser(this.state.username, this.state.email, this.state.password)}
-          ><Text>Sign Up</Text>
-          </Button>
+          <AwesomeButton
+              type="primary"
+              style={styles.button}
+              onPress={() => this.signUpUser(this.state.username, this.state.email, this.state.password)}
+            > Sign Up
+               </AwesomeButton>
         </Form>
       </Container>
 
@@ -112,4 +111,7 @@ const styles = StyleSheet.create({
     padding:10,
     justifyContent: 'center',
   },
+  button: {
+    marginTop: 10
+  }
 });

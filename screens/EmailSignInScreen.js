@@ -4,7 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
+  ImageBackground,
   StatusBar,
 } from 'react-native';
 
@@ -17,13 +17,15 @@ import {
   Input,
 } from 'native-base';
 
+import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+
 import firebase from '../services/firebase'
 
-export default class EmailSignInScreen extends Component{
+export default class EmailSignInScreen extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
-    
+
     this.state = ({
       email: '',
       password: ''
@@ -32,53 +34,51 @@ export default class EmailSignInScreen extends Component{
 
   loginUser = (email, password) => {
     try {
-        firebase.auth().signInWithEmailAndPassword(email,password)
+      firebase.auth().signInWithEmailAndPassword(email, password)
     } catch (error) {
       console.log(error.toString())
     }
   }
 
-  render(){
+  render() {
     return (
+     
       <Container style={styles.container}>
-        <Form>
+       
           <Item floatingLabel>
             <Label>Email</Label>
-            <Input 
-            autoCorrect={false} 
-            autoCapitalize="none"
-            onChangeText={(email) => this.setState({email})} />
+            <Input
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(email) => this.setState({ email })} />
           </Item>
-        
-         <Item floatingLabel>
+
+          <Item floatingLabel>
             <Label>Password</Label>
-            <Input 
-            secureTextEntry={true}
-            autoCorrect={false} 
-            autoCapitalize="none" 
-            onChangeText={(password) => this.setState({password})}
+            <Input
+              secureTextEntry={true}
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(password) => this.setState({ password })}
             />
           </Item>
-
-          <Button style={{marginTop:10}}
-            full
-            rounded
-            success
-            onPress={()=> this.loginUser(this.state.email, this.state.password)}
-          ><Text>LogIn</Text>
-          </Button>
-      
-        </Form>
-            
-          <Button style={{marginTop:10}}
-            full
-            rounded
-            primary
-            onPress={()=>{this.props.navigation.navigate('EmailSignUpScreen')}}
-          ><Text>Not all ready register? Sign Up!</Text>
-          </Button>
-      </Container>
-
+          <View style={styles.buttonContainer}>
+            <AwesomeButton
+              type="primary"
+              stretch = "true"
+              style={styles.button}
+              onPress={() => this.loginUser(this.state.email, this.state.password)}
+            > Login
+               </AwesomeButton>
+            <AwesomeButton
+              type="secondary"
+              stretch = "true"
+              style={styles.button}
+              onPress={() => { this.props.navigation.navigate('EmailSignUpScreen') }}
+            > Not all ready register? Sign Up!
+               </AwesomeButton>
+          </View> 
+     </Container>
     );
   }
 }
@@ -86,8 +86,15 @@ export default class EmailSignInScreen extends Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding:10,
+    padding: 10,
     justifyContent: 'center',
   },
+  button: {
+    marginTop: 10,
+    alignSelf: 'center'
+  },
+  buttonContainer: {
+    width:150,
+    alignSelf: "center",
+  }
 });
