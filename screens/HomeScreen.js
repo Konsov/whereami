@@ -5,6 +5,8 @@ import {
   ImageBackground,
   Button,
   StyleSheet,
+  BackHandler,
+  Alert
 } from 'react-native';
 import firebase from '../services/firebase';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
@@ -12,6 +14,21 @@ import { LoginManager } from "react-native-fbsdk";
 
 
 export default class HomeScreen extends Component {
+
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      Alert.alert(
+        'Confirm exit',
+        'Do you want to quit the app?',
+        [
+          {text: 'CANCEL', style: 'cancel'},
+          {text: 'OK', onPress: () => BackHandler.exitApp()},
+        ],
+        
+      );
+      return true;
+    });
+  }
 
   logOut() {
     firebase.auth().signOut();

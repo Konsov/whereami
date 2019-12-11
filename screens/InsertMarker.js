@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View, Dimensions,
-    Button
+    BackHandler
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
@@ -16,25 +16,32 @@ const LATITUDE = 47.275904;
 const LONGITUDE = -25.705134;
 const LATITUDE_DELTA = 50;
 const LONGITUDE_DELTA = 50;
-const SPACE = 0.01;
-
 
 export default class InsertMarker extends Component {
 
-        state = {
-            distance: 0,
-            roundFinished: false,
-            showingAnswerMarker: false,
-            marker: {"latitude": 45.742972, "longitude": 9.188209},
-            score: 0
-        }
+    state = {
+        distance: 0,
+        roundFinished: false,
+        showingAnswerMarker: false,
+        marker: { "latitude": 45.742972, "longitude": 9.188209 },
+        score: 0
+    }
 
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            
+            return true;
+        });
+    }
+    componentWillUnmount() {
+        this.backHandler.remove()
+    }
 
     calculateScore() {
-        
-        var lat1= this.state.marker.latitude
-        var lon1=this.state.marker.longitude
-        
+
+        var lat1 = this.state.marker.latitude
+        var lon1 = this.state.marker.longitude
+
         var lat2 = this.props.navigation.getParam('lat');
         var lon2 = this.props.navigation.getParam('long');
 
@@ -54,70 +61,70 @@ export default class InsertMarker extends Component {
         var tempScore = (20000 - distance)
         var score = tempScore + this.props.navigation.getParam('score')
         console.log('punti round prima: ' + this.props.navigation.getParam('score'))
-        console.log('punti round corrente: '  + tempScore)
+        console.log('punti round corrente: ' + tempScore)
         console.log('punti totali: ' + score)
-        
+
         this.setState({
             score: score,
             distance: distance
-            })
+        })
     }
 
 
 
-    getAnswer(){
+    getAnswer() {
         this.calculateScore()
-        alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')    
+        alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')
         this.setState({
             showingAnswerMarker: true,
             roundFinished: true
-            })
-        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).update({score:this.state.score})
+        })
+        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).update({ score: this.state.score })
     }
 
-    renderGetAnswerMarker(){
-        if(!this.state.showingAnswerMarker){
+    renderGetAnswerMarker() {
+        if (!this.state.showingAnswerMarker) {
             return null
-            }else{
-                return (<View style={styles.container}>
-                        <Marker
-                        coordinate={{latitude: this.props.navigation.getParam('lat') , longitude: this.props.navigation.getParam('long')}}
-                        />
-                        <Polyline
-                        coordinates={[
-                            { latitude: this.props.navigation.getParam('lat'), longitude: this.props.navigation.getParam('long') },
-			                { latitude: this.state.marker.latitude, longitude: this.state.marker.longitude} ]}
-                        />
+        } else {
+            return (<View style={styles.container}>
+                <Marker
+                    coordinate={{ latitude: this.props.navigation.getParam('lat'), longitude: this.props.navigation.getParam('long') }}
+                />
+                <Polyline
+                    coordinates={[
+                        { latitude: this.props.navigation.getParam('lat'), longitude: this.props.navigation.getParam('long') },
+                        { latitude: this.state.marker.latitude, longitude: this.state.marker.longitude }]}
+                />
 
-                        </View>);
-                    }
+            </View>);
+        }
     }
 
-                        
 
-    renderButton(){
-        if(this.state.roundFinished){      
-            return( <AwesomeButton
-                    type="primary"
-                    style={styles.button}
-                    onPress={() => {
-                            var nRound = this.props.navigation.getParam('round')
-                            if(nRound<6){
-                                this.props.navigation.navigate('PlayScreen', {score: this.state.score})
-                            }else{
-                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({finished:true})
-                                this.props.navigation.navigate('AppStack')
-                            }
-                        }
+
+    renderButton() {
+        if (this.state.roundFinished) {
+            return (<AwesomeButton
+                type="primary"
+                style={styles.button}
+                onPress={() => {
+                    var nRound = this.props.navigation.getParam('round')
+                    if (nRound < 6) {
+                        this.props.navigation.navigate('PlayScreen', { score: this.state.score })
+                    } else {
+                        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
+                        this.props.navigation.navigate('AppStack')
                     }
-                > Next Round
+                }
+                }
+            > Next Round
                 </AwesomeButton>);
-        }else{
-            return( <AwesomeButton
-                    type="primary"
-                    style={styles.button}
-                    onPress={() => this.getAnswer()}
-                > Make the Guess
+        } else {
+            return (<AwesomeButton
+                type="primary"
+                style={styles.button}
+                onPress={() => this.getAnswer()}
+            > Make the Guess
                 </AwesomeButton>);
         }
 
@@ -125,8 +132,8 @@ export default class InsertMarker extends Component {
 
     }
 
-    setPinColor(){
-        if(this.props.navigation.getParam('player') == 'player1'){
+    setPinColor() {
+        if (this.props.navigation.getParam('player') == 'player1') {
             return 'yellow'
         }
     }
@@ -138,13 +145,13 @@ export default class InsertMarker extends Component {
 
 
                 <CountDown
-                size={15}
-                style={styles.timer}
-                until={45}
-                onFinish={() => alert('Finished')}
-                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625'}}
-                digitTxtStyle={{color: '#1CC625'}}
-                timeToShow={['S']}   
+                    size={15}
+                    style={styles.timer}
+                    until={45}
+                    onFinish={() => alert('Finished')}
+                    digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625' }}
+                    digitTxtStyle={{ color: '#1CC625' }}
+                    timeToShow={['S']}
                 />
 
 
@@ -158,18 +165,18 @@ export default class InsertMarker extends Component {
                         longitudeDelta: LONGITUDE_DELTA,
                     }}
                     onPress={(e) => {
-                        if(!this.state.showingAnswerMarker)
+                        if (!this.state.showingAnswerMarker)
                             this.setState({
                                 marker: e.nativeEvent.coordinate
-                                })
-                        }}>{this.state.marker && <Marker pinColor={this.setPinColor()} coordinate={this.state.marker} />}
-                     
-                    {this.renderGetAnswerMarker()}   
+                            })
+                    }}>{this.state.marker && <Marker pinColor={this.setPinColor()} coordinate={this.state.marker} />}
+
+                    {this.renderGetAnswerMarker()}
 
                 </MapView>
 
-               
-                  {this.renderButton()}
+
+                {this.renderButton()}
 
 
 

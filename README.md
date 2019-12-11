@@ -1,8 +1,8 @@
 # whereami
 
 # 1 - pulsante torna indietro:
-# Da Playescreen => Sicuro Uscire Dal Gioco => HomeScreen
-# Da InsertMarker => ?
+# Da Playescreen => Sicuro Uscire Dal Gioco => HomeScreen ✔ (da playscreen va a Homescreen, da Homescreen esce dal gioco dopo aver confermato)
+# Da InsertMarker => ? ✔ (bloccato tasto indietro)
 
 # 2 - Sistemare timer durante la partita
 

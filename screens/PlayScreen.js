@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, ActivityIndicator, Image
+  View, Dimensions, ActivityIndicator, Image, BackHandler
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
@@ -28,7 +28,15 @@ export default class PlayScreen extends Component {
   }
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.navigate('HomeScreen'); 
+      return true;
+    });
     this.IsNumberTwo();
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
   }
 
   componentDidUpdate() {
@@ -149,18 +157,14 @@ export default class PlayScreen extends Component {
               style={styles.button1}
               onPress={() => this.goToMarker()}
             > Give the Answer
-               </AwesomeButton>
-            {console.log(this.props.coordinate)}   
+               </AwesomeButton> 
             <AwesomeButton
               type="primary"
               width={50}
               height={50}
               borderRadius={25}
               style={styles.button2}
-              onPress={() => <StreetView
-                style={styles.streetView}
-                allGesturesEnabled={true}
-                coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10 }} />}
+              onPress={() => this.props.navigation.navigate('PlayScreen')}             
              > 
               <Image source={require('../files/gps.png')} />
 
