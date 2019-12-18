@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import NotifService from './NotifService';
 
 const firebase = require('firebase')
 

@@ -6,6 +6,31 @@ admin.initializeApp(functions.config().firebase);
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var turf = require('@turf/turf');
 
+exports.sendFriendRequest = functions.region('europe-west1').database.
+    ref('users/{uid}/request/{uid2}')
+    .onCreate((snaposhot, context) => {
+        console.log(context.params)
+        const uuid = context.params.uid;
+
+        console.log('User to send notification', uuid);
+
+        var ref = admin.database().ref(`users/${uuid}/token`);
+        return ref.once("value", function (snapshot) {
+            const payload = {
+                notification: {
+                    title: 'You have a friend request!',
+                    body: 'Tap here to check it out!'
+                }
+            };
+            setTimeout(function(){admin.messaging().sendToDevice(snapshot.val(), payload) }, 5000);
+            
+
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+    })
+
+
 exports.createRandomGame = functions.region('europe-west1').database
     .ref('/waitingRoom/{userID}')
     .onCreate((snaposhot, context) => {

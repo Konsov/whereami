@@ -3,10 +3,16 @@ import {
     StyleSheet,
     Text,
     View,
-    Image,
+    Image
 } from 'react-native';
+import {
+    Input,
+    Item,
+    Label
+} from 'native-base';
 import firebase from '../services/firebase';
-import {PacmanIndicator} from 'react-native-indicators'; 
+import { PacmanIndicator } from 'react-native-indicators';
+import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 export default class UserProfileScreen extends Component {
 
@@ -41,11 +47,30 @@ export default class UserProfileScreen extends Component {
                 userPic: pic,
                 nGame: nGames
             })
-        }).then(    
+        }).then(
             this.setState({
-                loadingInformation : true
+                loadingInformation: true
             })
         )
+    }
+
+    friendRequest(username) {
+        const user = firebase.auth().currentUser;
+        var reff = firebase.database().ref('/users/');
+        reff.orderByChild('username').equalTo(`${username}`).once('value').then(function (snapshot) {
+            if (snapshot.exists()) {
+                for (var root in snapshot.toJSON()){
+                    firebase.database().ref(`users/${root}/request/${user.uid}`).set({
+                        name: root
+                   })
+                }          
+
+                
+                alert("Request delivered!")
+            } else {
+                alert("User "+ username + " doesn't exist!");
+            }
+        }.bind(this))
     }
 
     renderView() {
@@ -72,6 +97,22 @@ export default class UserProfileScreen extends Component {
                             <View style={styles.infoContent}>
                                 <Text style={styles.info} onPress={() => { this.props.navigation.goBack() }}>Home</Text>
                             </View>
+                            <View style={styles.infoContent}>
+                                <Item floatingLabel>
+                                <Label>Username</Label>
+                                <Input autoCorrect={false}
+                                    autoCapitalize="none"
+                                    onChangeText={(username) => this.setState({ username })} />
+                                </Item>
+                                
+                                <AwesomeButton
+                                    type="primary"
+                                    style={styles.button}
+                                    onPress={() => this.friendRequest(this.state.username)}
+                                > Friend Request
+                                </AwesomeButton>
+                            </View>
+
                         </View>
                     </View>
                 </View>
