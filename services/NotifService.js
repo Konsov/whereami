@@ -19,6 +19,7 @@ export default class NotifService {
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
       senderID: gcm,
 
+
       // IOS ONLY (optional): default: all - Permissions to register.
       permissions: {
         alert: true,

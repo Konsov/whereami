@@ -17,7 +17,7 @@ import {
   Input,
 } from 'native-base';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
-import NotifService from '../services/NotifService';
+
 
 
 import firebase from '../services/firebase'
@@ -32,16 +32,6 @@ export default class EmailSignUpScreen extends Component{
       email: '',
       password: ''
     })
-
-    this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
-  }
-
-  onRegister(token) {
-    this.setState({ registerToken: token.token, gcmRegistered: true });
-  }
-
-  onNotif(notif) {
-    console.log(notif);
   }
 
   signUpUser = (username,email, password) => {
@@ -52,7 +42,6 @@ export default class EmailSignUpScreen extends Component{
             firebase.database().ref(`/users/${currentUser.uid}/`)
             .set({
                 username: username,
-                token: this.state.registerToken,
                 userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
                 statistics:{
                   nGames:0,
