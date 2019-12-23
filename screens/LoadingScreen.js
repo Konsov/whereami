@@ -16,7 +16,8 @@ class LoadingScreen extends Component {
   constructor(props) {
     super(props)
     this.state = ({
-      registerToken: ''
+      registerToken: '',
+      notif:false
       })
 
   }
@@ -26,7 +27,9 @@ class LoadingScreen extends Component {
   }
 
   onNotif(notif) {
-    console.log(notif);
+    this.setState({
+      notif: true
+    })
   }
 
   componentDidMount() {
@@ -54,7 +57,10 @@ class LoadingScreen extends Component {
           })
           
         }
+        if (this.state.notif){
+          this.props.navigation.navigate("NotificationScreen");
 
+        }
         this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
 
       });

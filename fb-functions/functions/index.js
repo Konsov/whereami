@@ -8,12 +8,20 @@ var turf = require('@turf/turf');
 
 exports.sendFriendRequest = functions.region('europe-west1').database.
     ref('users/{uid}/request/{uid2}')
-    .onCreate((snaposhot, context) => {
-        console.log(context.params)
+    .onCreate((snapshot, context) => {
         const uuid = context.params.uid;
 
         console.log('User to send notification', uuid);
+        admin.auth().getUser(context.params.uid2).then(function(userRecord){
+            console.log(userRecord)
+            snapshot.ref.update({
+                img: userRecord.photoURL
+            })
+        })
 
+        
+
+       
         var ref = admin.database().ref(`users/${uuid}/token`);
         return ref.once("value", function (snapshot) {
             const payload = {

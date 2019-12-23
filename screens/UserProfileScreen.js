@@ -3,12 +3,16 @@ import {
     StyleSheet,
     Text,
     View,
-    Image
+    Image,
+    ScrollView
 } from 'react-native';
 import {
     Input,
     Item,
-    Label
+    Label,
+    Icon,
+    Button,
+    Badge
 } from 'native-base';
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
@@ -22,11 +26,19 @@ export default class UserProfileScreen extends Component {
         userPic: '',
         avgScore: 0,
         maxScore: 0,
-        nGame: 0
+        nGame: 0,
+        req: [],
+        not: 0
     }
 
+
     componentDidMount() {
-        this.loadInfo();
+        this.focusListener = this.props.navigation.addListener('didFocus', () => {
+            this.loadInfo();
+        });
+    }
+    componentWillUnmount() {
+        this.focusListener.remove();        
     }
 
     loadInfo() {
@@ -34,18 +46,25 @@ export default class UserProfileScreen extends Component {
         console.log(user.uid)
         firebase.database().ref('/users').child(`${user.uid}`).once('value').then(snapshot => {
             var profile = snapshot.toJSON();
-            console.log(profile)
+            var not = 0;
+            for (var val in profile['request']) {
+                not = not + 1;
+            }
+
+
             var avg = profile['statistics']['avgScore']
             var max = profile['statistics']['maxScore']
             var nGames = profile['statistics']['nGames']
             var name = profile['username']
             var pic = profile['userpic']
+
             this.setState({
                 player: name,
                 avgScore: avg,
                 maxScore: max,
                 userPic: pic,
-                nGame: nGames
+                nGame: nGames,
+                not: not
             })
         }).then(
             this.setState({
@@ -54,24 +73,25 @@ export default class UserProfileScreen extends Component {
         )
     }
 
+
     friendRequest(username) {
         const user = firebase.auth().currentUser;
         var reff = firebase.database().ref('/users/');
         reff.orderByChild('username').equalTo(`${username}`).once('value').then(function (snapshot) {
             if (snapshot.exists()) {
-                for (var root in snapshot.toJSON()){
+                for (var root in snapshot.toJSON()) {
                     firebase.database().ref(`users/${root}/request/${user.uid}`).set({
-                        name: root
-                   })
-                }          
-
-                
+                        name: this.state.player,
+                        img: ''
+                    })
+                }
                 alert("Request delivered!")
             } else {
-                alert("User "+ username + " doesn't exist!");
+                alert("User " + username + " doesn't exist!");
             }
         }.bind(this))
     }
+
 
     renderView() {
         if (this.state.player == '' || this.loadingInformation == false) {
@@ -81,6 +101,12 @@ export default class UserProfileScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.headerContent}>
+                            <Button transparent style={styles.button1} onPress={() => this.props.navigation.navigate('NotificationScreen')}>
+                                <Icon name="heart" style={{ fontSize: 50, color: 'white' }} />
+                                <Badge style={{ position: 'absolute', top: -20, right: 3, height : 20 }}>
+                                    <Text>{this.state.not}</Text>
+                                </Badge>
+                            </Button>
                             <Image style={styles.avatar}
                                 source={{ uri: this.state.userPic }} />
                             <Text style={styles.name}>{this.state.player} </Text>
@@ -99,19 +125,20 @@ export default class UserProfileScreen extends Component {
                             </View>
                             <View style={styles.infoContent}>
                                 <Item floatingLabel>
-                                <Label>Username</Label>
-                                <Input autoCorrect={false}
-                                    autoCapitalize="none"
-                                    onChangeText={(username) => this.setState({ username })} />
+                                    <Label>Username</Label>
+                                    <Input autoCorrect={false}
+                                        autoCapitalize="none"
+                                        onChangeText={(username) => this.setState({ username })} />
                                 </Item>
-                                
                                 <AwesomeButton
                                     type="primary"
                                     style={styles.button}
                                     onPress={() => this.friendRequest(this.state.username)}
-                                > Friend Request
+                                >Friend Request
                                 </AwesomeButton>
                             </View>
+                        </View>
+                        <View style={styles.infoContent}>
 
                         </View>
                     </View>
@@ -167,12 +194,18 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
+        padding: 10
     },
     infoContent: {
         flex: 1,
         alignItems: 'flex-start',
         paddingLeft: 5,
         paddingTop: 3
+    },
+    button1: {
+        flex: 1,
+        color: 'white',
+        alignSelf: 'flex-end'
     },
     iconContent: {
         flex: 1,

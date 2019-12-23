@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   ImageBackground,
-  Button,
   StyleSheet,
   BackHandler,
   Alert
 } from 'react-native';
+
 import firebase from '../services/firebase';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 import { LoginManager } from "react-native-fbsdk";
@@ -67,27 +66,28 @@ export default class HomeScreen extends Component {
   render() {
     return (
       <ImageBackground source={require('../files/hom.png')} style={{ width: '100%', height: '100%' }}>
+        
 
         <View style={styles.container}>
           <View style = {styles.buttonContainer}>
           <AwesomeButton
             type="primary"
             style={styles.button}            
-            stretch = "true"
+            stretch = {true}
             onPress={() => this.gioca()}
           >Gioca</AwesomeButton>
 
           <AwesomeButton
             type="primary"
             style={styles.button}            
-            stretch = "true"
+            stretch = {true}
             onPress={() => this.giocaConAmici()}
           >Gioca con Amici</AwesomeButton>
 
           <AwesomeButton
             type="primary"
             style={styles.button}           
-            stretch = "true"
+            stretch = {true}
             onPress={() => this.props.navigation.navigate('UserProfileScreen')}
           >Profile</AwesomeButton>
 
@@ -95,7 +95,7 @@ export default class HomeScreen extends Component {
           <AwesomeButton
             type="primary"
             style={styles.button}            
-            stretch = "true"
+            stretch = {true}
             onPress={() => this.logOut()}
           >Log Out</AwesomeButton>
         </View>
