@@ -102,9 +102,10 @@ export default class UserProfileScreen extends Component {
                         <View style={styles.headerContent}>
                             <Button transparent style={styles.button1} onPress={() => this.props.navigation.navigate('NotificationScreen')}>
                                 <Icon name="heart" style={{ fontSize: 50, color: 'white' }} />
-                                <Badge style={{ position: 'absolute', right: 5, height : -50 }}>
+                                {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 5, height : -50 }}>
                                     <Text>{this.state.not}</Text>
-                                </Badge>
+                                </Badge> : null}
+                                
                             </Button>
                             <Button transparent style={styles.button2}  onPress={() => this.props.navigation.navigate('FriendScreen')}>
                                 <Icon name="people" style={{ fontSize: 50, color: 'white'}} />

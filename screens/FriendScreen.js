@@ -24,7 +24,7 @@ import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
-
+var v= 0;
 
 export default class NotificationScreen extends Component {
 
@@ -44,6 +44,7 @@ export default class NotificationScreen extends Component {
     }
 
     componentDidMount() {
+
         this.loadInfo();
 
     }
@@ -51,19 +52,20 @@ export default class NotificationScreen extends Component {
     push() {
         let req = [...this.state.req];
 
-        // Add item to it
-
         for (var val in req){
+            if (v == val)
             req[val]['online'] = this.state.val
         }
 
-        // Set state
+        v = v + 1;
         this.setState({ req });
+        console.log(v)
     }
 
     isOnline() {
         var on = [];
         var k;
+        v= 0;
         firebase.database().ref('/users').once('value').then(snap => {
 
             for (var val in this.state.req) {
@@ -71,16 +73,16 @@ export default class NotificationScreen extends Component {
                     k = snapshot.val()
                     on.push(snapshot.val())
                     this.setState({
-                        val: k
+                        val: k 
                     })
-                }).then(
-                    setTimeout(() => {this.push()}, 2000)
-                )
+                    this.push(val);
+                })
             }
+            setTimeout(() => {}, 1500)
         }).then(
             this.setState({
                 loadingInformation: true
-            })
+            })            
         )
     }
 
@@ -131,11 +133,12 @@ export default class NotificationScreen extends Component {
                                 <ListItem avatar key={i}>
                                     <Left>
                                         <Thumbnail small source={{ uri: data.img }} />
-                                        {data.online == true ? <Badge style={{ backgroundColor: 'green', width: 10,height:10, right: 10, top:25 }}>
-                                        </Badge>: console.log(this.state.req) }
+                                        {data.online == true ? <Badge style={{ backgroundColor: 'green', width: 10, height:10, right: 10, top:25 }}>
+                                        </Badge>: null }
                                     </Left>
                                     <Body>
-                                        <Text>{data.name}</Text>
+                                    {data.online == true ? <Text style={{left: -12}}>{data.name}</Text>: <Text>{data.name}</Text> }
+                                        
                                     </Body>
                                     <Right style={{ flexDirection: 'row' }}>
                                     {data.online == true ? <AwesomeButton
