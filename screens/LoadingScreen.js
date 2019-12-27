@@ -36,11 +36,35 @@ class LoadingScreen extends Component {
     this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
   }
 
+  isOnline(){
+    firebase.database().ref('.info/connected').on('value', function(snapshot) {
+      
+      if (snapshot.val() == false) {
+          return;
+      };
+      
+      var uid = firebase.auth().currentUser.uid;
+
+      var userStatusDatabaseRef = firebase.database().ref('/users/' + uid);  
+
+      userStatusDatabaseRef.onDisconnect().update({online: false}).then(function() {
+          // The promise returned from .onDisconnect().set() will
+          // resolve as soon as the server acknowledges the onDisconnect() 
+          // request, NOT once we've actually disconnected:
+          // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
+  
+          // We can now safely set ourselves as 'online' knowing that the
+          // server will mark us as offline once we lose connection.
+          userStatusDatabaseRef.update({online: true});
+      });
+  });
+  }
+
   componentDidUpdate() {
     try {
       var k = this.state.registerToken;
      
-      const user = firebase.auth().currentUser;
+      this.isOnline();
       firebase.auth().onAuthStateChanged((user) => {
         
         if (user) {

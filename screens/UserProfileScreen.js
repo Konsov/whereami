@@ -43,7 +43,6 @@ export default class UserProfileScreen extends Component {
 
     loadInfo() {
         const user = firebase.auth().currentUser;
-        console.log(user.uid)
         firebase.database().ref('/users').child(`${user.uid}`).once('value').then(snapshot => {
             var profile = snapshot.toJSON();
             var not = 0;
@@ -94,7 +93,7 @@ export default class UserProfileScreen extends Component {
 
 
     renderView() {
-        if (this.state.player == '' || this.loadingInformation == false) {
+        if (this.state.player == '' || this.state.loadingInformation == false) {
             return <PacmanIndicator size={100} />
         } else {
             return (
@@ -103,9 +102,12 @@ export default class UserProfileScreen extends Component {
                         <View style={styles.headerContent}>
                             <Button transparent style={styles.button1} onPress={() => this.props.navigation.navigate('NotificationScreen')}>
                                 <Icon name="heart" style={{ fontSize: 50, color: 'white' }} />
-                                <Badge style={{ position: 'absolute', top: -20, right: 3, height : 20 }}>
+                                <Badge style={{ position: 'absolute', right: 5, height : -50 }}>
                                     <Text>{this.state.not}</Text>
                                 </Badge>
+                            </Button>
+                            <Button transparent style={styles.button2}  onPress={() => this.props.navigation.navigate('FriendScreen')}>
+                                <Icon name="people" style={{ fontSize: 50, color: 'white'}} />
                             </Button>
                             <Image style={styles.avatar}
                                 source={{ uri: this.state.userPic }} />
@@ -121,7 +123,7 @@ export default class UserProfileScreen extends Component {
                                 <Image style={styles.icon} source={{ uri: "https://img.icons8.com/material-rounded/24/000000/home.png" }} />
                             </View>
                             <View style={styles.infoContent}>
-                                <Text style={styles.info} onPress={() => { this.props.navigation.goBack() }}>Home</Text>
+                                <Text style={styles.info} onPress={() => { this.props.navigation.navigate('HomeScreen') }}>Home</Text>
                             </View>
                             <View style={styles.infoContent}>
                                 <Item floatingLabel>
@@ -202,10 +204,15 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingTop: 3
     },
-    button1: {
-        flex: 1,
-        color: 'white',
+    button1: {        
+        marginTop: -20,
+        height: 50,
         alignSelf: 'flex-end'
+    },
+    button2: {
+        height: 50,
+        marginTop: -50,
+        alignSelf: 'flex-start'
     },
     iconContent: {
         flex: 1,
