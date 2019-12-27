@@ -24,7 +24,7 @@ import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
-var v= 0;
+var v = 0;
 
 export default class NotificationScreen extends Component {
 
@@ -52,9 +52,9 @@ export default class NotificationScreen extends Component {
     push() {
         let req = [...this.state.req];
 
-        for (var val in req){
+        for (var val in req) {
             if (v == val)
-            req[val]['online'] = this.state.val
+                req[val]['online'] = this.state.val
         }
 
         v = v + 1;
@@ -65,7 +65,7 @@ export default class NotificationScreen extends Component {
     isOnline() {
         var on = [];
         var k;
-        v= 0;
+        v = 0;
         firebase.database().ref('/users').once('value').then(snap => {
 
             for (var val in this.state.req) {
@@ -73,16 +73,16 @@ export default class NotificationScreen extends Component {
                     k = snapshot.val()
                     on.push(snapshot.val())
                     this.setState({
-                        val: k 
+                        val: k
                     })
                     this.push(val);
                 })
             }
-            setTimeout(() => {}, 1500)
+            setTimeout(() => { }, 1500)
         }).then(
             this.setState({
                 loadingInformation: true
-            })            
+            })
         )
     }
 
@@ -107,6 +107,16 @@ export default class NotificationScreen extends Component {
 
             })
         }).then(this.isOnline())
+    }
+
+    playReq(data) {
+        const user = firebase.auth().currentUser;
+        firebase.database().ref('users/' + data + '/playRequest/' + user.uid).set(
+            {
+                user: this.state.username,
+                uid : user.uid
+            }
+        ).then(this.props.navigation.navigate('GameStack'))
     }
     renderView() {
         if (this.state.loadingInformation == false && this.state.req.length == 3) {
@@ -133,30 +143,29 @@ export default class NotificationScreen extends Component {
                                 <ListItem avatar key={i}>
                                     <Left>
                                         <Thumbnail small source={{ uri: data.img }} />
-                                        {data.online == true ? <Badge style={{ backgroundColor: 'green', width: 10, height:10, right: 10, top:25 }}>
-                                        </Badge>: null }
+                                        {data.online == true ? <Badge style={{ backgroundColor: 'green', width: 10, height: 10, right: 10, top: 25 }}>
+                                        </Badge> : null}
                                     </Left>
                                     <Body>
-                                    {data.online == true ? <Text style={{left: -12}}>{data.name}</Text>: <Text>{data.name}</Text> }
-                                        
+                                        {data.online == true ? <Text style={{ left: -12 }}>{data.name}</Text> : <Text>{data.name}</Text>}
+
                                     </Body>
                                     <Right style={{ flexDirection: 'row' }}>
-                                    {data.online == true ? <AwesomeButton
+                                        {data.online == true ? <AwesomeButton
                                             type="primary"
                                             height={25}
                                             style={styles.button}
-                                            onPress={() => this.confirmReq(data, i)}
+                                            onPress={() => this.playReq(data.uid)}
                                         >➤
-                                        </AwesomeButton>: <AwesomeButton
-                                            type="primary"
-                                            height={25}
-                                            style={styles.button}
-                                            disabled
-                                            onPress={() => this.confirmReq(data, i)}
-                                        >➤
-                                        </AwesomeButton> }
+                                        </AwesomeButton> : <AwesomeButton
+                                                type="primary"
+                                                height={25}
+                                                style={styles.button}
+                                                disabled
+                                            >➤
+                                        </AwesomeButton>}
 
-                                        
+
                                     </Right>
                                 </ListItem>
                             ))}

@@ -28,6 +28,7 @@
     "react-native-gesture-handler": "^1.5.0",
     "react-native-indicators": "^0.17.0",
     "react-native-maps": "git+https://git@github.com/react-native-community/react-native-maps.git",
+    "react-native-modal": "^11.5.3",
     "react-native-push-notification": "^3.1.9",
     "react-native-really-awesome-button": "^1.5.0",
     "react-native-streetview": "^0.2.1",
