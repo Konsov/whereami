@@ -6,14 +6,14 @@
 
 # 2 - Sistemare timer durante la partita
 
-# 3 - Lista Amici
-# 3.1 - Inviare Richiesta d'amicizia
-# 3.1.1 - Notifica richiesta d'amicizia
+# 3 - Lista Amici ✔
+# 3.1 - Inviare Richiesta d'amicizia ✔
+# 3.1.1 - Notifica richiesta d'amicizia ✔
 
-# 4 - Sfidare Amico
-# 4 - Notifica Partita con Amico
+# 4 - Sfidare Amico ✔
+# 4 - Notifica Partita con Amico ✔
 
-# 5 - Testare Multiplayer se funziona bene
+# 5 - Testare Multiplayer se funziona bene ✔
 
 # 6 - Sistemare Profile Screen
 
