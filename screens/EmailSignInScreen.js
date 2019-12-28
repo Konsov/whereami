@@ -65,14 +65,14 @@ export default class EmailSignInScreen extends Component {
           <View style={styles.buttonContainer}>
             <AwesomeButton
               type="primary"
-              stretch = "true"
+              stretch = {true}
               style={styles.button}
               onPress={() => this.loginUser(this.state.email, this.state.password)}
             > Login
                </AwesomeButton>
             <AwesomeButton
               type="secondary"
-              stretch = "true"
+              stretch = {true}
               style={styles.button}
               onPress={() => { this.props.navigation.navigate('EmailSignUpScreen') }}
             > Not all ready register? Sign Up!

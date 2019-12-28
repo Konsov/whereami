@@ -33,7 +33,8 @@ export default class HomeScreen extends Component {
 
   accReq(val){
     const user = firebase.auth().currentUser;
-    firebase.database().ref('Games/').child(`${user.uid}`).set(
+    var coord = user.uid + this.state.uid
+    firebase.database().ref('Games/').child(`${coord}`).set(
       {
         player1: {
           user: user.uid,
@@ -46,14 +47,15 @@ export default class HomeScreen extends Component {
         round: 0,
         finished: false
       }
-    ).then(firebase.database().ref('Games/').child(`${user.uid}`).update(
+    ).then(firebase.database().ref('Games/').child(`${coord}`).update(
       {
         round: 1
       }
     ).then(this.setState({ 
       modalVisible: false 
     }))
-    ).then(this.props.navigation.navigate('GameStack'))
+    ).then(firebase.database().ref('users/' + user.uid + '/playRequest/').remove())
+    .then(this.props.navigation.navigate('GameStack'))
   }
 
   
@@ -81,6 +83,16 @@ export default class HomeScreen extends Component {
       })
       this.setState({ 
         modalVisible: true
+      })
+    })
+    firebase.database().ref('/users').child(`${user.uid}`).child('playRequest').on('child_removed', (value) => {
+      
+      this.setState({
+        player: '',
+        uid: ''
+      })
+      this.setState({ 
+        modalVisible: false
       })
     })
   }
@@ -122,7 +134,7 @@ export default class HomeScreen extends Component {
   render() {
     return (
 
-      <ImageBackground source={require('../files/hom.png')} style={{ width: '100%', height: '100%' }}>
+      <ImageBackground source={require('../files/hom.png')} style={{ width: '101%', height: '100%' }}>
 
         <View style={styles.container}>
 

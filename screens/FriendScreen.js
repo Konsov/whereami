@@ -19,6 +19,7 @@ import {
 import {
     View
 } from 'react-native';
+import Modal from 'react-native-modal'
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
@@ -35,7 +36,9 @@ export default class NotificationScreen extends Component {
         username: '',
         profPic: '',
         loadOnl: false,
-        val: ''
+        val: '',
+        modalVisible: false,
+        playreq: ''
 
     }
 
@@ -59,7 +62,6 @@ export default class NotificationScreen extends Component {
 
         v = v + 1;
         this.setState({ req });
-        console.log(v)
     }
 
     isOnline() {
@@ -86,6 +88,14 @@ export default class NotificationScreen extends Component {
         )
     }
 
+    undoReq() {
+        const user = firebase.auth().currentUser;
+        firebase.database().ref('users/' + this.state.playreq + '/playRequest/' + user.uid).remove()
+        this.setState({
+            modalVisible: false
+        });
+    }
+
     loadInfo() {
         var req = [];
         const user = firebase.auth().currentUser;
@@ -109,14 +119,40 @@ export default class NotificationScreen extends Component {
         }).then(this.isOnline())
     }
 
+    checkPlayer(data) {
+        const user = firebase.auth().currentUser;
+        var game = false;
+        firebase.database().ref('/users').child(`${data}`).child('playRequest').on('child_removed', (value) => {
+            this.setState({
+                modalVisible: false
+            })
+            var ref = firebase.database().ref('/Games');
+            ref.orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+                if (snapshot.exists()) {
+                    ref.orderByChild('player1/user').equalTo(`${data}`).once('value').then(function (snap) {
+                        if (snap.exists()) {
+                            game = true;
+                        }
+                    })
+                 
+                }
+            }).then(setTimeout(() => {if (game){
+                this.props.navigation.navigate('GameStack')
+            } }, 1500))
+        })
+
+    }
     playReq(data) {
         const user = firebase.auth().currentUser;
         firebase.database().ref('users/' + data + '/playRequest/' + user.uid).set(
             {
                 user: this.state.username,
-                uid : user.uid
+                uid: user.uid
             }
-        ).then(this.props.navigation.navigate('GameStack'))
+        ).then(this.setState({
+            playreq: data,
+            modalVisible: true
+        })).then(this.checkPlayer(data))
     }
     renderView() {
         if (this.state.loadingInformation == false && this.state.req.length == 3) {
@@ -180,6 +216,31 @@ export default class NotificationScreen extends Component {
         return (
             <View style={styles.container}>
                 {this.renderView()}
+                <Modal
+                    testID={'modal'}
+                    isVisible={this.state.modalVisible}
+                    backdropColor="#B4B3DB"
+                    backdropOpacity={0.8}
+                    animationIn="zoomInDown"
+                    animationOut="zoomOutUp"
+                    animationInTiming={600}
+                    animationOutTiming={600}
+                    backdropTransitionInTiming={600}
+                    backdropTransitionOutTiming={600}>
+                    <View style={styles.content}>
+                        <Text style={styles.contentTitle}>Waiting for the other player response...</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <AwesomeButton
+                                type="primary"
+                                style={styles.button}
+
+                                width={80}
+                                onPress={() => this.undoReq()}
+                            >Cancel</AwesomeButton>
+
+                        </View>
+                    </View>
+                </Modal>
             </View>
         )
 
@@ -191,5 +252,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    content: {
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    contentTitle: {
+        fontSize: 20,
+        marginBottom: 12,
+    }
 });
 

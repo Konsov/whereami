@@ -46,13 +46,13 @@ class LoadingScreen extends Component {
       var uid = firebase.auth().currentUser.uid;
 
       var userStatusDatabaseRef = firebase.database().ref('/users/' + uid);  
-
+      
       userStatusDatabaseRef.onDisconnect().update({online: false}).then(function() {
           // The promise returned from .onDisconnect().set() will
           // resolve as soon as the server acknowledges the onDisconnect() 
           // request, NOT once we've actually disconnected:
           // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
-  
+          console.log("qua")
           // We can now safely set ourselves as 'online' knowing that the
           // server will mark us as offline once we lose connection.
           userStatusDatabaseRef.update({online: true});
