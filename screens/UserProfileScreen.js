@@ -4,7 +4,8 @@ import {
     Text,
     View,
     Image,
-    ScrollView
+    ScrollView,
+    TouchableHighlight
 } from 'react-native';
 import {
     Input,
@@ -100,51 +101,82 @@ export default class UserProfileScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.headerContent}>
-                            <Button transparent style={styles.button1} onPress={() => this.props.navigation.navigate('NotificationScreen')}>
-                                <Icon name="heart" style={{ fontSize: 50, color: 'white' }} />
-                                {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 5, height : -50 }}>
+                            <TouchableHighlight
+                                style={styles.button1}
+                                onPress={() => this.props.navigation.navigate('NotificationScreen')}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: 150, height: 100 }}
+                                    source={require('../files/notification.png')}
+                                />
+                            </TouchableHighlight>
+                            <TouchableHighlight
+                                style={styles.button3}
+                                onPress={() => this.props.navigation.navigate('HomeScreen')}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: 60, height: 60 }}
+                                    source={require('../files/back.png')}
+                                />
+                            </TouchableHighlight>
+                            
+                            {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 12, height : -50, marginTop: 20 }}>
                                     <Text>{this.state.not}</Text>
                                 </Badge> : null}
-                                
-                            </Button>
-                            <Button transparent style={styles.button2}  onPress={() => this.props.navigation.navigate('FriendScreen')}>
-                                <Icon name="people" style={{ fontSize: 50, color: 'white'}} />
-                            </Button>
+                            <TouchableHighlight
+                                style={styles.button2}
+                                onPress={() => this.props.navigation.navigate('FriendScreen')}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: 150, height: 100 }}
+                                    source={require('../files/friends.png')}
+                                />
+                            </TouchableHighlight>
+                           
                             <Image style={styles.avatar}
                                 source={{ uri: this.state.userPic }} />
                             <Text style={styles.name}>{this.state.player} </Text>
-                            <Text style={styles.userInfo}>Numero di partite: {this.state.nGame} </Text>
-                            <Text style={styles.userInfo}>Punteggio medio: {this.state.avgScore} </Text>
-                            <Text style={styles.userInfo}>Punteggio massimo: {this.state.maxScore} </Text>
                         </View>
                     </View>
                     <View style={styles.body}>
                         <View style={styles.item}>
                             <View style={styles.iconContent}>
-                                <Image style={styles.icon} source={{ uri: "https://img.icons8.com/material-rounded/24/000000/home.png" }} />
-                            </View>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.info} onPress={() => { this.props.navigation.navigate('HomeScreen') }}>Home</Text>
-                            </View>
-                            <View style={styles.infoContent}>
-                                <Item floatingLabel>
-                                    <Label>Username</Label>
+                                <Text style={styles.userInfo}>Number of games</Text>
+                                <Text style={styles.number}>{this.state.nGame}</Text>
+                                <Text style={styles.userInfo}>Avarage score</Text>
+                                <Text style={styles.number}>{this.state.avgScore}</Text>
+                                <Text style={styles.userInfo}>Maximum score</Text>  
+                                <Text style={styles.number}>{this.state.maxScore}</Text>  
+                                <Text style={styles.userInfo}>Add friend</Text>   
+                                <Item floatingLabel style= {{width:150, alignSelf:"center", marginTop:-15}}>
+                                    <Label style ={{alignSelf:"center"}}>Username</Label>
                                     <Input autoCorrect={false}
                                         autoCapitalize="none"
                                         onChangeText={(username) => this.setState({ username })} />
                                 </Item>
-                                <AwesomeButton
-                                    type="primary"
-                                    style={styles.button}
-                                    onPress={() => this.friendRequest(this.state.username)}
-                                >Friend Request
-                                </AwesomeButton>
-                            </View>
+                                <View style={{width:150, alignSelf:"center"}}>
+                                    <TouchableHighlight
+                                        style={styles.button}
+                                        onPress={() => this.friendRequest(this.state.username)}
+                                        underlayColor="transparent"
+                                        activeOpacity={0.7}
+                                    ><Image
+                                            style={{ width: 120, height: 60, resizeMode: "stretch"}}
+                                            source={require('../files/friend_request.png')}
+                                        />
+                                    </TouchableHighlight>
+                                </View>
+                                
+                                                         
+                            </View>                            
                         </View>
-                        <View style={styles.infoContent}>
 
-                        </View>
+                        
                     </View>
+                    
                 </View>
             )
         }
@@ -179,16 +211,34 @@ const styles = StyleSheet.create({
         borderWidth: 4,
         borderColor: "white",
         marginBottom: 10,
+        position:"absolute",
+        marginTop: 50
+    },
+    number: {
+        backgroundColor: "#0095B6", 
+        alignSelf:"center",
+        textAlign:"center",
+        borderColor: "white",
+        color: "white", 
+        borderWidth: 2,
+        marginTop:6,
+        width:100
     },
     name: {
         fontSize: 22,
         color: "#000000",
         fontWeight: '600',
+        fontFamily: "pixel_font",
+        left:10,
+        marginTop: -30
     },
     userInfo: {
         fontSize: 16,
-        color: "#778899",
+        color: "white",
         fontWeight: '600',
+        fontFamily: "pixel_font",
+        marginTop:30,
+        alignSelf:"center"
     },
     body: {
         backgroundColor: "#778899",
@@ -197,6 +247,7 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
+        alignSelf:"center",
         padding: 10
     },
     infoContent: {
@@ -205,14 +256,30 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingTop: 3
     },
-    button1: {        
-        marginTop: -20,
+    button: {
+        position: 'relative',
+        marginTop: 4,
+        alignSelf:"center"    
+    },
+    button1: {      
+        width: 150, 
+        height: 100,  
+        marginTop: -30,
+        marginRight:-40,
         height: 50,
         alignSelf: 'flex-end'
     },
     button2: {
-        height: 50,
-        marginTop: -50,
+        width: 150, 
+        height: 100,
+        marginTop: 50,
+        marginRight: -45,
+        alignSelf: 'flex-end'
+    },
+    button3: {
+        width: 60, 
+        height: 60,
+        marginTop: -30,
         alignSelf: 'flex-start'
     },
     iconContent: {

@@ -7,7 +7,6 @@ import {
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
-import AwesomeButtonSocial from "react-native-really-awesome-button/src/index";
 
 import { PacmanIndicator } from 'react-native-indicators';
 

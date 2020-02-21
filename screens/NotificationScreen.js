@@ -16,7 +16,9 @@ import {
     Body
 } from "native-base";
 import {
-    View
+    View,
+    TouchableHighlight,
+    Image 
 } from 'react-native';
 
 import firebase from '../services/firebase';
@@ -112,12 +114,12 @@ export default class NotificationScreen extends Component {
                             </Button>
                         </Left>
                         <Body>
-                            <Title>Notification</Title>
+                            <Title style={{ fontFamily: "pixel_font" }}>Notification</Title>
                         </Body>
                         <Right />
                     </Header>
 
-                    <Content>
+                    <Content style = {{backgroundColor: "#DCDCDC"}}>
                         <List>
                             {this.state.req.map((data, i) => (
                                 
@@ -126,26 +128,29 @@ export default class NotificationScreen extends Component {
                                         <Thumbnail small source={{uri: data.img}}/>
                                     </Left>
                                     <Body>
-                                        <Text>{data.name}</Text>
-                                        <Text numberOfLines={1} note>
+                                        <Text style={{ fontFamily: "pixel_font" }}>{data.name} </Text>
+                                        <Text numberOfLines={1} note style={{ marginTop: 12,fontFamily: "pixel_font",fontSize: 12 }}>
                                             Has sent you a friend request
                                         </Text>
                                     </Body>
                                     <Right style={{flexDirection:'row'}}>
-                                        <AwesomeButton 
-                                            type="primary"
-                                            height={40}
-                                            style={styles.button}
-                                            onPress={() => this.confirmReq(data,i)}
-                                        > ✔
-                                        </AwesomeButton>
-                                        <AwesomeButton
-                                            height={40}
-                                            type="primary"
-                                            style={styles.button}
-                                            onPress={() => this.denyReq(data,i)}
-                                        > ✘
-                                        </AwesomeButton>
+                                    <TouchableHighlight
+                                        onPress={() => this.confirmReq(data,i)}
+                                        underlayColor="transparent"
+                                        activeOpacity= {0.7}  
+                                        ><Image
+                                        style={{width: 40,height: 40}}
+                                        source={require('../files/confermation.png')}/>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight
+                                        onPress={() => this.denyReq(data,i)}
+                                        underlayColor="transparent"
+                                        activeOpacity= {0.7}  
+                                        style={{left: 5}}
+                                        ><Image
+                                        style={{width: 40,height: 40, left: 5}}
+                                        source={require('../files/negation.png')}/>
+                                    </TouchableHighlight>
                                     </Right>
                                 </ListItem>
                             ))}

@@ -5,6 +5,7 @@ import {
   ImageBackground,
   Button,
   StyleSheet,
+  Image
 } from 'react-native';
 
 import {
@@ -23,7 +24,8 @@ export default class LoginMethodScreen extends Component {
 
   render() {
     return (
-      <ImageBackground source={require('../files/firstbg.jpg')} style={{ width: '100%', height: '100%' }}>
+      <View>
+      <Image source={require('../files/nuv1.gif')} style={{width: "100%", height: '100%' }}/>
 
         <View style={styles.container}>
           <Button
@@ -35,7 +37,7 @@ export default class LoginMethodScreen extends Component {
           
         </View>
 
-      </ImageBackground>
+        </View> 
     );
   }
 }

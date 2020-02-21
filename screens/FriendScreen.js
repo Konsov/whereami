@@ -17,7 +17,9 @@ import {
     Badge
 } from "native-base";
 import {
-    View
+    View,
+    TouchableHighlight,
+    Image
 } from 'react-native';
 import Modal from 'react-native-modal'
 
@@ -167,12 +169,12 @@ export default class NotificationScreen extends Component {
                             </Button>
                         </Left>
                         <Body>
-                            <Title>Friend List</Title>
+                            <Title style={{ fontFamily: "pixel_font" }}>Friend List</Title>
                         </Body>
                         <Right />
                     </Header>
 
-                    <Content>
+                    <Content style = {{backgroundColor: "#DCDCDC"}}>
                         <List>
                             {this.state.req.map((data, i) => (
 
@@ -183,23 +185,24 @@ export default class NotificationScreen extends Component {
                                         </Badge> : null}
                                     </Left>
                                     <Body>
-                                        {data.online == true ? <Text style={{ left: -12 }}>{data.name}</Text> : <Text>{data.name}</Text>}
-
+                                        {data.online == true ? <Text style={{marginTop:12,fontFamily: "pixel_font",left: -12 }}>{data.name}</Text> : <Text style={{ marginTop:12,fontFamily: "pixel_font" }}>{data.name}</Text>}
+                                        <Text></Text>
                                     </Body>
-                                    <Right style={{ flexDirection: 'row' }}>
-                                        {data.online == true ? <AwesomeButton
-                                            type="primary"
-                                            height={25}
-                                            style={styles.button}
-                                            onPress={() => this.playReq(data.uid)}
-                                        >➤
-                                        </AwesomeButton> : <AwesomeButton
-                                                type="primary"
-                                                height={25}
-                                                style={styles.button}
-                                                disabled
-                                            >➤
-                                        </AwesomeButton>}
+                                    <Right style={{marginTop:-10, flexDirection: 'row' }}>
+                                        {data.online == true ? <TouchableHighlight
+                                        onPress={() => this.playReq(data)}
+                                        underlayColor="transparent"
+                                        activeOpacity= {0.7}  
+                                        ><Image
+                                        style={{width: 40,height: 40}}
+                                        source={require('../files/playbutton.png')}/>
+                                    </TouchableHighlight> : 
+                                    <TouchableHighlight
+                                    underlayColor="transparent"                               
+                                    ><Image
+                                    style={{width: 40,height: 40}}
+                                    source={require('../files/disabled_button.png')}/>
+                                    </TouchableHighlight>}
 
 
                                     </Right>

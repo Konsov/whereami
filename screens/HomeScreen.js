@@ -5,8 +5,9 @@ import {
   StyleSheet,
   BackHandler,
   Alert,
-  Button,
-  Text
+  TouchableHighlight,
+  Text,
+  Image
 } from 'react-native';
 
 import Modal from 'react-native-modal'
@@ -133,8 +134,9 @@ export default class HomeScreen extends Component {
 
   render() {
     return (
-
-      <ImageBackground source={require('../files/hom.png')} style={{ width: '101%', height: '100%' }}>
+      <View>        
+        <Image source={require('../files/nuv1.gif')} style={{width: "100%", height: '100%' }}/>
+      
 
         <View style={styles.container}>
 
@@ -171,41 +173,49 @@ export default class HomeScreen extends Component {
 
 
           <View style={styles.buttonContainer}>
-            <AwesomeButton
-              type="primary"
+            <TouchableHighlight
               style={styles.button}
-              stretch={true}
               onPress={() => this.gioca()}
-            >Gioca</AwesomeButton>
+              underlayColor="transparent"
+              activeOpacity= {0.7}  
+            ><Image
+            style={{width: 150,height: 100}}
+            source={require('../files/play.png')}
+          /></TouchableHighlight>
 
-            <AwesomeButton
-              type="primary"
+            <TouchableHighlight
               style={styles.button}
-              stretch={true}
               onPress={() => this.giocaConAmici()}
-            >Gioca con Amici</AwesomeButton>
+              underlayColor="transparent"
+              activeOpacity= {0.7}  
+            ><Image
+            style={{width: 150,height: 100}}
+            source={require('../files/online.png')}/></TouchableHighlight>
 
-            <AwesomeButton
-              type="primary"
-              style={styles.button}
-              stretch={true}
+            <TouchableHighlight
+              style={styles.button} 
+              underlayColor="transparent"
+              activeOpacity= {0.7}             
               onPress={() => this.props.navigation.navigate('UserProfileScreen')}
-            >Profile</AwesomeButton>
+            ><Image
+            style={{width: 150,height: 100}}
+            source={require('../files/profile.png')}/></TouchableHighlight>
 
 
-            <AwesomeButton
-              type="primary"
-              style={styles.button}
-              stretch={true}
+            <TouchableHighlight
+              style={styles.button}              
               onPress={() => this.logOut()}
-            >Log Out</AwesomeButton>
+              underlayColor="transparent"
+              activeOpacity= {0.7}  
+            ><Image
+            style={{width: 150,height: 100}}
+            source={require('../files/logout.png')}/></TouchableHighlight>
           </View>
 
 
+          </View>    
         </View>
-
-      </ImageBackground>
-    );
+        );
   }
 }
 
@@ -217,15 +227,18 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    position: 'relative',
-    marginTop: 10,
-    
+    position: 'relative'
+  },
+
+  image:{
+    width: 150,
+    height: 100
   },
 
   buttonContainer: {
     width: 150,
     alignSelf: "center",
-    marginTop: -100
+    marginTop: -120
   },
 
   content: {
