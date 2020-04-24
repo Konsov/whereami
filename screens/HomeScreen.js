@@ -7,29 +7,94 @@ import {
   Alert,
   TouchableHighlight,
   Text,
-  Image
+  Image,
+  AppState,
+  AsyncStorage,
+  Dimensions
 } from 'react-native';
 
 import Modal from 'react-native-modal'
 import firebase from '../services/firebase';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 import { LoginManager } from "react-native-fbsdk";
+import Sound from "react-native-sound";
+var whoosh;
 
+const { width, height } = Dimensions.get('window');
 
 export default class HomeScreen extends Component {
 
   state = {
     modalVisible: false,
     player: '',
-    uid: ''
+    uid: '',
+    volume: true
   }
 
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange.bind(this));
+  }
+
+  handleAppStateChange(currentAppState) {
+    if (currentAppState != 'active') {
+      this.stop()
+    } else {
+      this.start()
+    }
+  }
+  
   refuseReq(val) {
     const user = firebase.auth().currentUser;
     firebase.database().ref('users/' + user.uid + '/playRequest/').remove()
     this.setState({ 
       modalVisible: false
     });
+  }
+  
+  stop(){
+    whoosh.stop();
+    
+  }
+
+  pause(data){
+    if (data == true){
+      AsyncStorage.setItem('volume', 'false');
+      whoosh.stop();    
+      this.setState({
+        volume: false
+      })
+    } else {
+      AsyncStorage.setItem('volume', 'true');
+      whoosh.play();   
+      this.setState({
+        volume:true
+      })
+    }
+  }
+
+  start (){
+    whoosh.play();
+  }
+
+  sound(){
+    if (whoosh == null) {
+        Sound.setCategory("Playback"); 
+        whoosh = new Sound('game_music.mp3', Sound.MAIN_BUNDLE, (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+        // loaded successfully
+        console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+        
+        whoosh.setNumberOfLoops(-1);
+        // Play the sound with an onEnd callback
+        if (this.state.volume== true){
+          whoosh.play()
+        }
+      });
+      whoosh.release();
+    }    
   }
 
   accReq(val){
@@ -62,6 +127,13 @@ export default class HomeScreen extends Component {
   
 
   componentDidMount() {
+    if(this.props.navigation.getParam('volume') == "false"){
+      this.setState({
+        volume:false
+      })
+    } 
+
+    AppState.addEventListener('change', this.handleAppStateChange.bind(this));
     const user = firebase.auth().currentUser;
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       Alert.alert(
@@ -75,6 +147,8 @@ export default class HomeScreen extends Component {
       );
       return true;
     });
+
+    this.sound();
 
     firebase.database().ref('/users').child(`${user.uid}`).child('playRequest').on('child_added', (value) => {
       var k = value.toJSON()
@@ -135,11 +209,20 @@ export default class HomeScreen extends Component {
   render() {
     return (
       <View>        
-        <Image source={require('../files/nuv1.gif')} style={{width: "100%", height: '100%' }}/>
-      
+        <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>    
 
-        <View style={styles.container}>
 
+        <View style={styles.container}> 
+        <TouchableHighlight
+              style={styles.button1}
+              onPress={() => this.pause(this.state.volume)}
+            >{this.state.volume == true ? <Image
+              style={{width: width / 10,height: width / 10, alignSelf:"center",top:6}}
+              source={require('../files/volume.png')}
+            />:<Image
+            style={{width: width / 10,height: width / 10, alignSelf:"center",top:6}}
+            source={require('../files/no_volume.png')}
+          />}</TouchableHighlight>
           <Modal
             testID={'modal'}
             isVisible={this.state.modalVisible}
@@ -154,62 +237,57 @@ export default class HomeScreen extends Component {
             <View style={styles.content}>
               <Text style={styles.contentTitle}>{this.state.player} want to play with you!</Text>
               <View style={{ flexDirection: 'row' }}>
-                <AwesomeButton
-                  type="primary"
-                  style={styles.button}
-                  
-                  width = {60}
-                  onPress={() => this.accReq(false)}
-                >✔</AwesomeButton>
-                <AwesomeButton
-                  type="primary"
-                  style={styles.button}
-                  width = {60}
-                  onPress={() => this.refuseReq(false)}
-                >✘</AwesomeButton>
+              <TouchableHighlight
+                onPress={() => this.accReq(false)}
+                style={styles.button}
+                underlayColor="transparent"
+                activeOpacity= {0.7}  
+                ><Image
+                  style={{width: 40,height: 40,left: 70}}
+                  source={require('../files/success.png')}/>
+              </TouchableHighlight>
+              <TouchableHighlight
+               onPress={() => this.refuseReq(false)}
+               underlayColor="transparent"
+               activeOpacity= {0.7}  
+               style={{left: 5}}
+               ><Image
+                style={{width: 40,height: 40, left: 5, marginRight:75}}
+                source={require('../files/error.png')}/>
+              </TouchableHighlight>
               </View>
             </View>
           </Modal>
-
-
           <View style={styles.buttonContainer}>
-            <TouchableHighlight
-              style={styles.button}
+            <AwesomeButtonRick
               onPress={() => this.gioca()}
-              underlayColor="transparent"
-              activeOpacity= {0.7}  
-            ><Image
-            style={{width: 150,height: 100}}
-            source={require('../files/play.png')}
-          /></TouchableHighlight>
+              type="anchor"
+              stretch = {true}
+              style={{marginBottom:20,top:150}}
+            >PLAY
+            </AwesomeButtonRick>
 
-            <TouchableHighlight
-              style={styles.button}
+            <AwesomeButtonRick
               onPress={() => this.giocaConAmici()}
-              underlayColor="transparent"
-              activeOpacity= {0.7}  
-            ><Image
-            style={{width: 150,height: 100}}
-            source={require('../files/online.png')}/></TouchableHighlight>
+              type="anchor"
+              stretch = {true}
+              style={{marginBottom:20,top:150}}
+            >ONLINE</AwesomeButtonRick>
 
-            <TouchableHighlight
-              style={styles.button} 
-              underlayColor="transparent"
-              activeOpacity= {0.7}             
+            <AwesomeButtonRick   
               onPress={() => this.props.navigation.navigate('UserProfileScreen')}
-            ><Image
-            style={{width: 150,height: 100}}
-            source={require('../files/profile.png')}/></TouchableHighlight>
+              style={{marginBottom:20,top:150}}
+              type="anchor"
+              stretch = {true}
+            >PROFILE</AwesomeButtonRick>
 
 
-            <TouchableHighlight
-              style={styles.button}              
-              onPress={() => this.logOut()}
-              underlayColor="transparent"
-              activeOpacity= {0.7}  
-            ><Image
-            style={{width: 150,height: 100}}
-            source={require('../files/logout.png')}/></TouchableHighlight>
+            <AwesomeButtonRick             
+              onPress={() => this.logOut()}  
+              style={{top:150,marginBottom:20}}
+              type="anchor"
+              stretch = {true}
+            >LOG OUT</AwesomeButtonRick>
           </View>
 
 
@@ -227,7 +305,21 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    position: 'relative'
+    flex:1,
+    position: 'relative',
+  },
+
+  button1: {
+    position: "absolute",
+    width: width / 8, 
+    height: width / 8,  
+    marginTop: -(height/2.6),
+    flex:1,
+    right: -(width / 5),
+    alignItems: 'flex-end',
+    backgroundColor:'#95d44a',
+    borderRadius:50
+    
   },
 
   image:{
@@ -236,9 +328,10 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    width: 150,
+    flex:1,
+    width: width / 2.8,
     alignSelf: "center",
-    marginTop: -120
+    marginTop: -180
   },
 
   content: {

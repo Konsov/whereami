@@ -5,6 +5,8 @@ import {
   ImageBackground,
   ActivityIndicator,
   StatusBar,
+  Image,
+  AsyncStorage
 } from 'react-native';
 
 import firebase from '../services/firebase'
@@ -17,7 +19,8 @@ class LoadingScreen extends Component {
     super(props)
     this.state = ({
       registerToken: '',
-      notif:false
+      notif:false,
+      volume:true
       })
 
   }
@@ -34,8 +37,8 @@ class LoadingScreen extends Component {
 
   componentDidMount() {
     this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
+    
   }
-
   isOnline(){
     firebase.database().ref('.info/connected').on('value', function(snapshot) {
       
@@ -63,7 +66,6 @@ class LoadingScreen extends Component {
   componentDidUpdate() {
     try {
       var k = this.state.registerToken;
-     
       this.isOnline();
       firebase.auth().onAuthStateChanged((user) => {
         
@@ -82,10 +84,10 @@ class LoadingScreen extends Component {
           
         }
         if (this.state.notif){
-          this.props.navigation.navigate("NotificationScreen");
+          setTimeout(() => { this.navigate("NotificationScreen"), console.log("wait") }, 7000);       
 
         }
-        this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
+        setTimeout(() => { this.navigate(user ? 'HomeScreen' : 'AuthStack'), console.log("wait") }, 7000);
 
       });
     } catch (error) {
@@ -93,13 +95,19 @@ class LoadingScreen extends Component {
     }
   }
 
-
+  navigate(data) {
+    AsyncStorage.getItem('volume').then(value =>
+      //AsyncStorage returns a promise so adding a callback to get the value
+      this.props.navigation.navigate(data, {volume: value})
+      //Setting the value in Text
+    );
+    
+  }
 
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
+        <Image source={require('../files/nuv2.gif')} style={{width: "100%", height: '100%' }}/>        
       </View>
     );
   }

@@ -25,7 +25,7 @@ export default class LoginMethodScreen extends Component {
   render() {
     return (
       <View>
-      <Image source={require('../files/nuv1.gif')} style={{width: "100%", height: '100%' }}/>
+      <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
 
         <View style={styles.container}>
           <Button

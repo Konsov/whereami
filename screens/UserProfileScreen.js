@@ -5,7 +5,8 @@ import {
     View,
     Image,
     ScrollView,
-    TouchableHighlight
+    TouchableHighlight,
+    Dimensions
 } from 'react-native';
 import {
     Input,
@@ -17,7 +18,10 @@ import {
 } from 'native-base';
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
+
+
+const { width } = Dimensions.get('window');
 
 export default class UserProfileScreen extends Component {
 
@@ -101,28 +105,38 @@ export default class UserProfileScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.headerContent}>
-                            <TouchableHighlight
-                                style={styles.button1}
-                                onPress={() => this.props.navigation.navigate('NotificationScreen')}
-                                underlayColor="transparent"
-                                activeOpacity={0.7}
-                            ><Image
-                                    style={{ width: 150, height: 100 }}
-                                    source={require('../files/notification.png')}
-                                />
-                            </TouchableHighlight>
+                            <View style = {{marginTop:80, alignSelf:"center"}}></View>
                             <TouchableHighlight
                                 style={styles.button3}
                                 onPress={() => this.props.navigation.navigate('HomeScreen')}
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 60, height: 60 }}
+                                    style={{ width: 40, height: 40 }}
                                     source={require('../files/back.png')}
                                 />
-                            </TouchableHighlight>
+                            </TouchableHighlight> 
                             
-                            {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 12, height : -50, marginTop: 20 }}>
+                            {this.state.not > 0 ? <TouchableHighlight
+                                style={styles.button1}
+                                onPress={() => this.props.navigation.navigate('NotificationScreen')}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: 43, height: 47 }}
+                                    source={require('../files/alarm.png')}
+                                />
+                            </TouchableHighlight> : <TouchableHighlight
+                                style={styles.button1}
+                                onPress={() => this.props.navigation.navigate('NotificationScreen')}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: 43, height: 47 }}
+                                    source={require('../files/alarm.png')}
+                                />
+                            </TouchableHighlight>}
+                            {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 25, height : -45, marginTop: 35 }}>
                                     <Text>{this.state.not}</Text>
                                 </Badge> : null}
                             <TouchableHighlight
@@ -131,8 +145,8 @@ export default class UserProfileScreen extends Component {
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 150, height: 100 }}
-                                    source={require('../files/friends.png')}
+                                    style={{ width: 50, height: 50 }}
+                                    source={require('../files/users.png')}
                                 />
                             </TouchableHighlight>
                            
@@ -150,24 +164,20 @@ export default class UserProfileScreen extends Component {
                                 <Text style={styles.number}>{this.state.avgScore}</Text>
                                 <Text style={styles.userInfo}>Maximum score</Text>  
                                 <Text style={styles.number}>{this.state.maxScore}</Text>  
-                                <Text style={styles.userInfo}>Add friend</Text>   
-                                <Item floatingLabel style= {{width:150, alignSelf:"center", marginTop:-15}}>
-                                    <Label style ={{alignSelf:"center"}}>Username</Label>
+                                <Text style={{fontSize: 16,color: "white", fontWeight: '600', marginTop:40, alignSelf:"center"}}>Add friend</Text>   
+                                <Item floatingLabel style= {{width:150, alignSelf:"center", marginTop:-25}}>
+                                    
                                     <Input autoCorrect={false}
                                         autoCapitalize="none"
                                         onChangeText={(username) => this.setState({ username })} />
                                 </Item>
-                                <View style={{width:150, alignSelf:"center"}}>
-                                    <TouchableHighlight
-                                        style={styles.button}
-                                        onPress={() => this.friendRequest(this.state.username)}
-                                        underlayColor="transparent"
-                                        activeOpacity={0.7}
-                                    ><Image
-                                            style={{ width: 120, height: 60, resizeMode: "stretch"}}
-                                            source={require('../files/friend_request.png')}
-                                        />
-                                    </TouchableHighlight>
+                                <View style={{width:width / 2.8, alignSelf:"center"}}>
+                                    <AwesomeButtonRick
+                                               
+                                    onPress={() => this.friendRequest(this.state.username)}  
+                                    
+                                    type="anchor"
+                                    >FRIEND REQUEST</AwesomeButtonRick>
                                 </View>
                                 
                                                          
@@ -212,7 +222,8 @@ const styles = StyleSheet.create({
         borderColor: "white",
         marginBottom: 10,
         position:"absolute",
-        marginTop: 50
+        marginTop: 40,
+        alignSelf:"center"
     },
     number: {
         backgroundColor: "#0095B6", 
@@ -228,16 +239,16 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: "#000000",
         fontWeight: '600',
-        fontFamily: "pixel_font",
         left:10,
-        marginTop: -30
+        marginTop: 10,
+        alignSelf:"center"
     },
     userInfo: {
         fontSize: 16,
         color: "white",
         fontWeight: '600',
-        fontFamily: "pixel_font",
         marginTop:30,
+        marginRight:-20,
         alignSelf:"center"
     },
     body: {
@@ -259,27 +270,30 @@ const styles = StyleSheet.create({
     button: {
         position: 'relative',
         marginTop: 4,
-        alignSelf:"center"    
+        alignSelf:"center",
+        alignContent:"center",
+        width: 115, 
+        height: 40  
     },
     button1: {      
-        width: 150, 
-        height: 100,  
-        marginTop: -30,
-        marginRight:-40,
-        height: 50,
+        width: 60, 
+        height: 60,  
+        marginTop: -40,
+        marginRight:-17,
         alignSelf: 'flex-end'
     },
     button2: {
-        width: 150, 
-        height: 100,
-        marginTop: 50,
-        marginRight: -45,
+        width: 50, 
+        height: 50,
+        marginTop: 30,
+        marginRight: -2,
         alignSelf: 'flex-end'
     },
     button3: {
-        width: 60, 
-        height: 60,
-        marginTop: -30,
+        width: 40, 
+        height: 40,
+        marginTop: -80,
+        marginLeft: 0,
         alignSelf: 'flex-start'
     },
     iconContent: {

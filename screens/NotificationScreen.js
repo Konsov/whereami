@@ -110,11 +110,14 @@ export default class NotificationScreen extends Component {
                     <Header style = {{backgroundColor: "#778899"}}>
                         <Left>
                             <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
-                                <Icon name="arrow-back" />
+                            <Image
+                                    style={{ width: 20, height: 20 }}
+                                    source={require('../files/back.png')}
+                                />
                             </Button>
                         </Left>
                         <Body>
-                            <Title style={{ fontFamily: "pixel_font" }}>Notification</Title>
+                            <Title>Notification</Title>
                         </Body>
                         <Right />
                     </Header>
@@ -128,8 +131,8 @@ export default class NotificationScreen extends Component {
                                         <Thumbnail small source={{uri: data.img}}/>
                                     </Left>
                                     <Body>
-                                        <Text style={{ fontFamily: "pixel_font" }}>{data.name} </Text>
-                                        <Text numberOfLines={1} note style={{ marginTop: 12,fontFamily: "pixel_font",fontSize: 12 }}>
+                                        <Text>{data.name} </Text>
+                                        <Text numberOfLines={1} note style={{ marginTop: 12,fontSize: 12 }}>
                                             Has sent you a friend request
                                         </Text>
                                     </Body>
@@ -140,7 +143,7 @@ export default class NotificationScreen extends Component {
                                         activeOpacity= {0.7}  
                                         ><Image
                                         style={{width: 40,height: 40}}
-                                        source={require('../files/confermation.png')}/>
+                                        source={require('../files/success.png')}/>
                                     </TouchableHighlight>
                                     <TouchableHighlight
                                         onPress={() => this.denyReq(data,i)}
@@ -149,7 +152,7 @@ export default class NotificationScreen extends Component {
                                         style={{left: 5}}
                                         ><Image
                                         style={{width: 40,height: 40, left: 5}}
-                                        source={require('../files/negation.png')}/>
+                                        source={require('../files/error.png')}/>
                                     </TouchableHighlight>
                                     </Right>
                                 </ListItem>

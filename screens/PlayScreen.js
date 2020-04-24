@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, ActivityIndicator, Image, BackHandler
+  View, Dimensions, ActivityIndicator, Image, BackHandler, TouchableHighlight
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
@@ -151,24 +151,14 @@ export default class PlayScreen extends Component {
             allGesturesEnabled={true}
             coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10000 }} />
           <View>
-            <AwesomeButton
-              type="primary"
-              style={styles.button1}
-              onPress={() => this.goToMarker()}
-            > Give the Answer
-               </AwesomeButton> 
-            <AwesomeButton
-              type="primary"
-              width={50}
-              height={50}
-              borderRadius={25}
-              style={styles.button2}
-              onPress={() => this.props.navigation.navigate('PlayScreen')}             
-             > 
-              <Image source={require('../files/gps.png')} />
-
-
-            </AwesomeButton>
+            <TouchableHighlight
+                style={styles.button1}
+                onPress={() => this.goToMarker()}
+                underlayColor="transparent"
+                activeOpacity= {0.7}  
+              ><Image
+              style={{width: 150,height: 55, resizeMode:"stretch"}}
+              source={require('../files/answer.png')}/></TouchableHighlight>
           </View>
         </View>
       );
@@ -197,17 +187,15 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   button1: {
+    alignSelf:"flex-end",
     position: 'absolute',
     top: 20,
-    left: width - 150,
+    left: width - 170,
     right: 100,
-    zIndex: 2
-  },
-  button2: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    zIndex: 2
+    zIndex: 2,
+    width: 150,
+    height: 55
+
   },
 
   timer: {

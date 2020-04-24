@@ -145,6 +145,7 @@ export default class NotificationScreen extends Component {
 
     }
     playReq(data) {
+        console.log(data)
         const user = firebase.auth().currentUser;
         firebase.database().ref('users/' + data + '/playRequest/' + user.uid).set(
             {
@@ -165,11 +166,14 @@ export default class NotificationScreen extends Component {
                     <Header style={{ backgroundColor: "#778899" }}>
                         <Left>
                             <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
-                                <Icon name="arrow-back" />
+                            <Image
+                                    style={{ width: 20, height: 20 }}
+                                    source={require('../files/back.png')}
+                                />
                             </Button>
                         </Left>
                         <Body>
-                            <Title style={{ fontFamily: "pixel_font" }}>Friend List</Title>
+                            <Title>Friend List</Title>
                         </Body>
                         <Right />
                     </Header>
@@ -185,23 +189,23 @@ export default class NotificationScreen extends Component {
                                         </Badge> : null}
                                     </Left>
                                     <Body>
-                                        {data.online == true ? <Text style={{marginTop:12,fontFamily: "pixel_font",left: -12 }}>{data.name}</Text> : <Text style={{ marginTop:12,fontFamily: "pixel_font" }}>{data.name}</Text>}
+                                        {data.online == true ? <Text style={{marginTop:12,left: -12 }}>{data.name}</Text> : <Text style={{ marginTop:12 }}>{data.name}</Text>}
                                         <Text></Text>
                                     </Body>
                                     <Right style={{marginTop:-10, flexDirection: 'row' }}>
                                         {data.online == true ? <TouchableHighlight
-                                        onPress={() => this.playReq(data)}
+                                        onPress={() => this.playReq(data.uid)}
                                         underlayColor="transparent"
                                         activeOpacity= {0.7}  
                                         ><Image
                                         style={{width: 40,height: 40}}
-                                        source={require('../files/playbutton.png')}/>
+                                        source={require('../files/play_button.png')}/>
                                     </TouchableHighlight> : 
                                     <TouchableHighlight
                                     underlayColor="transparent"                               
                                     ><Image
                                     style={{width: 40,height: 40}}
-                                    source={require('../files/disabled_button.png')}/>
+                                    source={require('../files/no_play_button.png')}/>
                                     </TouchableHighlight>}
 
 
@@ -233,13 +237,15 @@ export default class NotificationScreen extends Component {
                     <View style={styles.content}>
                         <Text style={styles.contentTitle}>Waiting for the other player response...</Text>
                         <View style={{ flexDirection: 'row' }}>
-                            <AwesomeButton
-                                type="primary"
-                                style={styles.button}
-
-                                width={80}
-                                onPress={() => this.undoReq()}
-                            >Cancel</AwesomeButton>
+                        <TouchableHighlight
+                            onPress={() => this.undoReq()}
+                            underlayColor="transparent"
+                            activeOpacity= {0.7}  
+                            style={{left: 5}}
+                            ><Image
+                                style={{width: 50,height: 50}}
+                                source={require('../files/error.png')}/>
+                        </TouchableHighlight>   
 
                         </View>
                     </View>

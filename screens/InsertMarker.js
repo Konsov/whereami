@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View, Dimensions,
-    BackHandler
+    BackHandler, TouchableHighlight,Image
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
@@ -63,7 +63,7 @@ export default class InsertMarker extends Component {
         console.log('punti round prima: ' + this.props.navigation.getParam('score'))
         console.log('punti round corrente: ' + tempScore)
         console.log('punti totali: ' + score)
-
+        console.log(distance)
         this.setState({
             score: score,
             distance: distance
@@ -104,9 +104,10 @@ export default class InsertMarker extends Component {
 
     renderButton() {
         if (this.state.roundFinished) {
-            return (<AwesomeButton
-                type="primary"
+            return (<TouchableHighlight
                 style={styles.button}
+                underlayColor="transparent"
+                activeOpacity= {0.7}
                 onPress={() => {
                     var nRound = this.props.navigation.getParam('round')
                     if (nRound < 6) {
@@ -117,15 +118,19 @@ export default class InsertMarker extends Component {
                     }
                 }
                 }
-            > Next Round
-                </AwesomeButton>);
+            ><Image
+            style={{width: 150,height: 55, resizeMode:"stretch"}}
+            source={require('../files/round.png')}/></TouchableHighlight>);
         } else {
-            return (<AwesomeButton
-                type="primary"
+            return (
+                <TouchableHighlight
                 style={styles.button}
                 onPress={() => this.getAnswer()}
-            > Make the Guess
-                </AwesomeButton>);
+                underlayColor="transparent"
+                activeOpacity= {0.7} 
+              ><Image
+              style={{width: 150,height: 55, resizeMode:"stretch"}}
+              source={require('../files/guess.png')}/></TouchableHighlight>);
         }
 
 

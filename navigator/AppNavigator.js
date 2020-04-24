@@ -23,7 +23,7 @@ const AuthStack = createStackNavigator(
   EmailSignUpScreen: {screen: EmailSignUpScreen}
   },{
     defaultNavigationOptions: {
-      header: null
+      headerShown: false
     },
   }
 );
@@ -35,7 +35,7 @@ const GameStack = createStackNavigator(
     InsertMarker: {screen: InsertMarker}
   },{
     defaultNavigationOptions: {
-      header: null
+      headerShown: false
     },
   }
 );
@@ -50,7 +50,7 @@ const AppStack = createStackNavigator(
   
   },{
     defaultNavigationOptions: {
-      header: null
+      headerShown: false
     },
   }
 );
