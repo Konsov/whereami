@@ -116,6 +116,16 @@ export default class UserProfileScreen extends Component {
                                     source={require('../files/back.png')}
                                 />
                             </TouchableHighlight> 
+                            <TouchableHighlight
+                                style={styles.button4}
+                                onPress={() => this.props.navigation.navigate('LeaderScreen')}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: 50, height: 50 }}
+                                    source={require('../files/leaderboard.png')}
+                                />
+                            </TouchableHighlight>
                             
                             {this.state.not > 0 ? <TouchableHighlight
                                 style={styles.button1}
@@ -278,14 +288,14 @@ const styles = StyleSheet.create({
     button1: {      
         width: 60, 
         height: 60,  
-        marginTop: -40,
+        marginTop: -175,
         marginRight:-17,
         alignSelf: 'flex-end'
     },
     button2: {
         width: 50, 
         height: 50,
-        marginTop: 30,
+        marginTop: 70,
         marginRight: -2,
         alignSelf: 'flex-end'
     },
@@ -293,6 +303,13 @@ const styles = StyleSheet.create({
         width: 40, 
         height: 40,
         marginTop: -80,
+        marginLeft: 0,
+        alignSelf: 'flex-start'
+    },
+    button4: {
+        width: 50, 
+        height: 50,
+        marginTop: 90,
         marginLeft: 0,
         alignSelf: 'flex-start'
     },

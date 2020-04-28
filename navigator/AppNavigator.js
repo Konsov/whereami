@@ -10,6 +10,7 @@ import InsertMarker from '../screens/InsertMarker'
 import UserProfileScreen from '../screens/UserProfileScreen'
 import NotificationScreen from '../screens/NotificationScreen'
 import FriendScreen from '../screens/FriendScreen'
+import LeaderScreen from '../screens/LeaderScreen'
 
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -46,7 +47,8 @@ const AppStack = createStackNavigator(
   HomeScreen: {screen: HomeScreen},
   UserProfileScreen : {screen: UserProfileScreen},
   NotificationScreen : {screen: NotificationScreen},
-  FriendScreen: {screen: FriendScreen}
+  FriendScreen: {screen: FriendScreen},
+  LeaderScreen: {screen:LeaderScreen}
   
   },{
     defaultNavigationOptions: {
