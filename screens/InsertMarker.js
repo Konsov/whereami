@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
 import CountDown from 'react-native-countdown-component'
 
@@ -104,33 +104,30 @@ export default class InsertMarker extends Component {
 
     renderButton() {
         if (this.state.roundFinished) {
-            return (<TouchableHighlight
-                style={styles.button}
-                underlayColor="transparent"
-                activeOpacity= {0.7}
-                onPress={() => {
-                    var nRound = this.props.navigation.getParam('round')
-                    if (nRound < 6) {
-                        this.props.navigation.navigate('PlayScreen', { score: this.state.score })
-                    } else {
-                        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
-                        this.props.navigation.navigate('AppStack')
-                    }
+            return (
+            <AwesomeButtonRick
+            onPress={() => {
+                var nRound = this.props.navigation.getParam('round')
+                if (nRound < 6) {
+                    this.props.navigation.navigate('PlayScreen', { score: this.state.score })
+                } else {
+                    firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
+                    this.props.navigation.navigate('AppStack')
                 }
-                }
-            ><Image
-            style={{width: 150,height: 55, resizeMode:"stretch"}}
-            source={require('../files/round.png')}/></TouchableHighlight>);
+            }
+            }
+              type="anchor"
+              style={styles.button}
+            >NEXT ROUND
+            </AwesomeButtonRick>);
         } else {
             return (
-                <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.getAnswer()}
-                underlayColor="transparent"
-                activeOpacity= {0.7} 
-              ><Image
-              style={{width: 150,height: 55, resizeMode:"stretch"}}
-              source={require('../files/guess.png')}/></TouchableHighlight>);
+              <AwesomeButtonRick
+              onPress={() => this.getAnswer()}
+              type="anchor"
+              style={styles.button}
+            >MAKE THE GUESS
+            </AwesomeButtonRick>);
         }
 
 
@@ -204,9 +201,9 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     button: {
-        left: width - 245,
+        left: (width / 2) - 75,
         top: height - 100,
-        justifyContent: 'center',
+        width : 150
     },
     timer: {
         position: 'absolute',

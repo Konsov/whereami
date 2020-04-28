@@ -83,11 +83,9 @@ export default class NotificationScreen extends Component {
                 })
             }
             setTimeout(() => { }, 1500)
-        }).then(
-            this.setState({
-                loadingInformation: true
-            })
-        )
+        }).then(setTimeout(() => {this.setState({
+            loadingInformation: true
+        }) }, 1000))
     }
 
     undoReq() {
@@ -145,7 +143,6 @@ export default class NotificationScreen extends Component {
 
     }
     playReq(data) {
-        console.log(data)
         const user = firebase.auth().currentUser;
         firebase.database().ref('users/' + data + '/playRequest/' + user.uid).set(
             {

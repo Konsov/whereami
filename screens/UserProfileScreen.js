@@ -105,14 +105,14 @@ export default class UserProfileScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.headerContent}>
-                            <View style = {{marginTop:80, alignSelf:"center"}}></View>
+                            <View style = {{marginTop:width / 4.9, alignSelf:"center"}}></View>
                             <TouchableHighlight
                                 style={styles.button3}
                                 onPress={() => this.props.navigation.navigate('HomeScreen')}
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 40, height: 40 }}
+                                    style={{ width: width / 9.8, height: width / 9.8 }}
                                     source={require('../files/back.png')}
                                 />
                             </TouchableHighlight> 
@@ -122,7 +122,7 @@ export default class UserProfileScreen extends Component {
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 50, height: 50 }}
+                                    style={{ width: width / 7.85, height: width / 7.85 }}
                                     source={require('../files/leaderboard.png')}
                                 />
                             </TouchableHighlight>
@@ -133,7 +133,7 @@ export default class UserProfileScreen extends Component {
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 43, height: 47 }}
+                                    style={{ width: width / 9.13, height: width / 8.35 }}
                                     source={require('../files/alarm.png')}
                                 />
                             </TouchableHighlight> : <TouchableHighlight
@@ -142,7 +142,7 @@ export default class UserProfileScreen extends Component {
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 43, height: 47 }}
+                                    style={{ width: width / 9.13, height: width / 8.35 }}
                                     source={require('../files/alarm.png')}
                                 />
                             </TouchableHighlight>}
@@ -155,7 +155,7 @@ export default class UserProfileScreen extends Component {
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: 50, height: 50 }}
+                                    style={{ width: width / 7.85, height: width / 7.85 }}
                                     source={require('../files/users.png')}
                                 />
                             </TouchableHighlight>
@@ -174,8 +174,8 @@ export default class UserProfileScreen extends Component {
                                 <Text style={styles.number}>{this.state.avgScore}</Text>
                                 <Text style={styles.userInfo}>Maximum score</Text>  
                                 <Text style={styles.number}>{this.state.maxScore}</Text>  
-                                <Text style={{fontSize: 16,color: "white", fontWeight: '600', marginTop:40, alignSelf:"center"}}>Add friend</Text>   
-                                <Item floatingLabel style= {{width:150, alignSelf:"center", marginTop:-25}}>
+                                <Text style={{fontSize: width / 24.54,color: "white", fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text>   
+                                <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
                                     
                                     <Input autoCorrect={false}
                                         autoCapitalize="none"
@@ -225,14 +225,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     avatar: {
-        width: 130,
-        height: 130,
+        width: width / 3,
+        height: width / 3,
         borderRadius: 63,
         borderWidth: 4,
         borderColor: "white",
-        marginBottom: 10,
+        marginBottom: width / 39.2,
         position:"absolute",
-        marginTop: 40,
+        marginTop: width / 9.8,
         alignSelf:"center"
     },
     number: {
@@ -242,90 +242,90 @@ const styles = StyleSheet.create({
         borderColor: "white",
         color: "white", 
         borderWidth: 2,
-        marginTop:6,
-        width:100
+        marginTop:width / 65.4,
+        width:width / 3.92
     },
     name: {
-        fontSize: 22,
+        fontSize: width / 17.8,
         color: "#000000",
         fontWeight: '600',
         left:10,
-        marginTop: 10,
+        marginTop: width / 39.2,
         alignSelf:"center"
     },
     userInfo: {
-        fontSize: 16,
+        fontSize: width / 24.54,
         color: "white",
         fontWeight: '600',
-        marginTop:30,
-        marginRight:-20,
+        marginTop:width / 13,
+        marginRight:-(width / 19.6),
         alignSelf:"center"
     },
     body: {
         backgroundColor: "#778899",
-        height: 500,
+        height: width / 0.785,
         alignItems: 'center',
     },
     item: {
         flexDirection: 'row',
         alignSelf:"center",
-        padding: 10
+        padding: width / 39.2
     },
     infoContent: {
         flex: 1,
         alignItems: 'flex-start',
-        paddingLeft: 5,
-        paddingTop: 3
+        paddingLeft: width / 78.54,
+        paddingTop: width / 130.9
     },
     button: {
         position: 'relative',
-        marginTop: 4,
+        marginTop: width / 98.17,
         alignSelf:"center",
         alignContent:"center",
-        width: 115, 
-        height: 40  
+        width: width / 3.41, 
+        height: width / 9.81  
     },
     button1: {      
-        width: 60, 
-        height: 60,  
-        marginTop: -175,
-        marginRight:-17,
+        width: width / 6.54, 
+        height: width / 6.54,  
+        marginTop: -(width / 2.24),
+        marginRight:-(width / 23.1),
         alignSelf: 'flex-end'
     },
     button2: {
-        width: 50, 
-        height: 50,
-        marginTop: 70,
-        marginRight: -2,
+        width: width / 7.85, 
+        height: width / 7.85,
+        marginTop: width / 5.61,
+        marginRight: -(width / 196.35),
         alignSelf: 'flex-end'
     },
     button3: {
-        width: 40, 
-        height: 40,
-        marginTop: -80,
+        width: width / 9.8, 
+        height: width / 9.8,
+        marginTop: -(width / 4.9),
         marginLeft: 0,
         alignSelf: 'flex-start'
     },
     button4: {
-        width: 50, 
-        height: 50,
-        marginTop: 90,
+        width: width / 7.85, 
+        height: width / 7.85,
+        marginTop: width / 4.3,
         marginLeft: 0,
         alignSelf: 'flex-start'
     },
     iconContent: {
         flex: 1,
         alignItems: 'flex-end',
-        paddingRight: 5,
+        paddingRight: width / 78.5,
     },
     icon: {
-        width: 30,
-        height: 30,
-        marginTop: 20
+        width: width / 13.09,
+        height: width / 13.09,
+        marginTop: 19.635
     },
     info: {
-        fontSize: 18,
-        marginTop: 20,
+        fontSize: width / 21.81,
+        marginTop: width / 19.6,
         color: "#FFFFFF",
     }
 });

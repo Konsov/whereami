@@ -13,12 +13,12 @@
 # 4 - Sfidare Amico ✔
 # 4 - Notifica Partita con Amico ✔
 
-# 5 - Testare Multiplayer se funziona bene ✔
+# 5 - Testare Multiplayer se funziona bene 
 
-# 6 - Sistemare Profile Screen
+# 6 - Sistemare Profile Screen ✔
 
 # 7 - Fare Scoreboard per maxScore
-# 7.1 - Fare Scoreboard per avgScore
+# 7.1 - Fare Scoreboard per avgScore ✔
 
 # 8 - Perfezionare Codice
 

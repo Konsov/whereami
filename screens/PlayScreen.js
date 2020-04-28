@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
 import { PacmanIndicator } from 'react-native-indicators';
 
@@ -151,14 +151,13 @@ export default class PlayScreen extends Component {
             allGesturesEnabled={true}
             coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10000 }} />
           <View>
-            <TouchableHighlight
-                style={styles.button1}
-                onPress={() => this.goToMarker()}
-                underlayColor="transparent"
-                activeOpacity= {0.7}  
-              ><Image
-              style={{width: 150,height: 55, resizeMode:"stretch"}}
-              source={require('../files/answer.png')}/></TouchableHighlight>
+              <AwesomeButtonRick
+              onPress={() => this.goToMarker()}
+              type="anchor"
+              stretch = {true}
+              style={styles.button1}
+            >GIVE ANSWER
+            </AwesomeButtonRick>
           </View>
         </View>
       );

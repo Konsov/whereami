@@ -87,7 +87,7 @@ export default class HomeScreen extends Component {
         // loaded successfully
         console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
         
-        whoosh.setNumberOfLoops(-1);
+        whoosh.setNumberOfLoops(1);
         // Play the sound with an onEnd callback
         if (this.state.volume== true){
           whoosh.play()
@@ -131,8 +131,8 @@ export default class HomeScreen extends Component {
       this.setState({
         volume:false
       })
-    } 
 
+    } 
     AppState.addEventListener('change', this.handleAppStateChange.bind(this));
     const user = firebase.auth().currentUser;
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {

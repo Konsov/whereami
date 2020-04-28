@@ -19,13 +19,16 @@ import {
 import {
     View,
     TouchableHighlight,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal'
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+
+
+const { width } = Dimensions.get('window');
 
 var v = 0;
 
@@ -84,12 +87,11 @@ export default class LeaderScreen extends Component {
                 req: req
             })
 
-        }).then(setTimeout(() => {this.sortArray() }, 150))
+        }).then(setTimeout(() => {this.sortArray() }, 250))
     }
 
     sortArray() {
         var list = this.state.req;
-        console.log(this.state.req);
         var mapped = list.map(function(el, i) {
             return { index: i, value: el.avg };
         })
@@ -105,7 +107,6 @@ export default class LeaderScreen extends Component {
         var result = mapped.map(function(el){
             return list[el.index];
         });
-        console.log(mapped);
 
         this.setState({
             req: result,
@@ -123,7 +124,7 @@ export default class LeaderScreen extends Component {
                         <Left>
                             <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
                             <Image
-                                    style={{ width: 20, height: 20 }}
+                                    style={{ width: width / 19.63, height: width / 19.63 }}
                                     source={require('../files/back.png')}
                                 />
                             </Button>
@@ -143,28 +144,28 @@ export default class LeaderScreen extends Component {
                                     <Left>
                                         <Thumbnail small source={{ uri: data.img }} />
                                     </Left>
-                                    <Body>
-                                        <Text style={{ marginTop:12 }}>{data.name}</Text>
+                                    <Body style={{ flexDirection: "row" }}>
+                                        <Text adjustsFontSizeToFit numberOfLines={1} style={{ fontSize:width / 25, marginTop:width / 32.7 }}>{data.name}</Text>
                                         <Text></Text>
                                     </Body>
                                     <Body>
-                                        <Text style={{ marginLeft:30, marginTop:12}}>{data.avg}</Text>
-                                        <Text></Text>
+                                        <Text style={{ marginLeft:width / 13.09, marginTop:width / 32.7, fontSize:width / 25}}>{data.avg}</Text>
+                                       
                     
                                     </Body>
-                                    <Right style={{marginTop:-10, flexDirection: 'row' }}>
+                                    <Right style={{marginTop:-(width / 39.2), flexDirection: 'row' }}>
                                     
                                         {i == 0 ? <Image
-                                        style={{width: 40,height: 40}}
+                                        style={{width: width / 9.81,height: width / 9.81}}
                                         source={require('../files/gold-medal.png')}/>
                                      : i == 1 ?
                                     <Image
-                                    style={{width: 40,height: 40}}
+                                    style={{width: width / 9.81,height: width / 9.81}}
                                     source={require('../files/silver-medal.png')}/>
                                     : i == 2 ? <Image
-                                    style={{width: 40,height: 40}}
+                                    style={{width: width / 9.81,height: width / 9.81}}
                                     source={require('../files/bronze-medal.png')}/>
-                                        : <Text style={{marginRight: 16, marginBottom:15}}>{i}</Text>}
+                                        : <Text style={{marginRight: width / 24.54}}>{i}</Text>}
 
                                             
                                     </Right>
@@ -199,9 +200,9 @@ export default class LeaderScreen extends Component {
                             onPress={() => this.undoReq()}
                             underlayColor="transparent"
                             activeOpacity= {0.7}  
-                            style={{left: 5}}
+                            style={{left: width / 78.5}}
                             ><Image
-                                style={{width: 50,height: 50}}
+                                style={{width: width / 7.85,height: width / 7.85}}
                                 source={require('../files/error.png')}/>
                         </TouchableHighlight>   
 
@@ -221,15 +222,15 @@ const styles = StyleSheet.create({
     },
     content: {
         backgroundColor: 'white',
-        padding: 22,
+        padding: width / 17.85,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 4,
+        borderRadius: width / 98.18,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
     contentTitle: {
-        fontSize: 20,
-        marginBottom: 12,
+        fontSize: width / 19.6,
+        marginBottom: width / 32.7,
     }
 });
 
