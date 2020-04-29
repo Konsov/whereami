@@ -171,9 +171,9 @@ export default class UserProfileScreen extends Component {
                                 <Text style={styles.userInfo}>Number of games</Text>
                                 <Text style={styles.number}>{this.state.nGame}</Text>
                                 <Text style={styles.userInfo}>Avarage score</Text>
-                                <Text style={styles.number}>{this.state.avgScore}</Text>
+                                <Text style={styles.number}>{(this.state.avgScore).toFixed()}</Text>
                                 <Text style={styles.userInfo}>Maximum score</Text>  
-                                <Text style={styles.number}>{this.state.maxScore}</Text>  
+                                <Text style={styles.number}>{(this.state.maxScore).toFixed()}</Text>  
                                 <Text style={{fontSize: width / 24.54,color: "white", fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text>   
                                 <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
                                     

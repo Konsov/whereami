@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View, Dimensions,
-    BackHandler, TouchableHighlight,Image
+    BackHandler,Modal,Text
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
@@ -24,12 +24,12 @@ export default class InsertMarker extends Component {
         roundFinished: false,
         showingAnswerMarker: false,
         marker: { "latitude": 45.742972, "longitude": 9.188209 },
-        score: 0
+        score: 0,
+        modalVisible: false
     }
 
     componentDidMount() {
-        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {            
             return true;
         });
     }
@@ -60,6 +60,7 @@ export default class InsertMarker extends Component {
 
         var tempScore = (20000 - distance)
         var score = tempScore + this.props.navigation.getParam('score')
+        
         console.log('punti round prima: ' + this.props.navigation.getParam('score'))
         console.log('punti round corrente: ' + tempScore)
         console.log('punti totali: ' + score)
@@ -68,16 +69,22 @@ export default class InsertMarker extends Component {
             score: score,
             distance: distance
         })
+        this.getAnswer()
     }
 
 
 
     getAnswer() {
-        this.calculateScore()
-        alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')
+        if (this.props.navigation.getParam('round') == 6){
+            this.setState({
+                modalVisible: true
+            })
+        } else {
+            alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')
+        }        
         this.setState({
             showingAnswerMarker: true,
-            roundFinished: true
+            roundFinished: true,
         })
         firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).update({ score: this.state.score })
     }
@@ -103,33 +110,25 @@ export default class InsertMarker extends Component {
 
 
     renderButton() {
-        if (this.state.roundFinished) {
+        console.log("round"+ this.props.navigation.getParam('round'));
+        
+        if (this.state.roundFinished && this.props.navigation.getParam('round') < 6) {
             return (
             <AwesomeButtonRick
-            onPress={() => {
-                var nRound = this.props.navigation.getParam('round')
-                if (nRound < 6) {
-                    this.props.navigation.navigate('PlayScreen', { score: this.state.score })
-                } else {
-                    firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
-                    this.props.navigation.navigate('AppStack')
-                }
-            }
-            }
+            onPress={() => {this.props.navigation.navigate('PlayScreen', { score: this.state.score })}}
               type="anchor"
               style={styles.button}
             >NEXT ROUND
             </AwesomeButtonRick>);
-        } else {
+        } else if (!this.state.roundFinished){
             return (
               <AwesomeButtonRick
-              onPress={() => this.getAnswer()}
+              onPress={() => this.calculateScore()}
               type="anchor"
               style={styles.button}
             >MAKE THE GUESS
             </AwesomeButtonRick>);
         }
-
 
 
     }
@@ -143,9 +142,37 @@ export default class InsertMarker extends Component {
     render() {
 
         return (
-            <View style={styles.container}>
-
-
+            <View style={styles.container}>  
+            <Modal
+            testID={'modal'}
+            visible={this.state.modalVisible}
+            backdropColor="#B4B3DB"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+            transparent = {true}
+            animationType = "slide">
+            <View style={styles.content}>
+            <View style={styles.modalView}>
+                <Text style={styles.contentTitle}>Game finished with a score of</Text>
+                <Text style={styles.contentTitle}>{this.state.score}</Text>
+                
+                    <AwesomeButtonRick
+                    onPress={() => {firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
+                            this.props.navigation.navigate('AppStack')}}
+                    type="anchor"
+                    style={{left:5, alignItems:"center"}}
+                    >END GAME
+                    </AwesomeButtonRick>
+                </View>
+                
+            </View>
+          </Modal>
+       
                 <CountDown
                     size={15}
                     style={styles.timer}
@@ -209,5 +236,30 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 100,
         top: 20
-    }
+    },
+    content: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    contentTitle: {
+        fontSize: 20,
+        marginBottom: 12,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+      }
 });

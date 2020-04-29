@@ -39,6 +39,7 @@ class LoadingScreen extends Component {
     this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
     
   }
+  
   isOnline(){
     firebase.database().ref('.info/connected').on('value', function(snapshot) {
       
@@ -66,10 +67,11 @@ class LoadingScreen extends Component {
   componentDidUpdate() {
     try {
       var k = this.state.registerToken;
-      this.isOnline();
+      
       firebase.auth().onAuthStateChanged((user) => {
         
         if (user) {
+          this.isOnline();
           firebase.database().ref(`users/${user.uid}/token`).once('value').then(function (snapshot) {
             if (snapshot == undefined){
               firebase.database().ref(`users/${user.uid}`).set({

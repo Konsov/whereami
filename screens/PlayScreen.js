@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, ActivityIndicator, Image, BackHandler, TouchableHighlight
+  View, Dimensions, BackHandler
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
@@ -168,6 +168,7 @@ export default class PlayScreen extends Component {
     return (
       <View style={styles.container}>
         {this.renderView()}
+        
       </View>
     );
   }
@@ -195,6 +196,11 @@ const styles = StyleSheet.create({
     width: 150,
     height: 55
 
+  },
+
+  contentTitle: {
+    fontSize: 20,
+    marginBottom: 12,
   },
 
   timer: {
