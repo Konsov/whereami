@@ -25,7 +25,9 @@ export default class InsertMarker extends Component {
         showingAnswerMarker: false,
         marker: { "latitude": 45.742972, "longitude": 9.188209 },
         score: 0,
-        modalVisible: false
+        modalVisible1: false,
+        modalVisible2: false,
+        tempScore: 0
     }
 
     componentDidMount() {
@@ -67,7 +69,8 @@ export default class InsertMarker extends Component {
         console.log(distance)
         this.setState({
             score: score,
-            distance: distance
+            distance: distance,
+            tempScore: tempScore
         })
         this.getAnswer()
     }
@@ -77,10 +80,12 @@ export default class InsertMarker extends Component {
     getAnswer() {
         if (this.props.navigation.getParam('round') == 6){
             this.setState({
-                modalVisible: true
+                modalVisible1: true
             })
         } else {
-            alert('Hai sbagliato di: ' + this.state.distance + 'km \n sei a: ' + this.state.score + ' punti')
+            this.setState({
+                 modalVisible2: true
+            })
         }        
         this.setState({
             showingAnswerMarker: true,
@@ -110,17 +115,7 @@ export default class InsertMarker extends Component {
 
 
     renderButton() {
-        console.log("round"+ this.props.navigation.getParam('round'));
-        
-        if (this.state.roundFinished && this.props.navigation.getParam('round') < 6) {
-            return (
-            <AwesomeButtonRick
-            onPress={() => {this.props.navigation.navigate('PlayScreen', { score: this.state.score })}}
-              type="anchor"
-              style={styles.button}
-            >NEXT ROUND
-            </AwesomeButtonRick>);
-        } else if (!this.state.roundFinished){
+        if (!this.state.roundFinished){
             return (
               <AwesomeButtonRick
               onPress={() => this.calculateScore()}
@@ -144,8 +139,8 @@ export default class InsertMarker extends Component {
         return (
             <View style={styles.container}>  
             <Modal
-            testID={'modal'}
-            visible={this.state.modalVisible}
+            testID={'modal1'}
+            visible={this.state.modalVisible1}
             backdropColor="#B4B3DB"
             backdropOpacity={0.8}
             animationIn="zoomInDown"
@@ -163,10 +158,43 @@ export default class InsertMarker extends Component {
                 
                     <AwesomeButtonRick
                     onPress={() => {firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
-                            this.props.navigation.navigate('AppStack')}}
+                            this.props.navigation.navigate('AppStack'), this.setState({
+                                modalVisible1: false
+                            })}}
                     type="anchor"
                     style={{left:5, alignItems:"center"}}
                     >END GAME
+                    </AwesomeButtonRick>
+                </View>
+                
+            </View>
+          </Modal>
+          <Modal
+            testID={'modal2'}
+            visible={this.state.modalVisible2}
+            backdropColor="#B4B3DB"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+            transparent = {true}
+            animationType = "slide">
+            <View style={styles.content}>
+            <View style={styles.modalView}>
+                <Text style={styles.contentTitle}>Score previous round {this.props.navigation.getParam('score')}</Text>
+                <Text style={styles.contentTitle}>Score of this round {this.state.tempScore}</Text>
+                <Text style={styles.contentTitle}>Total score {this.state.score}</Text>
+                
+                    <AwesomeButtonRick
+                    onPress={() => {this.props.navigation.navigate('PlayScreen', { score: this.state.score }), this.setState({
+                        modalVisible2: false
+                    })}}
+                    type="anchor"
+                    style={{left:5, alignItems:"center"}}
+                    >NEXT ROUND
                     </AwesomeButtonRick>
                 </View>
                 

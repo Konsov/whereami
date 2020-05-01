@@ -140,7 +140,7 @@ export default class PlayScreen extends Component {
 
   renderView() {
 
-    if (this.state.player == '' || this.loadingCoordinate == false) {
+    if (this.state.player == '' || this.state.loadingCoordinate == false) {
       return <PacmanIndicator size={100} />
     } else {
       console.log("entra")

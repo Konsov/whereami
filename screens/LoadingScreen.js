@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import firebase from '../services/firebase'
-import NotifService from '../services/NotifService';
 
 
 class LoadingScreen extends Component {
@@ -19,25 +18,25 @@ class LoadingScreen extends Component {
     super(props)
     this.state = ({
       registerToken: '',
-      notif:false,
+      notif:'',
       volume:true
       })
 
   }
 
-  onRegister(token) {
-    this.setState({ registerToken: token.token, gcmRegistered: true });
-  }
-
-  onNotif(notif) {
-    this.setState({
-      notif: true
-    })
-  }
-
   componentDidMount() {
-    this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
-    
+    try {
+      var k = this.state.registerToken;
+      
+      firebase.auth().onAuthStateChanged((user) => {
+        
+       
+        setTimeout(() => { this.navigate(user ? 'HomeScreen' : 'AuthStack'), console.log("wait") }, 7000);
+
+      });
+    } catch (error) {
+      console.log(error.toString())
+    }
   }
   
   isOnline(){
@@ -65,36 +64,7 @@ class LoadingScreen extends Component {
   }
 
   componentDidUpdate() {
-    try {
-      var k = this.state.registerToken;
-      
-      firebase.auth().onAuthStateChanged((user) => {
-        
-        if (user) {
-          this.isOnline();
-          firebase.database().ref(`users/${user.uid}/token`).once('value').then(function (snapshot) {
-            if (snapshot == undefined){
-              firebase.database().ref(`users/${user.uid}`).set({
-                token : k
-              })
-            } else if (snapshot.val() != k){
-              firebase.database().ref(`users/${user.uid}`).update({
-                token : k
-              })
-            }
-          })
-          
-        }
-        if (this.state.notif){
-          setTimeout(() => { this.navigate("NotificationScreen"), console.log("wait") }, 7000);       
-
-        }
-        setTimeout(() => { this.navigate(user ? 'HomeScreen' : 'AuthStack'), console.log("wait") }, 7000);
-
-      });
-    } catch (error) {
-      console.log(error.toString())
-    }
+  
   }
 
   navigate(data) {

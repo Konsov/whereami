@@ -18,6 +18,8 @@ import firebase from '../services/firebase';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 import { LoginManager } from "react-native-fbsdk";
 import Sound from "react-native-sound";
+
+import NotifService from '../services/NotifService';
 var whoosh;
 
 const { width, height } = Dimensions.get('window');
@@ -291,7 +293,8 @@ export default class HomeScreen extends Component {
           </View>
 
 
-          </View>    
+          </View> 
+          <NotifService />   
         </View>
         );
   }
