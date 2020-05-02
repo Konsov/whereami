@@ -9,6 +9,7 @@ import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
+import CountDown from 'react-native-countdown-component'
 
 const { width, height } = Dimensions.get('window');
 const LATITUDE = 45.742972;
@@ -93,6 +94,8 @@ export default class InsertMarker extends Component {
             })
         }      
         
+        console.log(this.props.navigation.getParam('lat'),this.props.navigation.getParam('long'))
+
         var timerID = this.props.navigation.getParam('timerID') + 'a'
         
         this.setState({
@@ -193,6 +196,7 @@ export default class InsertMarker extends Component {
     
     goToNextRound(){
         this.setState({
+            modalVisible2: false,
             myStatus: 'not ready',
             oppoLat: -1
           })
@@ -286,9 +290,7 @@ export default class InsertMarker extends Component {
                 <Text style={styles.contentTitle}>Total score {this.state.score}</Text>
                 
                     <AwesomeButtonRick
-                    onPress={() => {this.props.navigation.navigate('PlayScreen', { score: this.state.score }), this.setState({
-                        modalVisible2: false
-                    })}}
+                    onPress={() => {this.goToNextRound()}}
                     type="anchor"
                     style={{left:5, alignItems:"center"}}
                     >NEXT ROUND
@@ -297,18 +299,6 @@ export default class InsertMarker extends Component {
                 
             </View>
           </Modal>
-       
-                <CountDown
-                    size={15}
-                    style={styles.timer}
-                    until={45}
-                    onFinish={() => alert('Finished')}
-                    digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625' }}
-                    digitTxtStyle={{ color: '#1CC625' }}
-                    timeToShow={['S']}
-                />
-
-
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
@@ -362,7 +352,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
+        marginTop: 22,
+        marginTop: height / 9,
+        marginBottom: height / 1.4
     },
     contentTitle: {
         fontSize: 20,

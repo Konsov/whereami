@@ -124,18 +124,11 @@ exports.createRandomGame = functions.region('europe-west1').database
                                 user: playerTwo,
                                 score: 0
                             },
-                            round: 0,
                             finished: false,
                             type:'multiplayer'
                         });
 
-                        snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).update({
-                            round: 1
-                        });
-
                         return null;
-
-
 
                     }
                 }
@@ -214,8 +207,8 @@ exports.delGameUpStats = functions.region('europe-west1').database
 
 
 exports.addCoordinate = functions.region('europe-west1').database
-    .ref('/Games/{gameID}/round')
-    .onUpdate((snaposhot, context) => {
+    .ref('/Games/{gameID}')
+    .onCreate((snaposhot, context) => {
 
         var continent = turf.polygon([
             [
@@ -278,15 +271,44 @@ exports.addCoordinate = functions.region('europe-west1').database
             ]
         ]);
 
-        var points = randomPointsOnPolygon(1, continent);
+        var points = randomPointsOnPolygon(5, continent);
 
-        var x = points[0]["geometry"]["coordinates"][1];
-        var y = points[0]["geometry"]["coordinates"][0];
+        var x5= points[0]["geometry"]["coordinates"][1];
+        var y5= points[0]["geometry"]["coordinates"][0];
+       
+        var x1 = points[1]["geometry"]["coordinates"][1];
+        var y1= points[1]["geometry"]["coordinates"][0];
+        
+        var x2 = points[2]["geometry"]["coordinates"][1];
+        var y2= points[2]["geometry"]["coordinates"][0];
 
+        var x3 = points[3]["geometry"]["coordinates"][1];
+        var y3= points[3]["geometry"]["coordinates"][0];
 
-        return snaposhot.after.ref.parent.child('coordinates').set({
-            latitude: x,
-            longitude: y
+        var x4 = points[4]["geometry"]["coordinates"][1];
+        var y4= points[4]["geometry"]["coordinates"][0];
+
+        return snaposhot.ref.child('RoundCoordinates').set({
+            round_1: {
+                latitude: x1,
+                longitude: y1
+            },
+            round_2: {
+                latitude: x2,
+                longitude: y2
+            },
+            round_3: {
+                latitude: x3,
+                longitude: y3
+            },
+            round_5: {
+                latitude: x5,
+                longitude: y5
+            },
+            round_4: {
+                latitude: x4,
+                longitude: y4
+            },
         })
 
     });
