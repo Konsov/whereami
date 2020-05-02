@@ -11,9 +11,6 @@ import {
 import {
     Input,
     Item,
-    Label,
-    Icon,
-    Button,
     Badge
 } from 'native-base';
 import firebase from '../services/firebase';
@@ -221,7 +218,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#DCDCDC",
     },
     headerContent: {
-        padding: 30,
+        padding: width/13.09,
         alignItems: 'center',
     },
     avatar: {
@@ -289,7 +286,7 @@ const styles = StyleSheet.create({
         width: width / 6.54, 
         height: width / 6.54,  
         marginTop: -(width / 2.24),
-        marginRight:-(width / 23.1),
+        marginRight: -(width / 23.1),
         alignSelf: 'flex-end'
     },
     button2: {
@@ -321,7 +318,7 @@ const styles = StyleSheet.create({
     icon: {
         width: width / 13.09,
         height: width / 13.09,
-        marginTop: 19.635
+        marginTop: width /19.635,
     },
     info: {
         fontSize: width / 21.81,

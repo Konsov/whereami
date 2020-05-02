@@ -1,25 +1,23 @@
 # whereami
 
-# 1 - pulsante torna indietro:
-# Da Playescreen => Sicuro Uscire Dal Gioco => HomeScreen ✔ 
-# Da InsertMarker => ? ✔ 
+# 1 - Loading inzio partita
 
 # 2 - Sistemare timer durante la partita
 
 # 3 - Lista Amici ✔
-# 3.1 - Inviare Richiesta d'amicizia ✔
-# 3.1.1 - Notifica richiesta d'amicizia ✔
+# 3.1 - Inviare Richiesta d'amicizia 
+# 3.1.1 - Notifica richiesta d'amicizia 
 
-# 4 - Sfidare Amico ✔
-# 4 - Notifica Partita con Amico ✔
+# 4 - Sistemare Poligoni Maps
 
-# 5 - Testare Multiplayer se funziona bene 
+# 5 - Testare Multiplayer se funziona bene
+# 5.1 - Sincronia Partita 
 
-# 6 - Sistemare Profile Screen ✔
+# 6 - isOnline in Homepage
 
 # 7 - Fare Scoreboard per maxScore
-# 7.1 - Fare Scoreboard per avgScore ✔
 
 # 8 - Perfezionare Codice
 
 # 9 - Fare Grafiche
+# 9.1 - Sistemare bene con percentuali

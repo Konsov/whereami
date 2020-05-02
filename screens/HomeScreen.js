@@ -111,7 +111,8 @@ export default class HomeScreen extends Component {
           score: 0
         },
         round: 0,
-        finished: false
+        finished: false,
+        type: 'multiplayer'
       }
     ).then(firebase.database().ref('Games/').child(`${coord}`).update(
       {
@@ -187,7 +188,8 @@ export default class HomeScreen extends Component {
           score: 0
         },
         round: 0,
-        finished: false
+        finished: false,
+        type: 'single'
       }
     ).then(firebase.database().ref('Games/').child(`${user.uid}`).update(
       {

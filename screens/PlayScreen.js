@@ -8,9 +8,12 @@ import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
+import CountDown from 'react-native-countdown-component'
+
 import { PacmanIndicator } from 'react-native-indicators';
 
-const { width } = Dimensions.get('window');
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default class PlayScreen extends Component {
 
@@ -18,12 +21,12 @@ export default class PlayScreen extends Component {
     player: '',
     gameID: '',
     loadingCoordinate: false,
-    preclatitude: 0,
-    preclongitude: 0,
+    preclatitude: -1,
+    preclongitude: -1,
     latitude: 0,
     longitude: 0,
     round: 1,
-    started: false
+    type: ''
   }
 
   componentDidMount() {
@@ -31,87 +34,69 @@ export default class PlayScreen extends Component {
       this.props.navigation.navigate('HomeScreen'); 
       return true;
     });
-    this.IsNumberTwo();
+    this.getGameInfo();
   }
 
   componentWillUnmount() {
     this.backHandler.remove();
   }
 
-  componentDidUpdate() {
-    if (!this.state.started) {
-      setTimeout(() => { this.IsNumberTwo(), console.log("wait") }, 5000);
-    } else if (!this.state.loadingCoordinate && this.state.round < 6) {
-      this.loadCoordinate();
-    }
+  getGameInfo(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref('/Games').orderByKey().startAt(`${user.uid}`).endAt(`${user.uid}\uf8ff`).once('value').then(function (snapshot) {
+      
+      var game = snapshot.toJSON();
+      
+      if(game != null){
+        for(id in game){        
+          this.setState({
+            player: 'player1',
+            type: game[id]['type']
+          })
+        }
+      }else{
+        this.setState({
+          player: 'player2',
+          type: 'multiplayer'
+        })
+      } 
+    }.bind(this));
+
+    this.loadCoordinate()
   }
 
   loadCoordinate() {
-    const user = firebase.auth().currentUser
-    firebase.database().ref('/Games').orderByChild(`${this.state.player}/user`).equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-      var game = snapshot.toJSON()
-      for (var id in game) {
-        if (game[id]['coordinates'] == null || game[id]['coordinates']['latitude'] == this.state.preclatitude) {
-          this.setState({ loadingCoordinate: false })
-          return null
+    const user = firebase.auth().currentUser;
+    firebase.database().ref(`/Games`).orderByChild(`${this.state.player}/user`).once('value').then(function (snapshot) {
+      console.log("Loading Coordinates..")
+    
+      var game = snapshot.toJSON();
+      
+      for(id in game){
+      
+        if (game[id]['coordinates'] == null || (game[id]['coordinates']['latitude'] == this.state.preclatitude && game[id]['coordinates']['longitude']== this.state.preclongitude)){
+           this.setState({ loadingCoordinate: false })
+            return this.loadCoordinate();
         }
-        var x = game[id]['coordinates']['latitude'];
-        var y = game[id]['coordinates']['longitude'];
-      }
+      var gameID = id;
+      var x = game[id]['coordinates']['latitude'];
+      var y = game[id]['coordinates']['longitude'];
+     
+      break;
+    }
+      console.log(gameID)
       console.log(x);
       console.log(y);
       console.log(this.state.loadingCoordinate)
       this.setState({
+        gameID: gameID,
         latitude: x,
         longitude: y,
-        loadingCoordinate: true
+        loadingCoordinate: true,
       })
       console.log(this.state.loadingCoordinate)
     }.bind(this));
 
-  }
-
-  IsNumberTwo() {
-    const user = firebase.auth().currentUser
-    var ref = firebase.database().ref('/Games');
-    ref.orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-      if (snapshot.exists()) {
-        var game = snapshot.toJSON()
-        for (var id in game) {
-          var gameID = id
-        }
-        this.setState({
-          player: 'player2',
-          gameID: gameID,
-          started: true
-        })
-      } else {
-        this.IsNumberOne();
-      }
-    }.bind(this))
-  }
-
-
-  IsNumberOne() {
-    const user = firebase.auth().currentUser
-    var ref = firebase.database().ref('/Games');
-    ref.orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-      if (snapshot.exists()) {
-        var game = snapshot.toJSON()
-        for (var id in game) {
-          var gameID = id
-        }
-        this.setState({
-          player: 'player1',
-          gameID: gameID,
-          started: true
-        })
-      } else {
-        this.setState({
-          started: false
-        })
-      }
-    }.bind(this))
   }
 
   goToMarker() {
@@ -122,28 +107,36 @@ export default class PlayScreen extends Component {
         }
       )
     }
+    
+    if (this.props.navigation.getParam('timerID') == null) {
+      var timerID = 'a'
+    } else {
+      var timerID = this.props.navigation.getParam('timerID')
+    }
 
     if (this.props.navigation.getParam('score') == null) {
       var score = 0
     } else {
       var score = this.props.navigation.getParam('score')
     }
-    this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player })
-
+    this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type})
+    
     this.setState({
       round: this.state.round + 1,
       loadingCoordinate: false,
       preclatitude: this.state.latitude,
       preclongitude: this.state.longitude
     })
+      
+    this.loadCoordinate() 
   }
+
 
   renderView() {
 
-    if (this.state.player == '' || this.loadingCoordinate == false) {
+    if (this.state.player == '' || this.state.loadingCoordinate == false) {
       return <PacmanIndicator size={100} />
     } else {
-      console.log("entra")
       return (
         <View style={styles.container}>
           <StreetView
@@ -151,13 +144,27 @@ export default class PlayScreen extends Component {
             allGesturesEnabled={true}
             coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10000 }} />
           <View>
-              <AwesomeButtonRick
+            <AwesomeButtonRick
               onPress={() => this.goToMarker()}
               type="anchor"
-              stretch = {true}
-              style={styles.button1}
+              style={styles.answerButton}
             >GIVE ANSWER
             </AwesomeButtonRick>
+
+            <CountDown
+                id = {this.props.navigation.getParam('timerID')}
+                style={styles.timer}
+                size={windowWidth/15}
+                until = {30}
+                onFinish={() => this.goToMarker()}
+                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625'}}
+                digitTxtStyle={{color: '#1CC625'}}
+                timeLabelStyle={{color: 'red', fontWeight: 'bold'}}
+                separatorStyle={{color: '#1CC625'}}
+                timeToShow={['S']}
+                timeLabels={{s: null}}
+            />
+         
           </View>
         </View>
       );
@@ -186,26 +193,16 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  button1: {
-    alignSelf:"flex-end",
+  answerButton: {
     position: 'absolute',
-    top: 20,
-    left: width - 170,
-    right: 100,
-    zIndex: 2,
-    width: 150,
-    height: 55
-
-  },
-
-  contentTitle: {
-    fontSize: 20,
-    marginBottom: 12,
+    top: windowHeight/25,
+    right: windowWidth/30
   },
 
   timer: {
     position: 'absolute',
-    left: 100,
-    top: 1000
+    top: windowHeight/40,
+    left: windowWidth/30
   }
+
 });
