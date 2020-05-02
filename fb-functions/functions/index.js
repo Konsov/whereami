@@ -125,7 +125,8 @@ exports.createRandomGame = functions.region('europe-west1').database
                                 score: 0
                             },
                             round: 0,
-                            finished: false
+                            finished: false,
+                            type:'multiplayer'
                         });
 
                         snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).update({
