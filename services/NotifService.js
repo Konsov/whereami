@@ -33,7 +33,7 @@ export default class NotifService extends Component {
         },
         
         // (required) Called when a remote or local notification is opened or received
-        onNotification: (notification) => {
+        onNotification: async (notification) => {
           console.log("NOTIFICATION:", notification);
           this.localNotif(notification);
           // process the notification here
@@ -68,14 +68,10 @@ export default class NotifService extends Component {
           group: 'group', // (optional) add group to message
           ongoing: false, // (optional) set whether this is an "ongoing" notification
   
-          /* iOS only properties */
-          alertAction: 'view', // (optional) default: view
-          category: '', // (optional) default: empty string
-          userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
-          
+        
           /* iOS and Android properties */
-          title: notification.title, // (optional)
-          message: notification.message, // (required)
+          title: "You have a new friend request!", // (optional)
+          message: "Check it out on your profile", // (required)
           playSound: false, // (optional) default: true
           soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
           number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)

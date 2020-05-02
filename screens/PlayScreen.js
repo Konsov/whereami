@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, BackHandler
+  View, Dimensions, BackHandler, Modal,TouchableHighlight,Image, Text
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
@@ -10,7 +10,7 @@ import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/ric
 
 import { PacmanIndicator } from 'react-native-indicators';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default class PlayScreen extends Component {
 
@@ -23,12 +23,16 @@ export default class PlayScreen extends Component {
     latitude: 0,
     longitude: 0,
     round: 1,
-    started: false
+    started: false,
+    modalVisible: false
   }
 
   componentDidMount() {
+    console.log("qui")
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      this.props.navigation.navigate('HomeScreen'); 
+      this.setState({
+        modalVisible:true
+      })
       return true;
     });
     this.IsNumberTwo();
@@ -141,16 +145,18 @@ export default class PlayScreen extends Component {
   renderView() {
 
     if (this.state.player == '' || this.state.loadingCoordinate == false) {
-      return <PacmanIndicator size={100} />
+      return (
+          <PacmanIndicator size={100} />)
     } else {
       console.log("entra")
       return (
         <View style={styles.container}>
+        
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
             coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10000 }} />
-          <View>
+          <View> 
               <AwesomeButtonRick
               onPress={() => this.goToMarker()}
               type="anchor"
@@ -159,6 +165,46 @@ export default class PlayScreen extends Component {
             >GIVE ANSWER
             </AwesomeButtonRick>
           </View>
+          <Modal
+            testID={'modal1'}
+            visible={this.state.modalVisible}
+            backdropColor="#B4B3DB"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+            transparent = {true}
+            animationType = "slide">
+            <View style={styles.content}>
+              <View style={styles.modalView}>
+                  <Text style={styles.contentTitle}>Do you really want to quit the game?</Text>
+                  <View style = {{flexDirection:'row'}}>
+                  <TouchableHighlight
+                      onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),console.log("quiqui")}}
+                      style={styles.buttons}
+                      underlayColor="transparent"
+                      activeOpacity= {0.7}  
+                      ><Image
+                        style={{width: 40,height: 40}}
+                        source={require('../files/success.png')}/>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                      onPress={() => {this.setState({ modalVisible:false})}}
+                      underlayColor="transparent"
+                      activeOpacity= {0.7}  
+                      style={styles.buttone}
+                      ><Image
+                        style={{width: 40,height: 40}}
+                        source={require('../files/error.png')}/>
+                  </TouchableHighlight>
+                  </View>
+              </View>
+                
+            </View>
+          </Modal> 
         </View>
       );
     }
@@ -198,6 +244,14 @@ const styles = StyleSheet.create({
 
   },
 
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: height / 3,
+    marginBottom: height / 3
+  },
+
   contentTitle: {
     fontSize: 20,
     marginBottom: 12,
@@ -207,5 +261,35 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 100,
     top: 1000
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  buttons: {
+    flex:1,
+    position: 'relative',
+    width:40,
+    height:40,
+    left:width/6
+  },
+  buttone: {
+    flex:1,
+    position: 'relative',
+    width:40,
+    height:40,
+    left: width / 12
+
   }
 });

@@ -10,27 +10,64 @@ exports.sendFriendRequest = functions.region('europe-west1').database.
     ref('users/{uid}/request/{uid2}')
     .onCreate((snapshot, context) => {
         const uuid = context.params.uid;
-
+        var user = "";
+        var img = "";
         console.log('User to send notification', uuid);
         admin.auth().getUser(context.params.uid2).then(function(userRecord){
             console.log(userRecord)
+            user = userRecord.displayName;
+            img = userRecord.photoURL;
             snapshot.ref.update({
                 img: userRecord.photoURL
             })
         })
 
-        
-
+        var body = user + " want to be your friend";
        
         var ref = admin.database().ref(`users/${uuid}/token`);
         return ref.once("value", function (snapshot) {
+            const message = {
+                
+                    "name": "prova",
+                    "data": {
+                      "data1": "data1",
+                      
+                    },
+                    "notification": {
+                        
+                            "title": "notif_title",
+                            "body": "notif_body"
+                          
+                    },
+                    "android": {
+
+                        "notification": {
+                            "title": `You received a friend request`,
+                            "body": `${user} want to be your friend`,
+                            "event_time": (new Date()).toISOString,
+                            "notification_priority": "PRIORITY_HIGH",
+                            "default_sound": true,
+                            "default_vibrate_timings": true,
+                            "default_light_settings": true,
+                            "visibility": "PUBLIC"
+                            
+                            
+                        }
+                    },
+                  
+                    // Union field target can be only one of the following:
+                    "token": snapshot.val(),
+                    // End of list of possible types for union field target.
+                  
+            }
+
             const payload = {
                 notification: {
                     title: 'You have a friend request!',
                     body: 'Tap here to check it out!'
-                }
+                }  
             };
-            setTimeout(function(){admin.messaging().sendToDevice(snapshot.val(), payload) }, 5000);
+            setTimeout(function(){admin.messaging().send(message) }, 5000);
             
 
         }, function (errorObject) {
