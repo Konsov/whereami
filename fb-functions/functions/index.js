@@ -288,7 +288,7 @@ exports.addCoordinate = functions.region('europe-west1').database
         var x4 = points[4]["geometry"]["coordinates"][1];
         var y4= points[4]["geometry"]["coordinates"][0];
 
-        return snaposhot.ref.child('RoundCoordinates').set({
+        return snaposhot.ref.child('roundCoordinates').set({
             round_1: {
                 latitude: x1,
                 longitude: y1

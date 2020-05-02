@@ -119,22 +119,22 @@ export default class PlayScreen extends Component {
       
       for(id in game){
       
-        if (game[id]['RoundCoordinates'] == null){
+        if (game[id]['roundCoordinates'] == null){
            this.setState({ loadingCoordinate: false })
             return this.loadCoordinate();
         }
         
         var gameID = id;
-        var x1 = game[id]['RoundCoordinates']['round_1']['latitude'];
-        var y1 = game[id]['RoundCoordinates']['round_1']['longitude'];
-        var x2 = game[id]['RoundCoordinates']['round_2']['latitude'];
-        var y2 = game[id]['RoundCoordinates']['round_2']['longitude'];
-        var x3 = game[id]['RoundCoordinates']['round_3']['latitude'];
-        var y3 = game[id]['RoundCoordinates']['round_3']['longitude'];
-        var x4 = game[id]['RoundCoordinates']['round_4']['latitude'];
-        var y4 = game[id]['RoundCoordinates']['round_4']['longitude'];
-        var x5 = game[id]['RoundCoordinates']['round_5']['latitude'];
-        var y5 = game[id]['RoundCoordinates']['round_5']['longitude']
+        var x1 = game[id]['roundCoordinates']['round_1']['latitude'];
+        var y1 = game[id]['roundCoordinates']['round_1']['longitude'];
+        var x2 = game[id]['roundCoordinates']['round_2']['latitude'];
+        var y2 = game[id]['roundCoordinates']['round_2']['longitude'];
+        var x3 = game[id]['roundCoordinates']['round_3']['latitude'];
+        var y3 = game[id]['roundCoordinates']['round_3']['longitude'];
+        var x4 = game[id]['roundCoordinates']['round_4']['latitude'];
+        var y4 = game[id]['roundCoordinates']['round_4']['longitude'];
+        var x5 = game[id]['roundCoordinates']['round_5']['latitude'];
+        var y5 = game[id]['roundCoordinates']['round_5']['longitude']
 
         break;
     }
