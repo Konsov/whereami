@@ -19,13 +19,21 @@ export default class PlayScreen extends Component {
 
   state = {
     player: '',
+    
     gameID: '',
-    loadingCoordinate: false,
-    preclatitude: -1,
-    preclongitude: -1,
-    latitude: 0,
-    longitude: 0,
-    round: 1,
+    
+    latitude_1: 0,
+    longitude_1: 0,
+    latitude_2: 0,
+    longitude_2: 0,
+    latitude_3: 0,
+    longitude_3: 0,
+    latitude_4: 0,
+    longitude_4: 0,
+    latitude_5: 0,
+    longitude_5: 0,
+
+    round: 0,
     type: '',
     modalVisible: false
   }
@@ -50,7 +58,6 @@ export default class PlayScreen extends Component {
     firebase.database().ref('/Games').orderByKey().startAt(`${user.uid}`).endAt(`${user.uid}\uf8ff`).once('value').then(function (snapshot) {
       
       var game = snapshot.toJSON();
-      
       if(game != null){
         for(id in game){        
           this.setState({
@@ -69,6 +76,40 @@ export default class PlayScreen extends Component {
     this.loadCoordinate()
   }
 
+
+  getRoundLatitude(){
+    switch(this.state.round) {
+      case 1:
+        return this.state.latitude_1;
+      case 2:
+        return this.state.latitude_2;
+      case 3:
+        return this.state.latitude_3;
+      case 4:
+        return this.state.latitude_4;
+      case 5:
+        return this.state.latitude_5;  
+      default:
+        return 0;
+      } 
+  }
+  getRoundLongitude(){
+    switch(this.state.round) {
+      case 1:
+        return this.state.longitude_1;
+      case 2:
+        return this.state.longitude_2;
+      case 3:
+        return this.state.longitude_3;
+      case 4:
+        return this.state.longitude_4;
+      case 5:
+        return this.state.longitude_5;   
+      default:
+        return 0; 
+      } 
+  }
+
   loadCoordinate() {
     const user = firebase.auth().currentUser;
     firebase.database().ref(`/Games`).orderByChild(`${this.state.player}/user`).once('value').then(function (snapshot) {
@@ -78,24 +119,50 @@ export default class PlayScreen extends Component {
       
       for(id in game){
       
-        if (game[id]['coordinates'] == null || (game[id]['coordinates']['latitude'] == this.state.preclatitude && game[id]['coordinates']['longitude']== this.state.preclongitude)){
+        if (game[id]['roundCoordinates'] == null){
            this.setState({ loadingCoordinate: false })
             return this.loadCoordinate();
         }
-      var gameID = id;
-      var x = game[id]['coordinates']['latitude'];
-      var y = game[id]['coordinates']['longitude'];
-     
-      break;
+        
+        var gameID = id;
+        var x1 = game[id]['roundCoordinates']['round_1']['latitude'];
+        var y1 = game[id]['roundCoordinates']['round_1']['longitude'];
+        var x2 = game[id]['roundCoordinates']['round_2']['latitude'];
+        var y2 = game[id]['roundCoordinates']['round_2']['longitude'];
+        var x3 = game[id]['roundCoordinates']['round_3']['latitude'];
+        var y3 = game[id]['roundCoordinates']['round_3']['longitude'];
+        var x4 = game[id]['roundCoordinates']['round_4']['latitude'];
+        var y4 = game[id]['roundCoordinates']['round_4']['longitude'];
+        var x5 = game[id]['roundCoordinates']['round_5']['latitude'];
+        var y5 = game[id]['roundCoordinates']['round_5']['longitude']
+
+        break;
     }
-      console.log(gameID)
-      console.log(x);
-      console.log(y);
-      console.log(this.state.loadingCoordinate)
-      this.setState({
+
+    console.log(gameID)
+    console.log('round 1: ',x1,y1)
+    console.log('round 2: ',x2,y2)
+    console.log('round 3: ',x3,y3)
+    console.log('round 4: ',x4,y4)
+    console.log('round 5: ',x5,y5)
+  
+    console.log(this.state.loadingCoordinate)
+    this.setState({
         gameID: gameID,
-        latitude: x,
-        longitude: y,
+        
+        latitude_1: x1,
+        longitude_1: y1,
+        latitude_2: x2,
+        longitude_2: y2,
+        latitude_3: x3,
+        longitude_3: y3,
+        latitude_4: x4,
+        longitude_4: y4,
+        latitude_5: x5,
+        longitude_5: y5,
+        
+        round: 1,
+
         loadingCoordinate: true,
       })
       console.log(this.state.loadingCoordinate)
@@ -104,13 +171,6 @@ export default class PlayScreen extends Component {
   }
 
   goToMarker() {
-    if (this.state.player == 'player1') {
-      firebase.database().ref('Games/').child(`${this.state.gameID}`).update(
-        {
-          round: this.state.round + 1
-        }
-      )
-    }
     
     if (this.props.navigation.getParam('timerID') == null) {
       var timerID = 'a'
@@ -123,16 +183,11 @@ export default class PlayScreen extends Component {
     } else {
       var score = this.props.navigation.getParam('score')
     }
-    this.props.navigation.navigate('InsertMarker', { lat: this.state.latitude, long: this.state.longitude, round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type})
+    this.props.navigation.navigate('InsertMarker', { lat: this.getRoundLatitude(), long: this.getRoundLongitude(), round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type})
     
     this.setState({
-      round: this.state.round + 1,
-      loadingCoordinate: false,
-      preclatitude: this.state.latitude,
-      preclongitude: this.state.longitude
+      round: this.state.round + 1
     })
-      
-    this.loadCoordinate() 
   }
 
 
@@ -147,7 +202,11 @@ export default class PlayScreen extends Component {
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
+<<<<<<< HEAD
             coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 50000 }} />
+=======
+            coordinate={{ latitude: this.getRoundLatitude(), longitude: this.getRoundLongitude(), radius: 100000 }} />
+>>>>>>> b3c84e2da62d3739160d0e6355c3d77549a8e618
           <View>
             <AwesomeButtonRick
               onPress={() => this.goToMarker()}

@@ -11,10 +11,6 @@ import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/ric
 import firebase from '../services/firebase';
 import CountDown from 'react-native-countdown-component'
 
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 const { width, height } = Dimensions.get('window');
 const LATITUDE = 45.742972;
 const LONGITUDE = 9.188209;
@@ -98,6 +94,8 @@ export default class InsertMarker extends Component {
             })
         }      
         
+        console.log(this.props.navigation.getParam('lat'),this.props.navigation.getParam('long'))
+
         var timerID = this.props.navigation.getParam('timerID') + 'a'
         
         this.setState({
@@ -198,6 +196,7 @@ export default class InsertMarker extends Component {
     
     goToNextRound(){
         this.setState({
+            modalVisible2: false,
             myStatus: 'not ready',
             oppoLat: -1,
             modalVisible2: false
@@ -301,10 +300,6 @@ export default class InsertMarker extends Component {
                 
             </View>
           </Modal>
-       
-            
-
-
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
@@ -358,9 +353,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,        
-        marginTop: windowHeight / 9,
-        marginBottom: windowHeight / 1.4
+        marginTop: 22,
+        marginTop: height / 9,
+        marginBottom: height / 1.4
     },
     contentTitle: {
         fontSize: 20,

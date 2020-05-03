@@ -112,19 +112,14 @@ export default class HomeScreen extends Component {
           user: this.state.uid,
           score: 0
         },
-        round: 0,
         finished: false,
         type: 'multiplayer'
       }
-    ).then(firebase.database().ref('Games/').child(`${coord}`).update(
-      {
-        round: 1
-      }
-    ).then(this.setState({ 
-      modalVisible: false 
-    }))
-    ).then(firebase.database().ref('users/' + user.uid + '/playRequest/').remove())
-    .then(this.props.navigation.navigate('GameStack'))
+    ).then(
+      this.setState({ 
+        modalVisible: false 
+      })
+    ).then(firebase.database().ref('users/' + user.uid + '/playRequest/').remove()).then(this.props.navigation.navigate('GameStack'))
   }
 
   
@@ -189,18 +184,13 @@ export default class HomeScreen extends Component {
           user: user.uid,
           score: 0
         },
-        round: 0,
         finished: false,
         type: 'single'
       }
-    ).then(firebase.database().ref('Games/').child(`${user.uid}`).update(
-      {
-        round: 1
-      }
-    ).then(this.props.navigation.navigate('GameStack')))
+    ).then(this.props.navigation.navigate('GameStack'))
   }
 
-  giocaConAmici() {
+  playOnline() {
     const user = firebase.auth().currentUser;
     firebase.database().ref('waitingRoom/' + user.uid).set(
       {
@@ -272,7 +262,7 @@ export default class HomeScreen extends Component {
             </AwesomeButtonRick>
 
             <AwesomeButtonRick
-              onPress={() => this.giocaConAmici()}
+              onPress={() => this.playOnline()}
               type="anchor"
               stretch = {true}
               style={{marginBottom:20,top:150}}
