@@ -202,11 +202,7 @@ export default class PlayScreen extends Component {
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
-<<<<<<< HEAD
-            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 50000 }} />
-=======
             coordinate={{ latitude: this.getRoundLatitude(), longitude: this.getRoundLongitude(), radius: 100000 }} />
->>>>>>> b3c84e2da62d3739160d0e6355c3d77549a8e618
           <View>
             <AwesomeButtonRick
               onPress={() => this.goToMarker()}
