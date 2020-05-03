@@ -9,6 +9,11 @@ import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
+import CountDown from 'react-native-countdown-component'
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const { width, height } = Dimensions.get('window');
 const LATITUDE = 45.742972;
@@ -194,7 +199,8 @@ export default class InsertMarker extends Component {
     goToNextRound(){
         this.setState({
             myStatus: 'not ready',
-            oppoLat: -1
+            oppoLat: -1,
+            modalVisible2: false
           })
         console.log(this.state.myStatus)
         this.props.navigation.navigate('PlayScreen', { score: this.state.score, timerID: this.state.timerID })  
@@ -286,9 +292,7 @@ export default class InsertMarker extends Component {
                 <Text style={styles.contentTitle}>Total score {this.state.score}</Text>
                 
                     <AwesomeButtonRick
-                    onPress={() => {this.props.navigation.navigate('PlayScreen', { score: this.state.score }), this.setState({
-                        modalVisible2: false
-                    })}}
+                    onPress={() => {this.goToNextRound()}}
                     type="anchor"
                     style={{left:5, alignItems:"center"}}
                     >NEXT ROUND
@@ -298,15 +302,7 @@ export default class InsertMarker extends Component {
             </View>
           </Modal>
        
-                <CountDown
-                    size={15}
-                    style={styles.timer}
-                    until={45}
-                    onFinish={() => alert('Finished')}
-                    digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625' }}
-                    digitTxtStyle={{ color: '#1CC625' }}
-                    timeToShow={['S']}
-                />
+            
 
 
                 <MapView
@@ -362,7 +358,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
+        marginTop: 22,        
+        marginTop: windowHeight / 9,
+        marginBottom: windowHeight / 1.4
     },
     contentTitle: {
         fontSize: 20,
@@ -381,6 +379,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5
+        elevation: 5,
+
       }
 });

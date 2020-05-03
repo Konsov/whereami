@@ -1,8 +1,8 @@
 # whereami
 
-# 1 - Loading inzio partita
-
 # 2 - Sistemare timer durante la partita
+
+
 
 # 3 - Lista Amici ✔
 # 3.1 - Inviare Richiesta d'amicizia 
@@ -12,8 +12,6 @@
 
 # 5 - Testare Multiplayer se funziona bene
 # 5.1 - Sincronia Partita 
-
-# 6 - isOnline in Homepage
 
 # 7 - Fare Scoreboard per maxScore
 

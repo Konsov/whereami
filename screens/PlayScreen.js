@@ -147,7 +147,7 @@ export default class PlayScreen extends Component {
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
-            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 10000 }} />
+            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude, radius: 50000 }} />
           <View>
             <AwesomeButtonRick
               onPress={() => this.goToMarker()}
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: height / 3,
-    marginBottom: height / 3
+    marginTop: windowHeight / 3,
+    marginBottom: windowHeight / 3
   },
 
   contentTitle: {
@@ -282,14 +282,14 @@ const styles = StyleSheet.create({
     position: 'relative',
     width:40,
     height:40,
-    left:width/6
+    left:windowWidth/6
   },
   buttone: {
     flex:1,
     position: 'relative',
     width:40,
     height:40,
-    left: width / 12
+    left: windowWidth / 12
 
   }
 

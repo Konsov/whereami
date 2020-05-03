@@ -296,7 +296,7 @@ export default class HomeScreen extends Component {
 
 
           </View> 
-          <NotifService />   
+          <NotifService navigation={this.props.navigation}/>   
         </View>
         );
   }

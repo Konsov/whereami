@@ -23,7 +23,6 @@ import {
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 export default class NotificationScreen extends Component {
 
