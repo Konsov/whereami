@@ -9,7 +9,6 @@ import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
-import CountDown from 'react-native-countdown-component'
 
 const { width, height } = Dimensions.get('window');
 const LATITUDE = 45.742972;

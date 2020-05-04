@@ -32,7 +32,7 @@ export default class PlayScreen extends Component {
     longitude_4: 0,
     latitude_5: 0,
     longitude_5: 0,
-
+    loadingCoordinate : false,
     round: 0,
     type: '',
     modalVisible: false

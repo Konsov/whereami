@@ -25,18 +25,20 @@ class LoadingScreen extends Component {
   }
 
   componentDidMount() {
-    try {
-      var k = this.state.registerToken;
+
+    setTimeout(() => {try {
       
       firebase.auth().onAuthStateChanged((user) => {
         
        
-        setTimeout(() => { this.navigate(user ? 'HomeScreen' : 'AuthStack'), console.log("wait") }, 7000);
+        this.navigate(user ? 'HomeScreen' : 'AuthStack')
 
       });
     } catch (error) {
       console.log(error.toString())
-    }
+    }}, 7000)
+
+    
   }
   
   isOnline(){

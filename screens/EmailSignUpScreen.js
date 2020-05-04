@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
-  Text,
-  StatusBar,
+  Image,
+  Dimensions,
 } from 'react-native';
 
 import {
-  Container,
-  Form,
   Item,
   Label,
-  Button,
   Input,
 } from 'native-base';
+
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 
+const { width, height } = Dimensions.get('window');
 
 import firebase from '../services/firebase'
 
@@ -65,42 +62,55 @@ export default class EmailSignUpScreen extends Component{
 
   render(){
     return (
-      <Container style={styles.container}>
-        <Form>
-
-          <Item floatingLabel>
-            <Label>Username</Label>
+      <View>
+      <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
+      <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
+      <View style={styles.container}>
+        <View style={styles.item}>
+          
+          <Item floatingLabel style= {styles.input}>
+            <Label style = {{color: "#FFFFFF"}}>Username</Label>
             <Input 
-            autoCorrect={false} 
-            autoCapitalize="none"
-            onChangeText={(username) => this.setState({username})} />
+              autoCorrect={false}
+              autoCapitalize="none"
+              style={{color:'white', fontWeight:'bold', fontSize:20}}
+              underlineColorAndroid = "white"
+              onChangeText={(username) => this.setState({username})} />
           </Item>
 
-          <Item floatingLabel>
-            <Label>Email</Label>
+          <Item floatingLabel style= {styles.input}>
+            <Label style = {{color: "#FFFFFF"}}>Email</Label>
             <Input 
-            autoCorrect={false} 
-            autoCapitalize="none"
-            onChangeText={(email) => this.setState({email})} />
+              autoCorrect={false}
+              autoCapitalize="none"
+              style={{color:'white', fontWeight:'bold', fontSize:20}}
+              underlineColorAndroid = "white"
+              onChangeText={(email) => this.setState({email})} />
           </Item>
         
-         <Item floatingLabel>
-            <Label>Password</Label>
+         <Item floatingLabel style= {styles.input}>
+            <Label style = {{color: "#FFFFFF"}}>Password</Label>
             <Input 
-            secureTextEntry={true}
-            autoCorrect={false} 
-            autoCapitalize="none" 
-            onChangeText={(password) => this.setState({password})}
+              autoCorrect={false}
+              autoCapitalize="none"
+              style={{color:'white', fontWeight:'bold', fontSize:20}}
+              underlineColorAndroid = "white" 
+              onChangeText={(password) => this.setState({password})}
             />
           </Item>
-          <AwesomeButton
-              type="primary"
+         
+          <View style={styles.buttonContainer}>
+            <AwesomeButton
+              type="anchor"
+              stretch = {true}
               style={styles.button}
               onPress={() => this.signUpUser(this.state.username, this.state.email, this.state.password)}
-            > Sign Up
-               </AwesomeButton>
-        </Form>
-      </Container>
+            >Sign Up
+            </AwesomeButton>
+          </View> 
+          </View>
+          </View>
+     </View>
 
     );
   }
@@ -108,12 +118,26 @@ export default class EmailSignUpScreen extends Component{
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding:10,
-    justifyContent: 'center',
+    position: 'absolute',
+    marginTop: '80%',
+    marginLeft: '28%',
   },
-  button: {
+  buttonContainer: {
+    flex:1,
+    width: width / 2,
+    marginRight: (width / 2) - (width / 4)
+  },
+  item: {
+    flexDirection: 'column',
+    alignSelf:"center",
+  },
+  button:{
     marginTop: 10
+  },
+  input:{
+    width:width / 2, 
+    alignSelf:"center", 
+    marginTop:10,
+    marginRight: (width / 2) - (width / 4)
   }
 });

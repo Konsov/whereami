@@ -1,21 +1,15 @@
 # whereami
 
-# 2 - Sistemare timer durante la partita
+# 1 - Sistemare timer durante la partita
 
+# 2 - Sistemare Poligoni Maps
 
+# 3 - Testare Multiplayer se funziona bene
+# 3.1 - Sincronia Partita 
 
-# 3 - Lista Amici ✔
-# 3.1 - Inviare Richiesta d'amicizia 
-# 3.1.1 - Notifica richiesta d'amicizia 
+# 4 - Fare Scoreboard per maxScore
 
-# 4 - Sistemare Poligoni Maps
+# 5 - Perfezionare Codice
 
-# 5 - Testare Multiplayer se funziona bene
-# 5.1 - Sincronia Partita 
-
-# 7 - Fare Scoreboard per maxScore
-
-# 8 - Perfezionare Codice
-
-# 9 - Fare Grafiche
-# 9.1 - Sistemare bene con percentuali
+# 6 - Fare Grafiche
+# 6.1 - Sistemare bene con percentuali

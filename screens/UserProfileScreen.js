@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#DCDCDC",
     },
     headerContent: {
-        padding: width/13.09,
+        padding: width / 13.09,
         alignItems: 'center',
     },
     avatar: {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
         fontSize: width / 17.8,
         color: "#000000",
         fontWeight: '600',
-        left:10,
+        left: width / 39.27,
         marginTop: width / 39.2,
         alignSelf:"center"
     },
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         fontSize: width / 24.54,
         color: "white",
         fontWeight: '600',
-        marginTop:width / 13,
+        marginTop: width / 13,
         marginRight:-(width / 19.6),
         alignSelf:"center"
     },
