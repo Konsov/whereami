@@ -30,7 +30,10 @@ class LoadingScreen extends Component {
       
       firebase.auth().onAuthStateChanged((user) => {
         
-       
+        if(user){
+          this.isOnline()
+        }
+        
         this.navigate(user ? 'HomeScreen' : 'AuthStack')
 
       });
