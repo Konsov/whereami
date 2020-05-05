@@ -109,7 +109,7 @@ export default class UserProfileScreen extends Component {
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
-                                    style={{ width: width / 9.8, height: width / 9.8 }}
+                                    style={{ width: width / 11, height: width / 11 }}
                                     source={require('../files/back.png')}
                                 />
                             </TouchableHighlight> 
@@ -131,7 +131,7 @@ export default class UserProfileScreen extends Component {
                                 activeOpacity={0.7}
                             ><Image
                                     style={{ width: width / 9.13, height: width / 8.35 }}
-                                    source={require('../files/alarm.png')}
+                                    source={require('../files/music.png')}
                                 />
                             </TouchableHighlight> : <TouchableHighlight
                                 style={styles.button1}
@@ -140,7 +140,7 @@ export default class UserProfileScreen extends Component {
                                 activeOpacity={0.7}
                             ><Image
                                     style={{ width: width / 9.13, height: width / 8.35 }}
-                                    source={require('../files/alarm.png')}
+                                    source={require('../files/music.png')}
                                 />
                             </TouchableHighlight>}
                             {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 25, height : -45, marginTop: 35 }}>
@@ -171,7 +171,7 @@ export default class UserProfileScreen extends Component {
                                 <Text style={styles.number}>{(this.state.avgScore).toFixed()}</Text>
                                 <Text style={styles.userInfo}>Maximum score</Text>  
                                 <Text style={styles.number}>{(this.state.maxScore).toFixed()}</Text>  
-                                <Text style={{fontSize: width / 24.54,color: "white", fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text>   
+                                <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text>   
                                 <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
                                     
                                     <Input autoCorrect={false}
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        backgroundColor: "#DCDCDC",
+        backgroundColor: "#119abf",
     },
     headerContent: {
         padding: width / 13.09,
@@ -236,15 +236,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#0095B6", 
         alignSelf:"center",
         textAlign:"center",
-        borderColor: "white",
-        color: "white", 
         borderWidth: 2,
         marginTop:width / 65.4,
         width:width / 3.92
     },
     name: {
         fontSize: width / 17.8,
-        color: "#000000",
+        color: "white",
         fontWeight: '600',
         left: width / 39.27,
         marginTop: width / 39.2,
@@ -252,14 +250,13 @@ const styles = StyleSheet.create({
     },
     userInfo: {
         fontSize: width / 24.54,
-        color: "white",
         fontWeight: '600',
         marginTop: width / 13,
         marginRight:-(width / 19.6),
         alignSelf:"center"
     },
     body: {
-        backgroundColor: "#778899",
+        backgroundColor: "#F2F5F7",
         height: width / 0.785,
         alignItems: 'center',
     },
@@ -276,7 +273,7 @@ const styles = StyleSheet.create({
     },
     button: {
         position: 'relative',
-        marginTop: width / 98.17,
+        marginTop: width / 100,
         alignSelf:"center",
         alignContent:"center",
         width: width / 3.41, 
@@ -297,9 +294,9 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end'
     },
     button3: {
-        width: width / 9.8, 
-        height: width / 9.8,
-        marginTop: -(width / 4.9),
+        width: width / 11, 
+        height: width / 11,
+        marginTop: -(width / 5.2),
         marginLeft: 0,
         alignSelf: 'flex-start'
     },
