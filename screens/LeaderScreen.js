@@ -1,27 +1,15 @@
 import React, { Component } from "react";
 import { StyleSheet } from 'react-native'
 import {
-    Container,
-    Header,
-    Title,
-    Content,
     Button,
-    List,
-    ListItem,
     Text,
-    Thumbnail,
-    Left,
-    Right,
-    Body,
-    Segment
 } from "native-base";
 import {
     View,
-    TouchableHighlight,
     Image,
-    Dimensions
+    Dimensions, 
+    Alert
 } from 'react-native';
-import Modal from 'react-native-modal'
 
 import { ButtonGroup } from 'react-native-elements';
 
@@ -81,15 +69,14 @@ export default class LeaderScreen extends Component {
                 var avg = profile[val]['statistics']['avgScore'];
                 var max = profile[val]['statistics']['maxScore'];
                 if (profile[user.uid]['friend'][val] != null){
-                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed() })
+                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val })
                 }
                 if (user.uid == val){
-                    console.log("qui")
                     us_avg = (avg).toFixed();
                     us_max = max.toFixed();
-                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed() })
+                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val  })
                 }
-                req.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed() })
+                req.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val })
             }
 
             this.setState({
@@ -162,7 +149,7 @@ export default class LeaderScreen extends Component {
         
         return (
             <View colors={[, '#1da2c6', '#1695b7']}
-                style={{ backgroundColor: '#119abf', padding: 15, paddingTop: 35, alignItems: 'center' }}>
+                style={{ backgroundColor: '#98cbe4', padding: 15, paddingTop: 35, alignItems: 'center' }}>
                 <Text style={{ fontSize: 25, color: 'white', }}>Leaderboard</Text>
                 <View style={{position:'absolute', marginLeft: width / 13, marginTop: width / 13, alignSelf:'flex-start'}}>
                     <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
@@ -174,7 +161,7 @@ export default class LeaderScreen extends Component {
                 </View>
                 <View style={{
                     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-                    marginBottom: 15, marginTop: 20
+                    marginBottom: 15, marginTop: 20, right: 17
                 }}> 
 
                     {this.state.filter > 0 ? <Text style={{ color: 'white', fontSize: 25, flex: 1, textAlign: 'right', marginRight: 40 }}>
@@ -184,8 +171,8 @@ export default class LeaderScreen extends Component {
                     </Text>}
                     <Image style={{ height: width / 3, width: width / 3, borderRadius: 63, borderWidth: 4, borderColor: "white" }}
                         source={{ uri: `${this.state.user.img}` }} />
-                    <Text style={{ color: 'white', fontSize: 25, flex: 1, marginLeft: 40 }}>
-                        {this.state.user.avg}pts
+                    <Text numberOfLines={2} style={{ color: 'white', fontSize: 25, flex: 1, marginLeft: 10, textAlign:'center' }}>
+                        {this.state.user.avg} pts
                     </Text>
                 </View>
                 <ButtonGroup
@@ -198,7 +185,14 @@ export default class LeaderScreen extends Component {
         
     }
 
-
+    goToProfile(data){
+        const user = firebase.auth().currentUser;
+        if (data.uid == user.uid){
+            this.props.navigation.navigate('UserProfileScreen')
+        } else {
+            this.props.navigation.navigate('PlayerProfileScreen', {uid : data.uid})
+        }
+    }
 
     render() {
 
@@ -206,7 +200,8 @@ export default class LeaderScreen extends Component {
             labelBy: 'name',
             sortBy: 'avg',
             data: this.state.filter > 0 ? this.state.friendData : this.state.globalData,
-            icon: 'img'
+            icon: 'img',
+            onRowPress: (item, index) => { this.goToProfile(item)}
         }
         if (this.state.loadingInformation == false) {
             return <PacmanIndicator size={100} />

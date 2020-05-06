@@ -12,6 +12,7 @@ import NotificationScreen from '../screens/NotificationScreen'
 import FriendScreen from '../screens/FriendScreen'
 import LeaderScreen from '../screens/LeaderScreen'
 import NotifService from '../services/NotifService'
+import PlayerProfileScreen from '../screens/PlayerProfileScreen'
 
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -50,7 +51,8 @@ const AppStack = createStackNavigator(
   NotificationScreen : {screen: NotificationScreen},
   FriendScreen: {screen: FriendScreen},
   LeaderScreen: {screen:LeaderScreen},
-  NotifService: {screen: NotifService}
+  NotifService: {screen: NotifService},
+  PlayerProfileScreen : {screen: PlayerProfileScreen}
   
   },{
     defaultNavigationOptions: {

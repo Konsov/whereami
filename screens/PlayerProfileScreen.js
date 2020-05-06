@@ -29,8 +29,8 @@ export default class UserProfileScreen extends Component {
         avgScore: 0,
         maxScore: 0,
         nGame: 0,
-        req: [],
-        not: 0
+        not: 0,
+        check: false
     }
 
 
@@ -44,14 +44,10 @@ export default class UserProfileScreen extends Component {
     }
 
     loadInfo() {
-        const user = firebase.auth().currentUser;
-        firebase.database().ref('/users').child(`${user.uid}`).once('value').then(snapshot => {
+        const my_user = firebase.auth().currentUser;
+        const user = this.props.navigation.getParam('uid');
+        firebase.database().ref('/users').child(`${user}`).once('value').then(snapshot => {
             var profile = snapshot.toJSON();
-            var not = 0;
-            for (var val in profile['request']) {
-                not = not + 1;
-            }
-
 
             var avg = profile['statistics']['avgScore']
             var max = profile['statistics']['maxScore']
@@ -59,13 +55,20 @@ export default class UserProfileScreen extends Component {
             var name = profile['username']
             var pic = profile['userpic']
 
+            for (var val in profile['friend']) {
+                if (val == my_user.uid){
+                    this.setState({
+                        check: true
+                    })
+                }
+            }
+
             this.setState({
                 player: name,
                 avgScore: avg,
                 maxScore: max,
                 userPic: pic,
-                nGame: nGames,
-                not: not
+                nGame: nGames
             })
         }).then(
             this.setState({
@@ -113,49 +116,16 @@ export default class UserProfileScreen extends Component {
                                     source={require('../files/back.png')}
                                 />
                             </TouchableHighlight> 
-                            <TouchableHighlight
-                                style={styles.button4}
-                                onPress={() => this.props.navigation.navigate('LeaderScreen')}
-                                underlayColor="transparent"
-                                activeOpacity={0.7}
-                            ><Image
-                                    style={{ width: width / 7.85, height: width / 7.85 }}
-                                    source={require('../files/leaderboard.png')}
-                                />
-                            </TouchableHighlight>
-                            
-                            {this.state.not > 0 ? <TouchableHighlight
-                                style={styles.button1}
-                                onPress={() => this.props.navigation.navigate('NotificationScreen')}
-                                underlayColor="transparent"
-                                activeOpacity={0.7}
-                            ><Image
-                                    style={{ width: width / 9.13, height: width / 8.35 }}
-                                    source={require('../files/music.png')}
-                                />
-                            </TouchableHighlight> : <TouchableHighlight
-                                style={styles.button1}
-                                onPress={() => this.props.navigation.navigate('NotificationScreen')}
-                                underlayColor="transparent"
-                                activeOpacity={0.7}
-                            ><Image
-                                    style={{ width: width / 9.13, height: width / 8.35 }}
-                                    source={require('../files/music.png')}
-                                />
-                            </TouchableHighlight>}
-                            {this.state.not > 0 ? <Badge style={{ position: 'absolute', right: 25, height : -45, marginTop: 35 }}>
-                                    <Text>{this.state.not}</Text>
-                                </Badge> : null}
-                            <TouchableHighlight
+                            {this.state.check == false ?<TouchableHighlight
                                 style={styles.button2}
-                                onPress={() => this.props.navigation.navigate('FriendScreen')}
+                                onPress={() => this.friendRequest(this.state.player)}
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image
                                     style={{ width: width / 7.85, height: width / 7.85 }}
-                                    source={require('../files/users.png')}
+                                    source={require('../files/add_user.png')}
                                 />
-                            </TouchableHighlight>
+                            </TouchableHighlight>: null}
                            
                             <Image style={styles.avatar}
                                 source={{ uri: this.state.userPic }} />
@@ -171,21 +141,7 @@ export default class UserProfileScreen extends Component {
                                 <Text style={styles.number}>{(this.state.avgScore).toFixed()}</Text>
                                 <Text style={styles.userInfo}>Maximum score</Text>  
                                 <Text style={styles.number}>{(this.state.maxScore).toFixed()}</Text>  
-                                <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text>   
-                                <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
-                                    
-                                    <Input autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(username) => this.setState({ username })} />
-                                </Item>
-                                <View style={{width:width / 2.8, alignSelf:"center"}}>
-                                    <AwesomeButtonRick
-                                               
-                                    onPress={() => this.friendRequest(this.state.username)}  
-                                    
-                                    type="anchor"
-                                    >FRIEND REQUEST</AwesomeButtonRick>
-                                </View>
+                                
                                 
                                                          
                             </View>                            
@@ -230,7 +186,7 @@ const styles = StyleSheet.create({
         marginBottom: width / 39.2,
         position:"absolute",
         marginTop: width / 9.8,
-        alignSelf:"center"
+        marginLeft: (width/ 2) - 31.5
     },
     number: {
         backgroundColor: "#0095B6", 
@@ -244,9 +200,8 @@ const styles = StyleSheet.create({
         fontSize: width / 17.8,
         color: "white",
         fontWeight: '600',
-        left: width / 39.27,
-        marginTop: width / 39.2,
-        alignSelf:"center"
+        marginTop: width / 3.5,
+        left : 6
     },
     userInfo: {
         fontSize: width / 24.54,
@@ -289,7 +244,7 @@ const styles = StyleSheet.create({
     button2: {
         width: width / 7.85, 
         height: width / 7.85,
-        marginTop: width / 5.61,
+        marginTop: -(width / 11),
         marginRight: -(width / 196.35),
         alignSelf: 'flex-end'
     },
