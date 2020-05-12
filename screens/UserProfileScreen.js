@@ -52,7 +52,6 @@ export default class UserProfileScreen extends Component {
                 not = not + 1;
             }
 
-
             var avg = profile['statistics']['avgScore']
             var max = profile['statistics']['maxScore']
             var nGames = profile['statistics']['nGames']

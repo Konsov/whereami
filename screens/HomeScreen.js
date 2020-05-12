@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  ImageBackground,
   StyleSheet,
   BackHandler,
   Alert,
@@ -28,8 +27,7 @@ export default class HomeScreen extends Component {
 
   state = {
     modalVisible: false,
-    player: '',
-    uid: '',
+    oppoUsername: '',
     volume: true
   }
 
@@ -103,15 +101,17 @@ export default class HomeScreen extends Component {
 
   accReq(val){
     const user = firebase.auth().currentUser;
-    var coord = user.uid + this.state.uid
+    var coord = user.uid + this.state.oppoUid
     firebase.database().ref('Games/').child(`${coord}`).set(
       {
         player1: {
           user: user.uid,
+          username: user.displayName,
           score: 0
         },
         player2: {
-          user: this.state.uid,
+          user: this.state.oppoUid,
+          username: this.state.oppoUsername,
           score: 0
         },
         finished: false,
@@ -151,10 +151,10 @@ export default class HomeScreen extends Component {
     this.sound();
 
     firebase.database().ref('/users').child(`${user.uid}`).child('playRequest').on('child_added', (value) => {
-      var k = value.toJSON()
+      var oppo = value.toJSON()
       this.setState({
-        player: k["user"],
-        uid: k["uid"]
+        oppoUid: oppo["uid"],
+        oppoUsername: oppo["user"]
       })
       this.setState({ 
         modalVisible: true
@@ -163,8 +163,7 @@ export default class HomeScreen extends Component {
     firebase.database().ref('/users').child(`${user.uid}`).child('playRequest').on('child_removed', (value) => {
       
       this.setState({
-        player: '',
-        uid: ''
+        player: ''
       })
       this.setState({ 
         modalVisible: false
@@ -184,6 +183,7 @@ export default class HomeScreen extends Component {
       {
         player1: {
           user: user.uid,
+          username: user.displayName,
           score: 0
         },
         finished: false,
@@ -196,7 +196,8 @@ export default class HomeScreen extends Component {
     const user = firebase.auth().currentUser;
     firebase.database().ref('waitingRoom/' + user.uid).set(
       {
-        user: user.uid
+        user: user.uid,
+        username: user.displayName
       }
     )
     this.props.navigation.navigate('GameStack')
@@ -232,7 +233,7 @@ export default class HomeScreen extends Component {
             backdropTransitionInTiming={600}
             backdropTransitionOutTiming={600}>
             <View style={styles.content}>
-              <Text style={styles.contentTitle}>{this.state.player} want to play with you!</Text>
+              <Text style={styles.contentTitle}>{this.state.oppoUsername} want to play with you!</Text>
               <View style={{ flexDirection: 'row' }}>
               <TouchableHighlight
                 onPress={() => this.accReq(false)}

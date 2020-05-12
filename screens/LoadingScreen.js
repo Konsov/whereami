@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
-  ImageBackground,
-  ActivityIndicator,
-  StatusBar,
   Image,
   AsyncStorage
 } from 'react-native';
@@ -52,7 +48,7 @@ class LoadingScreen extends Component {
       };
       
       var uid = firebase.auth().currentUser.uid;
-
+    
       var userStatusDatabaseRef = firebase.database().ref('/users/' + uid);  
       
       userStatusDatabaseRef.onDisconnect().update({online: false}).then(function() {
