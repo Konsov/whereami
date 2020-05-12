@@ -1,25 +1,16 @@
 import React, { Component } from "react";
 import { StyleSheet } from 'react-native'
 import {
-    Container,
-    Header,
-    Title,
-    Content,
     Button,
-    Icon,
-    List,
-    ListItem,
     Text,
-    Thumbnail,
-    Left,
-    Right,
-    Body,
-    Badge
 } from "native-base";
 import {
     View,
     TouchableHighlight,
-    Image
+    Image,
+    Dimensions,
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
 import Modal from 'react-native-modal'
 
@@ -27,6 +18,12 @@ import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
 
 var v = 0;
+
+
+const { width } = Dimensions.get('window');
+
+const oddRowColor = "white";
+const evenRowColor = "#f2f5f7";
 
 export default class NotificationScreen extends Component {
 
@@ -153,65 +150,95 @@ export default class NotificationScreen extends Component {
             modalVisible: true
         })).then(this.checkPlayer(data))
     }
+
+    renderItem = ({ item, index }) => {
+        return this.props.renderItem
+          ? this.props.renderItem(item, index)
+          : this.defaultRenderItem(item, index);
+    };
+
+    defaultRenderItem = (item, index) => {
+
+        const evenColor = this.props.evenRowColor || evenRowColor;
+        const oddColor = this.props.oddRowColor || oddRowColor;
+        const rowColor = index % 2 === 0 ? evenColor : oddColor;
     
+        const rowJSx = (
+          <View style={[styles.row, { backgroundColor: rowColor }]}>
+            <View style={styles.left}>
+                <Text>     </Text>
+                <Image
+                  source={{ uri: item['img'] }}
+                  style={styles.avatar}
+                />
+              
+              <Text style={styles.label} numberOfLines={1}>
+                {item['name']}
+              </Text>
+            </View>
+            <View style={styles.score}>
+                {item['online'] == true ? 
+                <TouchableHighlight
+                onPress={() => this.playReq(item.uid)}
+                underlayColor="transparent"
+                activeOpacity= {0.7}  
+                ><Image
+                        style={{width: 40,height: 40}}
+                        source={require('../files/play_button.png')}/>
+                </TouchableHighlight> : 
+                <TouchableHighlight
+                underlayColor="transparent"                               
+                ><Image
+                    style={{width: 40,height: 40}}
+                    source={require('../files/no_play_button.png')}/>
+                </TouchableHighlight>}
+            </View>
+          </View>
+        );
+        return (
+            <TouchableOpacity onPress={() => this.onRowPress(item)}>
+              {rowJSx}
+            </TouchableOpacity>
+        )  
+    }      
+    
+    onRowPress(data){
+        const user = firebase.auth().currentUser;
+        if (data.uid == user.uid){
+            this.props.navigation.navigate('UserProfileScreen')
+        } else {
+            this.props.navigation.navigate('PlayerProfileScreen', {uid : data.uid})
+        }
+    }
+
     renderView() {
+        const { req } = this.state;
         if (this.state.loadingInformation == false && this.state.req.length == 3) {
             return <PacmanIndicator size={100} />
         } else {
             return (
-                <Container style={styles.container}>
-                    <Header style={{ backgroundColor: "#778899" }}>
-                        <Left>
+                <View>
+                    <View colors={[, '#1da2c6', '#1695b7']}
+                        style={{ backgroundColor: '#98cbe4', padding: 15, alignItems: 'center' }}>
+                        <Text style={{ fontSize: 25, color: 'white', }}>Friend List</Text>
+                        <View style={{position:'absolute', marginLeft: width / 18, marginTop:width / 35 ,alignSelf:'flex-start'}}>
                             <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
-                            <Image
-                                    style={{ width: 20, height: 20 }}
-                                    source={require('../files/back.png')}
-                                />
+                                        <Image
+                                                style={{ width: width / 15, height: width / 15 }}
+                                                source={require('../files/back.png')}
+                                            />
                             </Button>
-                        </Left>
-                        <Body>
-                            <Title>Friend List</Title>
-                        </Body>
-                        <Right />
-                    </Header>
+                        </View>
+                    
+                    
+                    </View>
+                    <FlatList
+                        data={req}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={data => this.renderItem(data)}
+                    />
 
-                    <Content style = {{backgroundColor: "#DCDCDC"}}>
-                        <List>
-                            {this.state.req.map((data, i) => (
-
-                                <ListItem avatar key={i}>
-                                    <Left>
-                                        <Thumbnail small source={{ uri: data.img }} />
-                                        {data.online == true ? <Badge style={{ backgroundColor: 'green', width: 10, height: 10, right: 10, top: 25 }}>
-                                        </Badge> : null}
-                                    </Left>
-                                    <Body>
-                                        {data.online == true ? <Text style={{marginTop:12,left: -12 }}>{data.name}</Text> : <Text style={{ marginTop:12 }}>{data.name}</Text>}
-                                        <Text></Text>
-                                    </Body>
-                                    <Right style={{marginTop:-10, flexDirection: 'row' }}>
-                                        {data.online == true ? <TouchableHighlight
-                                        onPress={() => this.playReq(data.uid)}
-                                        underlayColor="transparent"
-                                        activeOpacity= {0.7}  
-                                        ><Image
-                                        style={{width: 40,height: 40}}
-                                        source={require('../files/play_button.png')}/>
-                                    </TouchableHighlight> : 
-                                    <TouchableHighlight
-                                    underlayColor="transparent"                               
-                                    ><Image
-                                    style={{width: 40,height: 40}}
-                                    source={require('../files/no_play_button.png')}/>
-                                    </TouchableHighlight>}
-
-
-                                    </Right>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Content>
-                </Container>
+            </View>
             );
         }
     }
@@ -269,6 +296,36 @@ const styles = StyleSheet.create({
     contentTitle: {
         fontSize: 20,
         marginBottom: 12,
+    },
+    row: {
+        paddingTop: 15,
+        paddingBottom: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderWidth: 0.5,
+        borderRadius: 5,
+        borderColor: "#d6d7da"
+    },    
+    left: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    label: {
+        fontSize: 17,
+        flex: 1,
+        paddingRight: 80
+    },    
+    score: {
+        position: "absolute",
+        right: 15,
+        paddingLeft: 15
+    },    
+    avatar: {
+        height: 30,
+        width: 30,
+        borderRadius: 30 / 2,
+        marginRight: 10
     }
 });
 

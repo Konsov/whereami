@@ -1,28 +1,19 @@
 import React, { Component } from "react";
 import { StyleSheet } from 'react-native'
 import {
-    Container,
-    Header,
-    Title,
-    Content,
     Button,
-    Icon,
-    List,
-    ListItem,
     Text,
-    Thumbnail,
-    Left,
-    Right,
-    Body,
-    Badge
 } from "native-base";
 import {
     View,
-    TouchableHighlight,
     Image,
-    Dimensions
+    Dimensions, 
+    Alert
 } from 'react-native';
-import Modal from 'react-native-modal'
+
+import { ButtonGroup } from 'react-native-elements';
+
+import Leaderboard from 'react-native-leaderboard';
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
@@ -35,7 +26,7 @@ var v = 0;
 export default class LeaderScreen extends Component {
 
     state = {
-        req: [],
+        globalData: [],
         online: [],
         loadingInformation: false,
         username: '',
@@ -43,7 +34,12 @@ export default class LeaderScreen extends Component {
         loadOnl: false,
         val: '',
         modalVisible: false,
-        playreq: ''
+        playreq: '',
+        filter: 0,
+        friendData: [],
+        user: [],
+        userRank1: 1,
+        userRank2:1
 
     }
 
@@ -57,21 +53,13 @@ export default class LeaderScreen extends Component {
 
     }
 
-    push() {
-        let req = [...this.state.req];
-
-        for (var val in req) {
-            if (v == val)
-                req[val]['online'] = this.state.val
-        }
-
-        v = v + 1;
-        this.setState({ req });
-    }
-
 
     loadInfo() {
         var req = [];
+        var fri = [];
+        var us_avg;
+        var us_max;
+        var user = firebase.auth().currentUser;
         firebase.database().ref('/users').once('value').then(snapshot => {
             var profile = snapshot.toJSON();
 
@@ -80,18 +68,33 @@ export default class LeaderScreen extends Component {
                 var im = profile[val]['userpic'];
                 var avg = profile[val]['statistics']['avgScore'];
                 var max = profile[val]['statistics']['maxScore'];
-                req.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed() })
+                if (profile[user.uid]['friend'][val] != null){
+                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val })
+                }
+                if (user.uid == val){
+                    us_avg = (avg).toFixed();
+                    us_max = max.toFixed();
+                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val  })
+                }
+                req.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val })
             }
 
             this.setState({
-                req: req
+                globalData: req,
+                friendData: fri,
+                user: {
+                    name: user.displayName,
+                    img: user.photoURL,
+                    avg: us_avg,
+                    max : us_max
+                }
             })
 
         }).then(setTimeout(() => {this.sortArray() }, 250))
     }
 
     sortArray() {
-        var list = this.state.req;
+        var list = this.state.globalData;
         var mapped = list.map(function(el, i) {
             return { index: i, value: el.avg };
         })
@@ -104,116 +107,130 @@ export default class LeaderScreen extends Component {
             }
             return 0;
         });
-        var result = mapped.map(function(el){
+        var result1 = mapped.map(function(el){
             return list[el.index];
         });
 
+        let userRank1 = result1.findIndex((item) => {
+            return item.name === this.state.user.name;
+        })
+
+        var list = this.state.friendData;
+        var mapped = list.map(function(el, i) {
+            return { index: i, value: el.avg };
+        })
+        mapped.sort(function(a, b) {
+            if (a.value > b.value) {
+              return -1;
+            }
+            if (a.value < b.value) {
+              return 1;
+            }
+            return 0;
+        });
+        var result2 = mapped.map(function(el){
+            return list[el.index];
+        });
+
+        let userRank2 = result2.findIndex((item) => {
+            return item.name === this.state.user.name;
+        })
+
         this.setState({
-            req: result,
-            loadingInformation:true
+            globalData: result1,
+            loadingInformation:true,
+            friendData: result2,
+            userRank1 : userRank1 + 1,
+            userRank2 : userRank2 + 1
         })
     }
 
-    renderView() {
-        if (this.state.loadingInformation == false) {
-            return <PacmanIndicator size={100} />
+    renderHeader() {
+        
+        return (
+            <View colors={[, '#1da2c6', '#1695b7']}
+                style={{ backgroundColor: '#98cbe4', padding: 15, paddingTop: 35, alignItems: 'center' }}>
+                <Text style={{ fontSize: 25, color: 'white', }}>Leaderboard</Text>
+                <View style={{position:'absolute', marginLeft: width / 13, marginTop: width / 13, alignSelf:'flex-start'}}>
+                    <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
+                                <Image
+                                        style={{ width: width / 15, height: width / 15 }}
+                                        source={require('../files/back.png')}
+                                    />
+                    </Button>
+                </View>
+                <View style={{
+                    flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+                    marginBottom: 15, marginTop: 20, right: 17
+                }}> 
+
+                    {this.state.filter > 0 ? <Text style={{ color: 'white', fontSize: 25, flex: 1, textAlign: 'right', marginRight: 40 }}>
+                        {ordinal_suffix_of(this.state.userRank2)}
+                    </Text> : <Text style={{ color: 'white', fontSize: 25, flex: 1, textAlign: 'right', marginRight: 40 }}>
+                        {ordinal_suffix_of(this.state.userRank1)}
+                    </Text>}
+                    <Image style={{ height: width / 3, width: width / 3, borderRadius: 63, borderWidth: 4, borderColor: "white" }}
+                        source={{ uri: `${this.state.user.img}` }} />
+                    <Text numberOfLines={2} style={{ color: 'white', fontSize: 25, flex: 1, marginLeft: 10, textAlign:'center' }}>
+                        {this.state.user.avg} pts
+                    </Text>
+                </View>
+                <ButtonGroup
+                    onPress={(x) => { this.setState({ filter: x }) }}
+                    selectedIndex={this.state.filter}
+                    buttons={['Global', 'Friends']}
+                    containerStyle={{ height: 30 }} />
+            </View>
+        )
+        
+    }
+
+    goToProfile(data){
+        const user = firebase.auth().currentUser;
+        if (data.uid == user.uid){
+            this.props.navigation.navigate('UserProfileScreen')
         } else {
-            return (
-                <Container style={styles.container}>
-                    <Header style={{ backgroundColor: "#778899" }}>
-                        <Left>
-                            <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
-                            <Image
-                                    style={{ width: width / 19.63, height: width / 19.63 }}
-                                    source={require('../files/back.png')}
-                                />
-                            </Button>
-                        </Left>
-                        <Body>
-                            <Title>Leader Board</Title>
-                        </Body>
-                        <Right />
-                    </Header>
-
-                    <Content style = {{backgroundColor: "#DCDCDC"}}>
-                        <List>
-                            
-                            {this.state.req.map((data, i) => (
-
-                                <ListItem avatar key={i}>
-                                    <Left>
-                                        <Thumbnail small source={{ uri: data.img }} />
-                                    </Left>
-                                    <Body style={{ flexDirection: "row" }}>
-                                        <Text adjustsFontSizeToFit numberOfLines={1} style={{ fontSize:width / 25, marginTop:width / 32.7 }}>{data.name}</Text>
-                                        <Text></Text>
-                                    </Body>
-                                    <Body>
-                                        <Text style={{ marginLeft:width / 13.09, marginTop:width / 32.7, fontSize:width / 25}}>{data.avg}</Text>
-                                       
-                    
-                                    </Body>
-                                    <Right style={{marginTop:-(width / 39.2), flexDirection: 'row' }}>
-                                    
-                                        {i == 0 ? <Image
-                                        style={{width: width / 9.81,height: width / 9.81}}
-                                        source={require('../files/gold-medal.png')}/>
-                                     : i == 1 ?
-                                    <Image
-                                    style={{width: width / 9.81,height: width / 9.81}}
-                                    source={require('../files/silver-medal.png')}/>
-                                    : i == 2 ? <Image
-                                    style={{width: width / 9.81,height: width / 9.81}}
-                                    source={require('../files/bronze-medal.png')}/>
-                                        : <Text style={{marginRight: width / 24.54}}>{i}</Text>}
-
-                                            
-                                    </Right>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Content>
-                </Container>
-            );
+            this.props.navigation.navigate('PlayerProfileScreen', {uid : data.uid})
         }
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                {this.renderView()}
-                <Modal
-                    testID={'modal'}
-                    isVisible={this.state.modalVisible}
-                    backdropColor="#B4B3DB"
-                    backdropOpacity={0.8}
-                    animationIn="zoomInDown"
-                    animationOut="zoomOutUp"
-                    animationInTiming={600}
-                    animationOutTiming={600}
-                    backdropTransitionInTiming={600}
-                    backdropTransitionOutTiming={600}>
-                    <View style={styles.content}>
-                        <Text style={styles.contentTitle}>Waiting for the other player response...</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                        <TouchableHighlight
-                            onPress={() => this.undoReq()}
-                            underlayColor="transparent"
-                            activeOpacity= {0.7}  
-                            style={{left: width / 78.5}}
-                            ><Image
-                                style={{width: width / 7.85,height: width / 7.85}}
-                                source={require('../files/error.png')}/>
-                        </TouchableHighlight>   
 
-                        </View>
-                    </View>
-                </Modal>
+         const props = {
+            labelBy: 'name',
+            sortBy: 'avg',
+            data: this.state.filter > 0 ? this.state.friendData : this.state.globalData,
+            icon: 'img',
+            onRowPress: (item, index) => { this.goToProfile(item)}
+        }
+        if (this.state.loadingInformation == false) {
+            return <PacmanIndicator size={100} />
+        } else {
+        return (
+            <View style={{ flex: 1, backgroundColor: 'white', }}>
+                {this.renderHeader()}
+                <Leaderboard {...props} />
             </View>
         )
+        }
 
 
     }
+}
+
+const ordinal_suffix_of = (i) => {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
 }
 
 const styles = StyleSheet.create({
@@ -225,7 +242,8 @@ const styles = StyleSheet.create({
         padding: width / 17.85,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: width / 98.18,
+        borderRadius: width / 98.18,        
+        
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
     contentTitle: {

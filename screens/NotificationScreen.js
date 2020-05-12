@@ -18,11 +18,21 @@ import {
 import {
     View,
     TouchableHighlight,
-    Image 
+    Image,
+    Dimensions,
+    FlatList 
 } from 'react-native';
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
+
+
+const oddRowColor = "white";
+const evenRowColor = "#f2f5f7";
+
+
+const { width } = Dimensions.get('window');
+
 export default class NotificationScreen extends Component {
 
     state = {
@@ -65,6 +75,12 @@ export default class NotificationScreen extends Component {
         )
     }
 
+    renderItem = ({ item, index }) => {
+        return this.props.renderItem
+          ? this.props.renderItem(item, index)
+          : this.defaultRenderItem(item, index);
+    };
+
     confirmReq(data,i){
         const user = firebase.auth().currentUser;
         firebase.database().ref('/users').child(`${user.uid}`).child('request').once('value').then(snapshot => {
@@ -99,65 +115,78 @@ export default class NotificationScreen extends Component {
         })
 
     }
+
+    defaultRenderItem = (item, index) => {
+
+        const evenColor = this.props.evenRowColor || evenRowColor;
+        const oddColor = this.props.oddRowColor || oddRowColor;
+        const rowColor = index % 2 === 0 ? evenColor : oddColor;
+    
+        const rowJSx = (
+          <View style={[styles.row, { backgroundColor: rowColor }]}>
+            <View style={styles.left}>
+                <Text>     </Text>
+                <Image
+                  source={{ uri: item['img'] }}
+                  style={styles.avatar}
+                />
+              
+              <Text style={styles.label} numberOfLines={2}>
+                {item['name']} has sent you a friend request
+              </Text>
+            </View>
+            <View style={styles.score}>
+            <TouchableHighlight
+                onPress={() => this.confirmReq(item,index)}
+                underlayColor="transparent"
+                activeOpacity= {0.7}  
+                    ><Image
+                        style={{width: 40,height: 40}}
+                        source={require('../files/success.png')}/>
+            </TouchableHighlight>
+            <TouchableHighlight
+                onPress={() => this.denyReq(item,index)}
+                underlayColor="transparent"
+                activeOpacity= {0.7}  
+                style={{left: 5}}
+                    ><Image
+                        style={{width: 40,height: 40}}
+                        source={require('../files/error.png')}/>
+            </TouchableHighlight>
+            </View>
+          </View>
+        );
+        return rowJSx
+    }
     renderView() {
+        const { req } = this.state;
         if (this.loadingInformation == false) {
             return <PacmanIndicator size={100} />
         } else {
             return (
-                <Container style={styles.container}>
-                    <Header style = {{backgroundColor: "#778899"}}>
-                        <Left>
+                <View>
+                    <View colors={[, '#1da2c6', '#1695b7']}
+                        style={{ backgroundColor: '#98cbe4', padding: 15, alignItems: 'center' }}>
+                        <Text style={{ fontSize: 25, color: 'white', }}>Notification</Text>
+                        <View style={{position:'absolute', marginLeft: width / 18, marginTop:width / 35 ,alignSelf:'flex-start'}}>
                             <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
-                            <Image
-                                    style={{ width: 20, height: 20 }}
-                                    source={require('../files/back.png')}
-                                />
+                                        <Image
+                                                style={{ width: width / 15, height: width / 15 }}
+                                                source={require('../files/back.png')}
+                                            />
                             </Button>
-                        </Left>
-                        <Body>
-                            <Title>Notification</Title>
-                        </Body>
-                        <Right />
-                    </Header>
+                        </View>
+                    
+                    
+                    </View>
+                    <FlatList
+                        data={req}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={data => this.renderItem(data)}
+                    />
 
-                    <Content style = {{backgroundColor: "#DCDCDC"}}>
-                        <List>
-                            {this.state.req.map((data, i) => (
-                                
-                                <ListItem avatar key={i}>
-                                    <Left>
-                                        <Thumbnail small source={{uri: data.img}}/>
-                                    </Left>
-                                    <Body>
-                                        <Text>{data.name} </Text>
-                                        <Text numberOfLines={1} note style={{ marginTop: 12,fontSize: 12 }}>
-                                            Has sent you a friend request
-                                        </Text>
-                                    </Body>
-                                    <Right style={{flexDirection:'row'}}>
-                                    <TouchableHighlight
-                                        onPress={() => this.confirmReq(data,i)}
-                                        underlayColor="transparent"
-                                        activeOpacity= {0.7}  
-                                        ><Image
-                                        style={{width: 40,height: 40}}
-                                        source={require('../files/success.png')}/>
-                                    </TouchableHighlight>
-                                    <TouchableHighlight
-                                        onPress={() => this.denyReq(data,i)}
-                                        underlayColor="transparent"
-                                        activeOpacity= {0.7}  
-                                        style={{left: 5}}
-                                        ><Image
-                                        style={{width: 40,height: 40, left: 5}}
-                                        source={require('../files/error.png')}/>
-                                    </TouchableHighlight>
-                                    </Right>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Content>
-                </Container>
+                 </View>
+                
             );
         }
     }
@@ -177,5 +206,35 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    row: {
+        paddingTop: 15,
+        paddingBottom: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderWidth: 0.5,
+        borderRadius: 5,
+        borderColor: "#d6d7da"
+    },    
+    left: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    label: {
+        fontSize: 17,
+        flex: 1,
+        paddingRight: 80
+    },    
+    score: {
+        position: "absolute",
+        right: 15,
+        flexDirection:'row'
+    },    
+    avatar: {
+        height: 30,
+        width: 30,
+        borderRadius: 30 / 2,
+        marginRight: 10
+    }
 });
 

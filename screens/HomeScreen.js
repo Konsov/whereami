@@ -39,7 +39,9 @@ export default class HomeScreen extends Component {
     if (currentAppState != 'active') {
       this.stop()
     } else {
-      this.start()
+      if(this.state.volume == true){        
+        this.start()
+      }
     }
   }
   
@@ -87,7 +89,7 @@ export default class HomeScreen extends Component {
         // loaded successfully
         console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
         
-        whoosh.setNumberOfLoops(1);
+        whoosh.setNumberOfLoops(-1);
         // Play the sound with an onEnd callback
         if (this.state.volume== true){
           whoosh.play()
@@ -204,7 +206,8 @@ export default class HomeScreen extends Component {
   render() {
     return (
       <View>        
-        <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>    
+        <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>   
+        <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
 
 
         <View style={styles.container}> 
@@ -287,7 +290,7 @@ export default class HomeScreen extends Component {
 
 
           </View> 
-          <NotifService />   
+          <NotifService navigation={this.props.navigation}/>   
         </View>
         );
   }
