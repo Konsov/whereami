@@ -14,7 +14,7 @@ exports.sendFriendRequest = functions.region('europe-west1').database.
         var img = "";
         console.log('User to send notification', uuid);
         admin.auth().getUser(context.params.uid2).then(function(userRecord){
-            console.log(userRecord)
+            console.log('dasda', userRecord)
             user = userRecord.displayName;
             img = userRecord.photoURL;
             snapshot.ref.update({
@@ -61,12 +61,6 @@ exports.sendFriendRequest = functions.region('europe-west1').database.
                   
             }
 
-            const payload = {
-                notification: {
-                    title: 'You have a friend request!',
-                    body: 'Tap here to check it out!'
-                }  
-            };
             setTimeout(function(){admin.messaging().send(message) }, 5000);
             
 
@@ -81,6 +75,7 @@ exports.createRandomGame = functions.region('europe-west1').database
     .onCreate((snaposhot, context) => {
 
         const playerOne = context.params.userID
+        console.log('playerOne:dasda ', playerOne)
 
         return snaposhot.ref.parent.once('value').then(snapWaitingRoom => {
 
@@ -100,6 +95,22 @@ exports.createRandomGame = functions.region('europe-west1').database
                     if (player != playerOne) {
                         const playerTwo = player
 
+
+                        snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
+                            player1: {
+                                user: playerOne,
+                                username: playersInWaitingRoom[playerOne]['username'],
+                                score: 0
+                            },
+                            player2: {
+                                user: playerTwo,
+                                username: playersInWaitingRoom[playerTwo]['username'],
+                                score: 0
+                            },
+                            finished: false,
+                            type:'multiplayer'
+                        });
+
                         snapWaitingRoom.ref.child(playerOne).remove().then(function () {
                             console.log(`${playerOne} removed from the waiting room`)
                         })
@@ -114,19 +125,6 @@ exports.createRandomGame = functions.region('europe-west1').database
                                 console.log(`Removed of ${playerTwo} failed:` + error.message)
                             });
 
-
-                        snapWaitingRoom.ref.parent.child('Games').child(playerOne + playerTwo).set({
-                            player1: {
-                                user: playerOne,
-                                score: 0
-                            },
-                            player2: {
-                                user: playerTwo,
-                                score: 0
-                            },
-                            finished: false,
-                            type:'multiplayer'
-                        });
 
                         return null;
 

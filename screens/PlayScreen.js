@@ -18,10 +18,13 @@ const windowHeight = Dimensions.get('window').height;
 export default class PlayScreen extends Component {
 
   state = {
-    player: '',
+    player: 'not assigned',
+    username: '',
+    oppoUsername: '',
     
     gameID: '',
     
+    loadingCoordinate: false,
     latitude_1: 0,
     longitude_1: 0,
     latitude_2: 0,
@@ -35,7 +38,7 @@ export default class PlayScreen extends Component {
 
     round: 0,
     type: '',
-    modalVisible: false
+    modalVisible: false,
   }
 
   componentDidMount() {
@@ -55,25 +58,68 @@ export default class PlayScreen extends Component {
 
   getGameInfo(){
     const user = firebase.auth().currentUser;
-    firebase.database().ref('/Games').orderByKey().startAt(`${user.uid}`).endAt(`${user.uid}\uf8ff`).once('value').then(function (snapshot) {
-      
-      var game = snapshot.toJSON();
-      if(game != null){
-        for(id in game){        
-          this.setState({
-            player: 'player1',
-            type: game[id]['type']
-          })
+    
+    
+    if(this.state.player != 'not assigned'){
+      return null
+    }
+    
+      console.log("Loading Game...")  
+      firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+       
+        if (snapshot.exists()) {
+          var game = snapshot.toJSON()
+          console.log(game)
+          for (var id in game) {
+            this.setState({
+              gameID: id,
+              player: 'player1',
+              type: game[id]['type'],
+              username: game[id]['player1']['username'],
+              })
+              
+            console.log(`${this.state.username} has loaded the game: `)
+            console.log(`Game: ${this.state.gameID}`)
+            console.log(`type: ${this.state.type}`)
+            console.log(`${this.state.username} is the player 1`)
+            
+            if(game[id]['type'] == 'multiplayer'){
+              this.setState({
+                oppoUsername: game[id]['player2']['username']
+              })
+              console.log(`${this.state.oppoUsername} is the player 2`)
+            }
+            
+            return this.loadCoordinate()
+          }
         }
-      }else{
-        this.setState({
-          player: 'player2',
-          type: 'multiplayer'
-        })
-      } 
-    }.bind(this));
-
-    this.loadCoordinate()
+      }.bind(this))
+    
+      firebase.database().ref('/Games').orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+       
+        if (snapshot.exists()) {
+          var game = snapshot.toJSON()
+          for (var id in game) {
+            this.setState({
+              gameID: id,
+              player: 'player2',
+              type: game[id]['type'],
+              username: game[id]['player2']['username'],
+              oppoUsername: game[id]['player1']['username']
+              })
+              console.log(`${this.state.username} has loaded the game: `)
+              console.log(`Game: ${this.state.gameID}`)
+              console.log(`type: ${this.state.type}`)
+              console.log(`${this.state.oppoUsername} is the player 1`)
+              console.log(`${this.state.username} is the player 2`)
+            return this.loadCoordinate()
+          }
+        }
+      }.bind(this))     
+  
+      var retry = setTimeout(()=>{
+        return this.getGameInfo()
+      }, 5000)
   }
 
 
@@ -111,17 +157,14 @@ export default class PlayScreen extends Component {
   }
 
   loadCoordinate() {
-    const user = firebase.auth().currentUser;
-    firebase.database().ref(`/Games`).orderByChild(`${this.state.player}/user`).once('value').then(function (snapshot) {
-      console.log("Loading Coordinates..")
-    
-      var game = snapshot.toJSON();
-      
+    firebase.database().ref(`/Games`).orderByChild(`${this.state.gameID}`).once('value').then(function (snapshot) {
+
+    var game = snapshot.toJSON()
+
       for(id in game){
-      
         if (game[id]['roundCoordinates'] == null){
-           this.setState({ loadingCoordinate: false })
-            return this.loadCoordinate();
+          console.log("Loading Coordinates..")
+          return this.loadCoordinate();
         }
         
         var gameID = id;
@@ -139,14 +182,15 @@ export default class PlayScreen extends Component {
         break;
     }
 
-    console.log(gameID)
+    this.props.navigation.setParams({runTimer: true });
+
+    console.log(`${this.state.username} has loaded the coordiantes: `)
     console.log('round 1: ',x1,y1)
     console.log('round 2: ',x2,y2)
     console.log('round 3: ',x3,y3)
     console.log('round 4: ',x4,y4)
     console.log('round 5: ',x5,y5)
   
-    console.log(this.state.loadingCoordinate)
     this.setState({
         gameID: gameID,
         
@@ -165,13 +209,15 @@ export default class PlayScreen extends Component {
 
         loadingCoordinate: true,
       })
-      console.log(this.state.loadingCoordinate)
+
     }.bind(this));
 
   }
 
   goToMarker() {
     
+    this.props.navigation.setParams({runTimer: false });
+
     if (this.props.navigation.getParam('timerID') == null) {
       var timerID = 'a'
     } else {
@@ -183,17 +229,20 @@ export default class PlayScreen extends Component {
     } else {
       var score = this.props.navigation.getParam('score')
     }
-    this.props.navigation.navigate('InsertMarker', { lat: this.getRoundLatitude(), long: this.getRoundLongitude(), round: this.state.round + 1, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type})
+
+    this.props.navigation.navigate('InsertMarker', { lat: this.getRoundLatitude(), long: this.getRoundLongitude(), round: this.state.round, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type, username: this.state.username, oppoUsername: this.state.oppoUsername})
     
+
     this.setState({
-      round: this.state.round + 1
+      round: this.state.round+1,
     })
+
   }
 
-
+ 
   renderView() {
 
-    if (this.state.player == '' || this.state.loadingCoordinate == false) {
+    if (this.state.player == 'not assigned' || this.state.loadingCoordinate == false) {
       return <PacmanIndicator size={100} />
     } else {
       return (
@@ -215,7 +264,7 @@ export default class PlayScreen extends Component {
                 id = {this.props.navigation.getParam('timerID')}
                 style={styles.timer}
                 size={windowWidth/15}
-                until = {30}
+                until = {59}
                 onFinish={() => this.goToMarker()}
                 digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625'}}
                 digitTxtStyle={{color: '#1CC625'}}
@@ -223,9 +272,11 @@ export default class PlayScreen extends Component {
                 separatorStyle={{color: '#1CC625'}}
                 timeToShow={['S']}
                 timeLabels={{s: null}}
+                running = {this.props.navigation.getParam('runTimer')}
             />
          
           </View>
+          
           <Modal
             testID={'modal1'}
             visible={this.state.modalVisible}
@@ -286,6 +337,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  
   streetView: {
     position: 'absolute',
     top: 0,
@@ -293,6 +345,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+
   answerButton: {
     position: 'absolute',
     top: windowHeight/25,

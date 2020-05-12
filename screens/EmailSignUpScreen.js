@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import {
-  SafeAreaView,
+ 
   StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
+
 } from 'react-native';
 
 import {
@@ -13,7 +10,6 @@ import {
   Form,
   Item,
   Label,
-  Button,
   Input,
 } from 'native-base';
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
@@ -28,7 +24,7 @@ export default class EmailSignUpScreen extends Component{
     super(props)
     
     this.state = ({
-    username: '',
+      username: '',
       email: '',
       password: ''
     })
@@ -53,6 +49,7 @@ export default class EmailSignUpScreen extends Component{
               displayName: username,
               photoURL: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png'              
             })
+            console.log(currentUser.uid)
 
         } catch (error) {
           console.log(error);

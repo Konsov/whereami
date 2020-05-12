@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
-  ImageBackground,
-  ActivityIndicator,
-  StatusBar,
   Image,
   AsyncStorage
 } from 'react-native';
@@ -25,18 +21,23 @@ class LoadingScreen extends Component {
   }
 
   componentDidMount() {
-    try {
-      var k = this.state.registerToken;
+
+    setTimeout(() => {try {
       
       firebase.auth().onAuthStateChanged((user) => {
         
-       
-        setTimeout(() => { this.navigate(user ? 'HomeScreen' : 'AuthStack'), console.log("wait") }, 7000);
+        if(user){
+          this.isOnline()
+        }
+        
+        this.navigate(user ? 'HomeScreen' : 'AuthStack')
 
       });
     } catch (error) {
       console.log(error.toString())
-    }
+    }}, 7000)
+
+    
   }
   
   isOnline(){
@@ -47,7 +48,7 @@ class LoadingScreen extends Component {
       };
       
       var uid = firebase.auth().currentUser.uid;
-
+    
       var userStatusDatabaseRef = firebase.database().ref('/users/' + uid);  
       
       userStatusDatabaseRef.onDisconnect().update({online: false}).then(function() {

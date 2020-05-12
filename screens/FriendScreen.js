@@ -25,7 +25,6 @@ import Modal from 'react-native-modal'
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
-import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
 var v = 0;
 
@@ -154,6 +153,7 @@ export default class NotificationScreen extends Component {
             modalVisible: true
         })).then(this.checkPlayer(data))
     }
+    
     renderView() {
         if (this.state.loadingInformation == false && this.state.req.length == 3) {
             return <PacmanIndicator size={100} />

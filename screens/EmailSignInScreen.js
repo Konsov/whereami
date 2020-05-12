@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import {
-  SafeAreaView,
+
   StyleSheet,
-  ScrollView,
+  
   View,
-  ImageBackground,
-  StatusBar,
+ 
 } from 'react-native';
 
 import {
   Container,
-  Form,
+
   Item,
   Label,
-  Button,
+
   Input,
 } from 'native-base';
 
