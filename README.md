@@ -7,8 +7,6 @@
 # 3 - Testare Multiplayer se funziona bene
 # 3.1 - Sincronia Partita 
 
-# 4 - Fare Scoreboard per maxScore
-
 # 5 - Perfezionare Codice
 
 # 6 - Fare Grafiche

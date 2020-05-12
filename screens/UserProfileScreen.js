@@ -18,7 +18,7 @@ import { PacmanIndicator } from 'react-native-indicators';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default class UserProfileScreen extends Component {
 
@@ -165,27 +165,157 @@ export default class UserProfileScreen extends Component {
                     <View style={styles.body}>
                         <View style={styles.item}>
                             <View style={styles.iconContent}>
-                                <Text style={styles.userInfo}>Number of games</Text>
-                                <Text style={styles.number}>{this.state.nGame}</Text>
-                                <Text style={styles.userInfo}>Avarage score</Text>
-                                <Text style={styles.number}>{(this.state.avgScore).toFixed()}</Text>
-                                <Text style={styles.userInfo}>Maximum score</Text>  
-                                <Text style={styles.number}>{(this.state.maxScore).toFixed()}</Text>  
-                                <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text>   
-                                <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
-                                    
-                                    <Input autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(username) => this.setState({ username })} />
-                                </Item>
-                                <View style={{width:width / 2.8, alignSelf:"center"}}>
-                                    <AwesomeButtonRick
-                                               
-                                    onPress={() => this.friendRequest(this.state.username)}  
-                                    
-                                    type="anchor"
-                                    >FRIEND REQUEST</AwesomeButtonRick>
+                                <View style = {{ flexDirection: 'column',left: -(width/3), marginTop:10}} >
+                                    <Text style={styles.number}>{this.state.nGame}</Text>
+                                    <Text style={styles.userInfo}>Games</Text>
                                 </View>
+                                <View style = {{ flexDirection: 'column', marginTop: -46}} >                                    
+                                    <Text style={styles.number}>{(this.state.avgScore).toFixed()}</Text>                                
+                                    <Text style={styles.userInfo}>Avg score</Text>
+                                </View>
+                                <View style = {{ flexDirection: 'column', marginTop: -48, left: (width/3)}}>                                  
+                                    <Text style={styles.number}>{(this.state.maxScore).toFixed()}</Text>
+                                    <Text style={styles.userInfo}>Max score</Text> 
+                                </View>   
+                                <Text style={{fontSize: 20, fontWeight: 'bold', textAlign:'center', marginTop: 20}}>Badges</Text>  
+                                
+                                
+                                <ScrollView>
+                                    <View style={{flexDirection:'column'}}>
+                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                {this.state.nGame > 5 || this.state.nGame == 5 ?<Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/bronze.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/bronze.png')}
+                                                />}
+                                                
+                                                <Text style={styles.userInfo}>5 single play</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.8}}>
+                                                {this.state.nGame > 20 || this.state.nGame == 20 ?  <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/silver.png')}
+                                                />:  <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/silver.png')}
+                                                />}                                               
+                                                <Text style={styles.userInfo}>20 single play</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.8}}>
+                                                {this.state.nGame > 50 || this.state.nGame == 50 ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/gold.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/gold.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>50 single play</Text>
+                                            </View>                                            
+                                        </View>
+                                        <View style = {{flexDirection:'row', marginTop:18, marginLeft:18}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                {this.state.nGame > 5 || this.state.nGame == 5 ?<Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/game_1.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/game_1.png')}
+                                                />}
+                                                
+                                                <Text style={styles.userInfo}>5 online play</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/10}}>
+                                                {this.state.nGame > 20 || this.state.nGame == 20 ?  <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/game_2.png')}
+                                                />:  <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/game_2.png')}
+                                                />}                                               
+                                                <Text style={styles.userInfo}>20 online play</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/10}}>
+                                                {this.state.nGame > 50 || this.state.nGame == 50 ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/game_3.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/game_3.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>50 online play</Text>
+                                            </View>                                            
+                                        </View>
+                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                    source={require('../files/bronze_2.png')}
+                                                />
+                                                <Text style={styles.userInfo}>5 online win</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
+                                                <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                    source={require('../files/silver_2.png')}
+                                                />
+                                                <Text style={styles.userInfo}>20 online win</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
+                                                <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                    source={require('../files/gold_1.png')}
+                                                />
+                                                <Text style={styles.userInfo}>50 online win</Text>
+                                            </View>      
+                                        </View>
+                                        <View style = {{flexDirection:'row', marginTop:20, marginLeft:18}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                <Image
+                                                    style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                    source={require('../files/target.png')}
+                                                />
+                                                <Text style={styles.userInfo}>Really close</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
+                                                <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                    source={require('../files/stopwatch.png')}
+                                                />
+                                                <Text style={styles.userInfo}>So fast!</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5, marginTop:-10}}>
+                                                <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                    source={require('../files/fire.png')}
+                                                />
+                                                <Text style={styles.userInfo}>On fire</Text>
+                                            </View>
+                                        </View>
+
+                                        <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text> 
+                                        <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
+                                            
+                                            <Input autoCorrect={false}
+                                                autoCapitalize="none"
+                                                onChangeText={(username) => this.setState({ username })} />
+                                        </Item>
+                                        <View style={{width:width / 2.8, alignSelf:"center", marginBottom:10}}>
+                                            <AwesomeButtonRick
+                                                    
+                                            onPress={() => this.friendRequest(this.state.username)}  
+                                            
+                                            type="anchor"
+                                            >FRIEND REQUEST</AwesomeButtonRick>
+                                        </View> 
+                                    </View>
+                                    
+                                    
+                                       
+                                </ScrollView>
+                             
                                 
                                                          
                             </View>                            
@@ -233,37 +363,32 @@ const styles = StyleSheet.create({
         alignSelf:"center"
     },
     number: {
-        backgroundColor: "#0095B6", 
         alignSelf:"center",
         textAlign:"center",
-        borderWidth: 2,
-        marginTop:width / 65.4,
-        width:width / 3.92
+        fontWeight: 'bold',
+        fontSize:19
     },
     name: {
         fontSize: width / 17.8,
         color: "white",
         fontWeight: '600',
         left: width / 39.27,
-        marginTop: width / 39.2,
+        marginTop: -(width / 15),
         alignSelf:"center"
     },
     userInfo: {
         fontSize: width / 24.54,
         fontWeight: '600',
-        marginTop: width / 13,
-        marginRight:-(width / 19.6),
         alignSelf:"center"
     },
     body: {
         backgroundColor: "#F2F5F7",
         height: width / 0.785,
-        alignItems: 'center',
+        flex: 1
     },
     item: {
         flexDirection: 'row',
-        alignSelf:"center",
-        padding: width / 39.2
+        flex:1
     },
     infoContent: {
         flex: 1,
@@ -309,8 +434,6 @@ const styles = StyleSheet.create({
     },
     iconContent: {
         flex: 1,
-        alignItems: 'flex-end',
-        paddingRight: width / 78.5,
     },
     icon: {
         width: width / 13.09,
