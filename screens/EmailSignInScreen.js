@@ -3,16 +3,16 @@ import {
 
   StyleSheet,
   
+  KeyboardAvoidingView,
   View,
   Image,
   Dimensions,
 } from 'react-native';
 
 import {
-  Container,
   Item,
   Label,
-  Input,
+  Input
 } from 'native-base';
 
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
@@ -42,13 +42,13 @@ export default class EmailSignInScreen extends Component {
   }
 
   render() {
-    return (
-     
+    return (     
       <View>
-      <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
-      <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
-      <View style={styles.container}>
-        <View style={styles.item}>
+        <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
+        <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
+        <View style={styles.container}>
+        <KeyboardAvoidingView behavior='height'>
+          <View style={styles.item}>
           <Item  floatingLabel style= {styles.input}>
             <Label style = {{color: "#FFFFFF"}}>Email</Label>
             <Input
@@ -89,7 +89,8 @@ export default class EmailSignInScreen extends Component {
                </AwesomeButton>
           </View> 
           </View>
-          </View>
+        </KeyboardAvoidingView>
+      </View>
      </View>
     );
   }

@@ -104,7 +104,7 @@ export default class UserProfileScreen extends Component {
                             <View style = {{marginTop:width / 4.9, alignSelf:"center"}}></View>
                             <TouchableHighlight
                                 style={styles.button3}
-                                onPress={() => this.props.navigation.goBack()}
+                                onPress={() => this.props.navigation.navigate('HomeScreen')}
                                 underlayColor="transparent"
                                 activeOpacity={0.7}
                             ><Image

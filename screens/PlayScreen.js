@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, BackHandler, Modal,TouchableHighlight,Image, Text
+  View, Dimensions, BackHandler, Modal,TouchableHighlight,Image, Text,
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
@@ -11,9 +11,12 @@ import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/ric
 import CountDown from 'react-native-countdown-component'
 
 import { PacmanIndicator } from 'react-native-indicators';
+import { Label } from 'native-base';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
 
 export default class PlayScreen extends Component {
 
@@ -42,7 +45,6 @@ export default class PlayScreen extends Component {
   }
 
   componentDidMount() {
-    console.log("qui")
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       this.setState({
         modalVisible:true
@@ -239,6 +241,16 @@ export default class PlayScreen extends Component {
 
   }
 
+  eliminateGame(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+      var game = snapshot.toJSON()
+      if(game[id]['type'] == 'single'){
+        firebase.database().ref(`/Games/${user.uid}`).remove()
+      }
+    })
+  }
+
  
   renderView() {
 
@@ -247,7 +259,6 @@ export default class PlayScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
-        
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
@@ -259,6 +270,7 @@ export default class PlayScreen extends Component {
               style={styles.answerButton}
             >GIVE ANSWER
             </AwesomeButtonRick>
+            
 
             <CountDown
                 id = {this.props.navigation.getParam('timerID')}
@@ -274,7 +286,7 @@ export default class PlayScreen extends Component {
                 timeLabels={{s: null}}
                 running = {this.props.navigation.getParam('runTimer')}
             />
-         
+          
           </View>
           
           <Modal
@@ -295,7 +307,7 @@ export default class PlayScreen extends Component {
                   <Text style={styles.contentTitle}>Do you really want to quit the game?</Text>
                   <View style = {{flexDirection:'row'}}>
                   <TouchableHighlight
-                      onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),console.log("quiqui")}}
+                      onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),this.eliminateGame()}}
                       style={styles.buttons}
                       underlayColor="transparent"
                       activeOpacity= {0.7}  
@@ -317,6 +329,7 @@ export default class PlayScreen extends Component {
                 
             </View>
           </Modal> 
+          <View style = {{width:'100%', height:45, backgroundColor:'#489d2b',marginTop:windowHeight-55}}></View>
         </View>
       );
     }

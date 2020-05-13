@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
-import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
 
 const { width } = Dimensions.get('window');

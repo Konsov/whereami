@@ -4,6 +4,7 @@ import {
   View,
   Image,
   Dimensions,
+  KeyboardAvoidingView
 } from 'react-native';
 
 import {
@@ -67,8 +68,8 @@ export default class EmailSignUpScreen extends Component{
       <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
       <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
       <View style={styles.container}>
-        <View style={styles.item}>
-          
+          <KeyboardAvoidingView behavior='height'>
+          <View style={styles.item}>          
           <Item floatingLabel style= {styles.input}>
             <Label style = {{color: "#FFFFFF"}}>Username</Label>
             <Input 
@@ -78,7 +79,6 @@ export default class EmailSignUpScreen extends Component{
               underlineColorAndroid = "white"
               onChangeText={(username) => this.setState({username})} />
           </Item>
-
           <Item floatingLabel style= {styles.input}>
             <Label style = {{color: "#FFFFFF"}}>Email</Label>
             <Input 
@@ -87,8 +87,7 @@ export default class EmailSignUpScreen extends Component{
               style={{color:'white', fontWeight:'bold', fontSize:20}}
               underlineColorAndroid = "white"
               onChangeText={(email) => this.setState({email})} />
-          </Item>
-        
+          </Item>        
          <Item floatingLabel style= {styles.input}>
             <Label style = {{color: "#FFFFFF"}}>Password</Label>
             <Input 
@@ -98,8 +97,7 @@ export default class EmailSignUpScreen extends Component{
               underlineColorAndroid = "white" 
               onChangeText={(password) => this.setState({password})}
             />
-          </Item>
-         
+          </Item>         
           <View style={styles.buttonContainer}>
             <AwesomeButton
               type="anchor"
@@ -108,8 +106,9 @@ export default class EmailSignUpScreen extends Component{
               onPress={() => this.signUpUser(this.state.username, this.state.email, this.state.password)}
             >Sign Up
             </AwesomeButton>
-          </View> 
+          </View>           
           </View>
+          </KeyboardAvoidingView>
           </View>
      </View>
 

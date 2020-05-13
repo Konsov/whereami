@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 import {
-    StyleSheet,TouchableHighlight,
+    StyleSheet,
     View, Dimensions,
-    BackHandler,Modal,Text
+    BackHandler,Text
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
@@ -12,6 +12,7 @@ import firebase from '../services/firebase';
 import CountDown from 'react-native-countdown-component'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import Modal from 'react-native-modal';
 
 const LATITUDE = 45.742972;
 const LONGITUDE = 9.188209;
@@ -246,26 +247,10 @@ export default class InsertMarker extends Component {
             if(this.state.score > this.state.oppoScore){
             outro = <View>
                         <Text>YOU WIN</Text>
-                        <TouchableHighlight
-                            onPress={() => {
-                                this.setState({
-                                    modalVisibleScore: false
-                                })
-                            }}
-                        ><Text>Hide Modal</Text>
-                        </TouchableHighlight>
                     </View>
             }else{
                 outro = <View>
                 <Text>YOU LOSE</Text>
-                <TouchableHighlight
-                    onPress={() => {
-                        this.setState({
-                            modalVisibleScore: false
-                        })
-                    }}
-                ><Text>Hide Modal</Text>
-                </TouchableHighlight>
             </View>
             }
             
@@ -294,7 +279,7 @@ export default class InsertMarker extends Component {
         return(
         <Modal
             testID={'ModalNextRound'}
-            visible={this.state.modalVisibleNextRound}
+            isVisible={this.state.modalVisibleNextRound}
             backdropColor="#B4B3DB"
             backdropOpacity={0.8}
             animationIn="zoomInDown"
@@ -304,8 +289,9 @@ export default class InsertMarker extends Component {
             backdropTransitionInTiming={600}
             backdropTransitionOutTiming={600}
             transparent = {true}
-            animationType = "slide">
-            
+            animationType = "slide"
+            hasBackDrop={true}>
+            onBackdropPress={() => this.setState({modalVisibleNextRound:false})}
             <View>
 
                 {this.getLeaderbordText()}
@@ -460,7 +446,7 @@ export default class InsertMarker extends Component {
         return(
         <Modal
             testID={'modalScore'}
-            visible={this.state.modalVisibleScore}
+            isVisible={this.state.modalVisibleScore}
             backdropColor="#B4B3DB"
             backdropOpacity={0.8}
             animationIn="zoomInDown"
@@ -470,20 +456,13 @@ export default class InsertMarker extends Component {
             backdropTransitionInTiming={600}
             backdropTransitionOutTiming={600}
             transparent = {true}
-            animationType = "slide">
+            animationType = "slide"
+            hasBackDrop={true}
+            onBackdropPress={() => this.setState({modalVisibleScore:false})}>
         <View style={styles.modalView}>     
                 {this.getMyScoreRender()}
                 <Text>Score of this round {this.state.tempScore}</Text>
                 <Text>Total score {this.state.score}</Text>
-                <TouchableHighlight
-                    onPress={() => {
-                        this.setState({
-                            modalVisibleScore: false
-                        })
-                    }}
-                >
-                <Text>Hide Modal</Text>
-                </TouchableHighlight>
         </View>
       </Modal>)
     }
@@ -547,7 +526,7 @@ export default class InsertMarker extends Component {
                             longitudeDelta: LONGITUDE_DELTA,
                         }}
                         onPress={(e) => {
-                            if (!this.state.showingAnswerMarker)
+                            if (!this.state.showingAnswerMarker && !this.state.answered)
                                 this.setState({
                                     marker: e.nativeEvent.coordinate
                                 })
@@ -621,7 +600,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 5
 
       }
 });

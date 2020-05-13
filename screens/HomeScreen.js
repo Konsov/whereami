@@ -54,8 +54,7 @@ export default class HomeScreen extends Component {
   }
   
   stop(){
-    whoosh.stop();
-    
+    whoosh.stop();    
   }
 
   pause(data){
