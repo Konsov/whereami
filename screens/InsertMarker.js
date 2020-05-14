@@ -291,8 +291,7 @@ export default class InsertMarker extends Component {
             transparent = {true}
             animationType = "slide"
             hasBackDrop={true}>
-            onBackdropPress={() => this.setState({modalVisibleNextRound:false})}
-            <View>
+            <View style={styles.modalView}>
 
                 {this.getLeaderbordText()}
 

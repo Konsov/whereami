@@ -329,7 +329,7 @@ export default class PlayScreen extends Component {
                 
             </View>
           </Modal> 
-          <View style = {{width:'100%', height:45, backgroundColor:'#489d2b',marginTop:windowHeight-55}}></View>
+          
         </View>
       );
     }
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: -40,
   },
 
   answerButton: {

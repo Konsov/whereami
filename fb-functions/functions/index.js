@@ -139,6 +139,31 @@ exports.createRandomGame = functions.region('europe-west1').database
 
     });
 
+exports.updateImgProfile = functions.region('europe-west1').database
+    .ref('/users/{uid}/userpic')
+    .onUpdate((snapshot, context) => {
+        const uid = context.params.uid;
+        return snapshot.after.ref.parent.once('value').then(val => {
+            var user = val.toJSON();
+            var img = user['userpic'];
+            admin.database().ref('/users').once('value').then(snap => {
+                
+                                
+                var profile = snap.toJSON();
+
+                for (users in profile){
+                    for (var prof in profile[users]['friend']) {
+                        if (prof == uid){
+                            admin.database().ref(`/users/${users}/friend/${uid}`).update({
+                                img: img
+                            })
+                        }
+                    }
+                }
+            })
+        })
+    });
+
 
 exports.delGameUpStats = functions.region('europe-west1').database
     .ref('/Games/{gameID}/finished')

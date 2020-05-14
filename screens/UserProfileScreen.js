@@ -16,9 +16,20 @@ import {
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
+import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import { utils } from '@react-native-firebase/app';
 
 
 const { width, height } = Dimensions.get('window');
+
+const options = {
+    mediaType: 'photo',
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+};
 
 export default class UserProfileScreen extends Component {
 
@@ -32,6 +43,8 @@ export default class UserProfileScreen extends Component {
         req: [],
         not: 0
     }
+
+    
 
 
     componentDidMount() {
@@ -73,6 +86,65 @@ export default class UserProfileScreen extends Component {
         )
     }
 
+    changeImg(){
+
+        ImagePicker.showImagePicker(options, (response) => {
+           
+          
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            } else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+              console.log('User tapped custom button: ', response.customButton);
+            } else {
+              
+              try {
+                 
+                var user = firebase.auth().currentUser;   
+                const source = { uri: response.uri, path: response.path, fileName: response.fileName, data: 'data:image/jpeg;base64,' + response.data };
+                const reference = storage().ref(`images/${source.fileName}`); 
+                const task = reference.putFile(source.path); 
+                task.on('state_changed', taskSnapshot => {
+                    
+                });
+                  
+                task.then(() => {
+                    var str = source.fileName.split(".")         
+                    try {
+                        reference.getDownloadURL().then(function(url) {
+                            user.updateProfile({
+                                photoURL:url
+                            })
+                            firebase.database().ref(`/users/${user.uid}/`).update({
+                                userpic: url
+                            })
+                            
+                        }).catch(function(error) {
+                            // Handle any errors
+                        });
+                    } catch (error) {
+                        console.log("error.toString()1")
+                    }                             
+                        
+                });
+               
+                this.setState({
+                    userPic: source.uri,
+              });
+              } catch (error) {
+                console.log("error.toString()2")
+              }
+              
+    
+              
+              // You can also display the image using data:
+              // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+          
+             
+            }
+          });
+    }
 
     friendRequest(username) {
         const user = firebase.auth().currentUser;
@@ -111,7 +183,8 @@ export default class UserProfileScreen extends Component {
                                     style={{ width: width / 11, height: width / 11 }}
                                     source={require('../files/back.png')}
                                 />
-                            </TouchableHighlight> 
+                            </TouchableHighlight>
+                             
                             <TouchableHighlight
                                 style={styles.button4}
                                 onPress={() => this.props.navigation.navigate('LeaderScreen')}
@@ -158,6 +231,16 @@ export default class UserProfileScreen extends Component {
                            
                             <Image style={styles.avatar}
                                 source={{ uri: this.state.userPic }} />
+                            <TouchableHighlight
+                                style={{position:'absolute', top:height/15,left:width/1.65}}
+                                onPress={() => this.changeImg()}
+                                underlayColor="transparent"
+                                activeOpacity={0.7}
+                            ><Image
+                                    style={{ width: width / 14, height: width / 14 }}
+                                    source={require('../files/interface.png')}
+                                />
+                            </TouchableHighlight>    
                             <Text style={styles.name}>{this.state.player} </Text>
                         </View>
                     </View>
