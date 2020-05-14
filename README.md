@@ -34,7 +34,7 @@
 
 # Aggiunte
 # A.1 Mettere Username con login da Facebook
-# A.2 Possibilità di scegliere Foto da UserprofileScreen. Esempio Archiviazione/Serie di Avatar
+# A.2 Possibilità di scegliere Foto da UserprofileScreen. Esempio Archiviazione/Serie di Avatar ✓
 # A.3 Scegliere bene Badges da mettere (vedi A.4)
 # A.4 Modale/Notifiche quando vengono sbloccati in game (vedi A.3)
 # A.5 Gestire Abbandono di un giocatore in Multyplayer (vedi B.4)
