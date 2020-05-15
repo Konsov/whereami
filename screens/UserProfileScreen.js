@@ -15,10 +15,8 @@ import {
 } from 'native-base';
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
-import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import { utils } from '@react-native-firebase/app';
 
 
 const { width, height } = Dimensions.get('window');
@@ -104,13 +102,9 @@ export default class UserProfileScreen extends Component {
                 var user = firebase.auth().currentUser;   
                 const source = { uri: response.uri, path: response.path, fileName: response.fileName, data: 'data:image/jpeg;base64,' + response.data };
                 const reference = storage().ref(`images/${source.fileName}`); 
-                const task = reference.putFile(source.path); 
-                task.on('state_changed', taskSnapshot => {
-                    
-                });
+                const task = reference.putFile(source.path);
                   
-                task.then(() => {
-                    var str = source.fileName.split(".")         
+                task.then(() => {        
                     try {
                         reference.getDownloadURL().then(function(url) {
                             user.updateProfile({
@@ -377,21 +371,7 @@ export default class UserProfileScreen extends Component {
                                             </View>
                                         </View>
 
-                                        <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text> 
-                                        <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
-                                            
-                                            <Input autoCorrect={false}
-                                                autoCapitalize="none"
-                                                onChangeText={(username) => this.setState({ username })} />
-                                        </Item>
-                                        <View style={{width:width / 2.8, alignSelf:"center", marginBottom:10}}>
-                                            <AwesomeButtonRick
-                                                    
-                                            onPress={() => this.friendRequest(this.state.username)}  
-                                            
-                                            type="anchor"
-                                            >FRIEND REQUEST</AwesomeButtonRick>
-                                        </View> 
+                                        
                                     </View>
                                     
                                     

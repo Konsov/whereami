@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native'
 import {
     Button,
     Text,
+    Item,
+    Input
 } from "native-base";
 import {
     View,
@@ -12,7 +14,9 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
-import Modal from 'react-native-modal'
+import Modal from 'react-native-modal';
+
+import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
 import firebase from '../services/firebase';
 import { PacmanIndicator } from 'react-native-indicators';
@@ -217,9 +221,9 @@ export default class NotificationScreen extends Component {
             return <PacmanIndicator size={100} />
         } else {
             return (
-                <View>
+                <View style={{flex:1}}>
                     <View colors={[, '#1da2c6', '#1695b7']}
-                        style={{ backgroundColor: '#98cbe4', padding: 15, alignItems: 'center' }}>
+                        style={{ backgroundColor: '#98cbe4', padding: 15, alignItems: 'center',flex:0.05 }}>
                         <Text style={{ fontSize: 25, color: 'white', }}>Friend List</Text>
                         <View style={{position:'absolute', marginLeft: width / 18, marginTop:width / 35 ,alignSelf:'flex-start'}}>
                             <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
@@ -232,12 +236,27 @@ export default class NotificationScreen extends Component {
                     
                     
                     </View>
-                    <FlatList
-                        data={req}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={data => this.renderItem(data)}
-                    />
-
+                    <View style={{flex:0.74}}>
+                        <FlatList
+                            data={req}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={data => this.renderItem(data)}
+                        />
+                    </View>
+                    <View style={{flex:0.21}}>
+                        <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text> 
+                        <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
+                            <Input autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(user) => this.setState({ user })} />
+                        </Item>
+                        <View style={{width:width / 2.8, alignSelf:"center", marginBottom:10,}}>
+                            <AwesomeButtonRick         
+                                onPress={() => this.friendRequest(this.state.user)}  
+                                type="anchor"
+                            >FRIEND REQUEST</AwesomeButtonRick>
+                        </View>
+                    </View>
             </View>
             );
         }

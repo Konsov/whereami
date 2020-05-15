@@ -69,35 +69,37 @@ export default class EmailSignUpScreen extends Component{
       <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
       <View style={styles.container}>
           <KeyboardAvoidingView behavior='height'>
-          <View style={styles.item}>          
-          <Item floatingLabel style= {styles.input}>
-            <Label style = {{color: "#FFFFFF"}}>Username</Label>
-            <Input 
-              autoCorrect={false}
-              autoCapitalize="none"
-              style={{color:'white', fontWeight:'bold', fontSize:20}}
-              underlineColorAndroid = "white"
-              onChangeText={(username) => this.setState({username})} />
-          </Item>
-          <Item floatingLabel style= {styles.input}>
-            <Label style = {{color: "#FFFFFF"}}>Email</Label>
-            <Input 
-              autoCorrect={false}
-              autoCapitalize="none"
-              style={{color:'white', fontWeight:'bold', fontSize:20}}
-              underlineColorAndroid = "white"
-              onChangeText={(email) => this.setState({email})} />
-          </Item>        
-         <Item floatingLabel style= {styles.input}>
-            <Label style = {{color: "#FFFFFF"}}>Password</Label>
-            <Input 
-              autoCorrect={false}
-              autoCapitalize="none"
-              style={{color:'white', fontWeight:'bold', fontSize:20}}
-              underlineColorAndroid = "white" 
-              onChangeText={(password) => this.setState({password})}
-            />
-          </Item>         
+          <View style={styles.item}> 
+          <View style ={{backgroundColor:'rgba(152, 203, 228, 0.5)'}}>        
+            <Item floatingLabel style= {styles.input}>
+              <Label style = {{color: "#FFFFFF"}}>Username</Label>
+              <Input 
+                autoCorrect={false}
+                autoCapitalize="none"
+                style={{color:'white', fontWeight:'bold', fontSize:20}}
+                underlineColorAndroid = "white"
+                onChangeText={(username) => this.setState({username})} />
+            </Item>
+            <Item floatingLabel style= {styles.input}>
+              <Label style = {{color: "#FFFFFF"}}>Email</Label>
+              <Input 
+                autoCorrect={false}
+                autoCapitalize="none"
+                style={{color:'white', fontWeight:'bold', fontSize:20}}
+                underlineColorAndroid = "white"
+                onChangeText={(email) => this.setState({email})} />
+            </Item>        
+            <Item floatingLabel style= {styles.input}>
+              <Label style = {{color: "#FFFFFF"}}>Password</Label>
+              <Input 
+                autoCorrect={false}
+                autoCapitalize="none"
+                style={{color:'white', fontWeight:'bold', fontSize:20}}
+                underlineColorAndroid = "white" 
+                onChangeText={(password) => this.setState({password})}
+              />
+            </Item>
+          </View>            
           <View style={styles.buttonContainer}>
             <AwesomeButton
               type="anchor"

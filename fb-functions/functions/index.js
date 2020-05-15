@@ -61,7 +61,7 @@ exports.sendFriendRequest = functions.region('europe-west1').database.
                   
             }
 
-            setTimeout(function(){admin.messaging().send(message) }, 5000);
+            admin.messaging().send(message);
             
 
         }, function (errorObject) {

@@ -4,10 +4,10 @@
 # 1.1 Scritta where am i nuova.
 
 # 2_EmailSingIN / EmailSingOUT
-# 2.1 Provare a sistemare grafica form email e password, esempio: mettere dietro view opaca
+# 2.1 Provare a sistemare grafica form email e password, esempio: mettere dietro view opaca ✓
 
 # 3_UserProfileScreen
-# 3.1 Spostare Pulsante friend Request
+# 3.1 Spostare Pulsante friend Request ✓
 # 3.2 Sistemare Badges e Statistiche (vedi A.3 e A.4)
 
 # 4_PlayScreen
@@ -36,8 +36,9 @@
 # A.1 Mettere Username con login da Facebook
 # A.2 Possibilità di scegliere Foto da UserprofileScreen. Esempio Archiviazione/Serie di Avatar ✓
 # A.3 Scegliere bene Badges da mettere (vedi A.4)
-# A.4 Modale/Notifiche quando vengono sbloccati in game (vedi A.3)
+# A.4 Modale/Notifiche quando vengono sbloccati in game con notifiche (vedi A.3)
 # A.5 Gestire Abbandono di un giocatore in Multyplayer (vedi B.4)
+
 
 
 
