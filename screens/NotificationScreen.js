@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 17,
         flex: 1,
-        paddingRight: 80
+        paddingRight: 100
     },    
     score: {
         position: "absolute",
