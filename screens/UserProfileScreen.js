@@ -14,7 +14,6 @@ import {
     Badge
 } from 'native-base';
 import firebase from '../services/firebase';
-<<<<<<< HEAD
 import { BarIndicator } from 'react-native-indicators';
 
 
@@ -24,11 +23,9 @@ import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/ric
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 
-=======
 import { PacmanIndicator } from 'react-native-indicators';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
->>>>>>> fcc4319bdfa26d34976c287edfdb9943b0cdb3dd
 
 
 const { width, height } = Dimensions.get('window');

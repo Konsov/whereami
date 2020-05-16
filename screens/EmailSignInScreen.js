@@ -42,7 +42,6 @@ export default class EmailSignInScreen extends Component {
         <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: windowHeight / 15, alignSelf:'center'}}/>
          
         <View style={styles.container}>
-<<<<<<< HEAD
        
           <View style= {styles.containerItems}>
             <Item floatingLabel>
@@ -82,51 +81,6 @@ export default class EmailSignInScreen extends Component {
               onPress={() => { this.props.navigation.navigate('EmailSignUpScreen') }}
               > Not already register? Sign Up!
             </AwesomeButton>
-=======
-        <KeyboardAvoidingView behavior='height'>
-          <View style={styles.item}>
-            <View style ={{backgroundColor:'rgba(152, 203, 228, 0.5)'}}>
-              <Item  floatingLabel style= {styles.input}>
-                <Label style = {{color: "#FFFFFF"}}>Email</Label>
-                <Input
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  style={{color:'white', fontWeight:'bold', fontSize:20}}
-                  underlineColorAndroid = "white"
-                  onChangeText={(email) => this.setState({ email })} />
-              </Item>
-
-              <Item floatingLabel style= {styles.input}>
-                <Label style = {{color: "#FFFFFF"}}>Password</Label>
-                <Input
-                  secureTextEntry={true}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  underlineColorAndroid = "white"
-                  style={{color:'white', fontWeight:'bold', fontSize:20}}
-                  onChangeText={(password) => this.setState({ password })}
-                />
-              </Item>
-            </View>
-            <View style={styles.buttonContainer}>
-              <AwesomeButton
-                type="anchor"
-                stretch = {true}
-                style={styles.button}
-                onPress={() => this.loginUser(this.state.email, this.state.password)}
-              > Login
-                </AwesomeButton>
-              <AwesomeButton
-                type="anchor"
-                backgroundColor = "#CEFB80"
-                borderColor= "#ADF888"
-                stretch = {true}
-                style={styles.button}
-                onPress={() => { this.props.navigation.navigate('EmailSignUpScreen') }}
-              > Not all ready register? Sign Up!
-                </AwesomeButton>
-            </View> 
->>>>>>> fcc4319bdfa26d34976c287edfdb9943b0cdb3dd
           </View>
      </View>
   </View> 
