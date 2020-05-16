@@ -16,7 +16,11 @@ import { ButtonGroup } from 'react-native-elements';
 import Leaderboard from 'react-native-leaderboard';
 
 import firebase from '../services/firebase';
-import { PacmanIndicator } from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 
 const { width } = Dimensions.get('window');
@@ -204,7 +208,10 @@ export default class LeaderScreen extends Component {
             onRowPress: (item, index) => { this.goToProfile(item)}
         }
         if (this.state.loadingInformation == false) {
-            return <PacmanIndicator size={100} />
+            return(<View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
+                <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
+                <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+                </View>)
         } else {
         return (
             <View style={{ flex: 1, backgroundColor: 'white', }}>

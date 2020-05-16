@@ -15,22 +15,20 @@ import {
 
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
 
-
-const { width, height } = Dimensions.get('window');
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 import firebase from '../services/firebase'
 
 export default class EmailSignUpScreen extends Component{
 
-  constructor(props){
-    super(props)
     
-    this.state = ({
+    state = {
       username: '',
       email: '',
       password: ''
-    })
-  }
+    }
+  
 
   signUpUser = (username,email, password) => {
     try {
@@ -65,50 +63,51 @@ export default class EmailSignUpScreen extends Component{
   render(){
     return (
       <View>
-      <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
-      <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
-      <View style={styles.container}>
-          <KeyboardAvoidingView behavior='height'>
-          <View style={styles.item}>          
-          <Item floatingLabel style= {styles.input}>
-            <Label style = {{color: "#FFFFFF"}}>Username</Label>
-            <Input 
-              autoCorrect={false}
-              autoCapitalize="none"
-              style={{color:'white', fontWeight:'bold', fontSize:20}}
-              underlineColorAndroid = "white"
-              onChangeText={(username) => this.setState({username})} />
-          </Item>
-          <Item floatingLabel style= {styles.input}>
-            <Label style = {{color: "#FFFFFF"}}>Email</Label>
-            <Input 
-              autoCorrect={false}
-              autoCapitalize="none"
-              style={{color:'white', fontWeight:'bold', fontSize:20}}
-              underlineColorAndroid = "white"
-              onChangeText={(email) => this.setState({email})} />
-          </Item>        
-         <Item floatingLabel style= {styles.input}>
-            <Label style = {{color: "#FFFFFF"}}>Password</Label>
-            <Input 
-              autoCorrect={false}
-              autoCapitalize="none"
-              style={{color:'white', fontWeight:'bold', fontSize:20}}
-              underlineColorAndroid = "white" 
-              onChangeText={(password) => this.setState({password})}
-            />
-          </Item>         
-          <View style={styles.buttonContainer}>
+        <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
+        <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: windowHeight / 15, alignSelf:'center'}}/>
+        
+        <View style={styles.container}>
+          <View style={styles.containerItems}>          
+            <Item floatingLabel>
+              <Label style = {{color: "#FFFFFF"}}>Username</Label>
+              <Input 
+                autoCorrect={false}
+                autoCapitalize="none"
+                style={{color:'white', fontWeight:'bold'}}
+                underlineColorAndroid = "white"
+                onChangeText={(username) => this.setState({username})} />
+            </Item>
+            <Item floatingLabel style={styles.item}>
+              <Label style = {{color: "#FFFFFF"}}>Email</Label>
+              <Input 
+                autoCorrect={false}
+                autoCapitalize="none"
+                style={{color:'white', fontWeight:'bold'}}
+                underlineColorAndroid = "white"
+                onChangeText={(email) => this.setState({email})} />
+            </Item>        
+            <Item floatingLabel style={styles.item}>
+              <Label style = {{color: "#FFFFFF"}}>Password</Label>
+              <Input 
+                secureTextEntry={true}
+                autoCorrect={false}
+                autoCapitalize="none"
+                style={{color:'white', fontWeight:'bold'}}
+                underlineColorAndroid = "white" 
+                onChangeText={(password) => this.setState({password})}
+              />
+            </Item>
+          </View>         
+          <View style={styles.containerButtons}>
             <AwesomeButton
-              type="anchor"
+              type="primary"
               stretch = {true}
               style={styles.button}
               onPress={() => this.signUpUser(this.state.username, this.state.email, this.state.password)}
             >Sign Up
             </AwesomeButton>
           </View>           
-          </View>
-          </KeyboardAvoidingView>
+          
           </View>
      </View>
 
@@ -119,25 +118,25 @@ export default class EmailSignUpScreen extends Component{
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    marginTop: '80%',
-    marginLeft: '28%',
+    marginTop:windowHeight/3.5,
+    alignSelf: 'center',
+    width:windowWidth/1.3,
   },
-  buttonContainer: {
-    flex:1,
-    width: width / 2,
-    marginRight: (width / 2) - (width / 4)
+  containerButtons:{
+    alignSelf: 'center',
+    width: windowWidth/2,
+    marginTop:windowHeight/20,
   },
-  item: {
-    flexDirection: 'column',
-    alignSelf:"center",
+  item:{
+    marginTop: windowHeight/50
   },
-  button:{
-    marginTop: 10
-  },
-  input:{
-    width:width / 2, 
-    alignSelf:"center", 
-    marginTop:10,
-    marginRight: (width / 2) - (width / 4)
+  containerItems:{
+    borderColor:'#0F52BA',
+    borderWidth: 3,
+    borderRadius:20,
+    paddingTop: windowHeight/20,
+    paddingBottom: windowHeight/15,
+    paddingHorizontal: windowWidth/20,
+    backgroundColor:  '#0F52BA99',
   }
 });
