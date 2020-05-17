@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, BackHandler, Modal,TouchableHighlight,Image, Text,
+  View, Dimensions, BackHandler,TouchableHighlight,Image, Text,
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
-
+import Modal from 'react-native-modal';
 import CountDown from 'react-native-countdown-component'
 
-import { PacmanIndicator } from 'react-native-indicators';
-import { Label } from 'native-base';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BarIndicator } from 'react-native-indicators';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -251,19 +250,62 @@ export default class PlayScreen extends Component {
     })
   }
 
- 
+renderModalExitGame(){
+  return(
+    <Modal
+      testID={'modal1'}
+      visible={this.state.modalVisible}
+      backdropColor="#B4B3DB"
+      backdropOpacity={0.8}
+      animationIn="zoomInDown"
+      animationOut="zoomOutUp"
+      animationInTiming={600}
+      animationOutTiming={600}
+      backdropTransitionInTiming={600}
+      backdropTransitionOutTiming={600}
+      transparent = {true}
+      animationType = "slide">
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Are you sure to leave the game?</Text>
+          <View style = {styles.buttonModalContainer}>
+            <TouchableHighlight
+              onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),this.eliminateGame()}}
+              underlayColor="transparent"
+              activeOpacity= {0.7}  
+              ><Image source={require('../files/success.png')} style={{width:windowWidth/9, height:windowWidth/9}}/>
+            </TouchableHighlight>
+            <TouchableHighlight
+              onPress={() => {this.setState({ modalVisible:false})}}
+              underlayColor="transparent"
+              activeOpacity= {0.7}  
+              ><Image source={require('../files/error.png')} style={{width:windowWidth/9, height:windowWidth/9,marginLeft:windowWidth/9}}/>
+            </TouchableHighlight>
+          </View>
+        </View>
+    </Modal> 
+  )
+}
+
   renderView() {
 
     if (this.state.player == 'not assigned' || this.state.loadingCoordinate == false) {
-      return <PacmanIndicator size={100} />
+      
+      return (<View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
+        <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
+        <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+        </View>)
     } else {
       return (
         <View style={styles.container}>
+
+          {this.renderModalExitGame()}
+
           <StreetView
             style={styles.streetView}
             allGesturesEnabled={true}
             coordinate={{ latitude: this.getRoundLatitude(), longitude: this.getRoundLongitude(), radius: 100000 }} />
-          <View>
+         
+         
             <AwesomeButtonRick
               onPress={() => this.goToMarker()}
               type="anchor"
@@ -288,49 +330,7 @@ export default class PlayScreen extends Component {
             />
           
           </View>
-          
-          <Modal
-            testID={'modal1'}
-            visible={this.state.modalVisible}
-            backdropColor="#B4B3DB"
-            backdropOpacity={0.8}
-            animationIn="zoomInDown"
-            animationOut="zoomOutUp"
-            animationInTiming={600}
-            animationOutTiming={600}
-            backdropTransitionInTiming={600}
-            backdropTransitionOutTiming={600}
-            transparent = {true}
-            animationType = "slide">
-            <View style={styles.content}>
-              <View style={styles.modalView}>
-                  <Text style={styles.contentTitle}>Do you really want to quit the game?</Text>
-                  <View style = {{flexDirection:'row'}}>
-                  <TouchableHighlight
-                      onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),this.eliminateGame()}}
-                      style={styles.buttons}
-                      underlayColor="transparent"
-                      activeOpacity= {0.7}  
-                      ><Image
-                        style={{width: 40,height: 40}}
-                        source={require('../files/success.png')}/>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                      onPress={() => {this.setState({ modalVisible:false})}}
-                      underlayColor="transparent"
-                      activeOpacity= {0.7}  
-                      style={styles.buttone}
-                      ><Image
-                        style={{width: 40,height: 40}}
-                        source={require('../files/error.png')}/>
-                  </TouchableHighlight>
-                  </View>
-              </View>
-                
-            </View>
-          </Modal> 
-          
-        </View>
+
       );
     }
   }
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: -40,
+    bottom: -windowHeight/25,
   },
 
   answerButton: {
@@ -365,17 +365,13 @@ const styles = StyleSheet.create({
     right: windowWidth/30
   },
 
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: windowHeight / 3,
-    marginBottom: windowHeight / 3
+  buttonModalContainer:{
+    flexDirection:'row',
+    marginTop: windowHeight/40,
   },
 
-  contentTitle: {
-    fontSize: 20,
-    marginBottom: 12,
+  modalText: {
+    fontSize: windowHeight/33
   },
 
   timer: {
@@ -383,12 +379,12 @@ const styles = StyleSheet.create({
     top: windowHeight/40,
     left: windowWidth/30
   },
+
   modalView: {
-    margin: 20,
+    alignItems: 'center',
     backgroundColor: "white",
+    padding: windowHeight/19,
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -398,20 +394,5 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
-  buttons: {
-    flex:1,
-    position: 'relative',
-    width:40,
-    height:40,
-    left:windowWidth/6
-  },
-  buttone: {
-    flex:1,
-    position: 'relative',
-    width:40,
-    height:40,
-    left: windowWidth / 12
-
-  }
 
 });

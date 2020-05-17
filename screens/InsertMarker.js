@@ -10,9 +10,11 @@ import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
 import CountDown from 'react-native-countdown-component'
+import Modal from 'react-native-modal';
+import { BarIndicator } from 'react-native-indicators';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import Modal from 'react-native-modal';
 
 const LATITUDE = 45.742972;
 const LONGITUDE = 9.188209;
@@ -73,11 +75,7 @@ export default class InsertMarker extends Component {
         var tempScore = (20000 - distance)
         
         var score = tempScore + this.props.navigation.getParam('score')
-        
-        console.log('punti round prima: ' + this.props.navigation.getParam('score'))
-        console.log('punti round corrente: ' + tempScore)
-        console.log('punti totali: ' + score)
-        console.log(distance)
+       
         this.setState({
             score: score,
             distance: distance,
@@ -94,17 +92,15 @@ export default class InsertMarker extends Component {
         })
           
         
-        console.log(this.props.navigation.getParam('lat'),this.props.navigation.getParam('long'))
-        
+  
         this.setState({
             answered: true
         })
 
-        console.log(this.props.navigation.getParam('player'),' ha risposto? ',this.state.answered)
         
         if(this.props.navigation.getParam('type') == 'multiplayer'){
 
-            console.log('quando do la risposta',this.props.navigation.getParam('round'))
+ 
             if(this.props.navigation.getParam('player') == 'player1'){
                 firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates`).child(`round_${this.props.navigation.getParam('round')}`).update({ player1_answer: {coordinates: this.state.marker, score: this.state.tempScore, ready: false}})
             }else{
@@ -186,15 +182,13 @@ export default class InsertMarker extends Component {
     }
     
     getOpponentCoordinate() {
-        console.log("quando prendo le coordinate dell`opponent", this.props.navigation.getParam('round'))
+
             if(this.props.navigation.getParam('player')== 'player1'){
                 firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player2_answer`).once('value').then(function (snapshot){
                 
                     var oppoAns = snapshot.toJSON();
                     if(oppoAns != null){
-                        console.log(oppoAns)
-                        console.log(oppoAns['coordinates']['latitude'])
-                        console.log(oppoAns['coordinates']['longitude'])
+                   
                         
                         this.setState({
                             oppoLat: oppoAns['coordinates']['latitude'],
@@ -213,10 +207,7 @@ export default class InsertMarker extends Component {
                 
                     var oppoAns = snapshot.toJSON();
                     if(oppoAns != null){
-                        console.log(oppoAns)
-                        console.log(oppoAns['coordinates']['latitude'])
-                        console.log(oppoAns['coordinates']['longitude'])
-                        
+                    
                         this.setState({
                             oppoLat: oppoAns['coordinates']['latitude'],
                             oppoLon: oppoAns['coordinates']['longitude'],
@@ -232,7 +223,7 @@ export default class InsertMarker extends Component {
             }
     }
 
-    getLeaderbordText(){
+    renderLeaderbordText(){
 
         var intro
         var outro
@@ -245,13 +236,28 @@ export default class InsertMarker extends Component {
             intro = <Text>Final Leaderboard</Text>
             
             if(this.state.score > this.state.oppoScore){
-            outro = <View>
-                        <Text>YOU WIN</Text>
-                    </View>
+                outro = <View>
+                            <Text>YOU WIN</Text>
+                            <AwesomeButtonRick
+                            onPress={() => {
+                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
+                                this.props.navigation.navigate('AppStack'), this.setState({
+                                })}}
+                            type="anchor"
+                            >Go To Home
+                            </AwesomeButtonRick>
+                        </View>
             }else{
                 outro = <View>
-                <Text>YOU LOSE</Text>
-            </View>
+                            <Text>YOU LOSE</Text>
+                            <AwesomeButtonRick
+                                onPress={() => {
+                                    firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
+                                    this.props.navigation.navigate('AppStack')}}
+                                type="anchor"
+                                >Go To Home
+                            </AwesomeButtonRick>
+                        </View>
             }
             
         }
@@ -275,7 +281,7 @@ export default class InsertMarker extends Component {
         }
     }
    
-    getModalNextRoundRender(){
+    renderModalNextRound(){
         return(
         <Modal
             testID={'ModalNextRound'}
@@ -293,7 +299,7 @@ export default class InsertMarker extends Component {
             hasBackDrop={true}>
             <View style={styles.modalView}>
 
-                {this.getLeaderbordText()}
+                {this.renderLeaderbordText()}
 
             </View>
       </Modal>)
@@ -319,29 +325,32 @@ export default class InsertMarker extends Component {
     }
     
     goToNextRound(){
-    
-        if(this.props.navigation.getParam('type')=='single'){
-           
-            this.props.navigation.navigate('PlayScreen', { score: this.state.score, timerID: this.props.navigation.getParam('timerID') + 'a', runTimer: true })  
-           
-            this.setState({
-                answered: false
-            })
-        }else{
-            if(this.props.navigation.getParam('player') == 'player1'){
-                
-            console.log("quando sono pronto", this.props.navigation.getParam('round'))
-                firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player1_answer`).update({ready: true})
+        
+            if(this.props.navigation.getParam('type')=='single'){
+
+                if(this.props.navigation.getParam('round')<5){
+                    this.props.navigation.navigate('PlayScreen', { score: this.state.score, timerID: this.props.navigation.getParam('timerID') + 'a', runTimer: true })  
+            
+                this.setState({
+                    answered: false
+                })
+                }else{
+                    firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
+                    this.props.navigation.navigate('AppStack')
+                }
             }else{
-                
-            console.log("quando sono pronto", this.props.navigation.getParam('round'))
-                firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player2_answer`).update({ready: true})
+                if(this.props.navigation.getParam('player') == 'player1'){
+                    
+                    firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player1_answer`).update({ready: true})
+                }else{
+                    
+                    firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player2_answer`).update({ready: true})
+                }
+                this.setState({
+                    myStatus: true
+                })
+                this.getOpponentStatus()
             }
-            this.setState({
-                myStatus: true
-            })
-            this.getOpponentStatus()
-        }
     }
 
     getOpponentStatus(){
@@ -351,8 +360,6 @@ export default class InsertMarker extends Component {
                 var oppoStatus = snapshot.toJSON();
                 if(oppoStatus != null){
 
-                    console.log("oppostatus",oppoStatus)
-                  
                     if(oppoStatus == true){ 
                         this.setState({
                             modalVisibleNextRound: true,
@@ -376,7 +383,6 @@ export default class InsertMarker extends Component {
             
                 var oppoStatus = snapshot.toJSON();
                 if(oppoStatus != null){
-                    console.log("oppostatus",oppoStatus)
                     if(oppoStatus == true){ 
                         this.setState({
                             modalVisibleNextRound: true,
@@ -418,17 +424,12 @@ export default class InsertMarker extends Component {
             )
         }else if((this.state.answered && !this.state.oppoAnswered && this.props.navigation.getParam('type') == 'multiplayer')  || (this.state.myStatus && this.props.navigation.getParam('round') < 5)){
             return(
-                <View>
-                    <Text>Waiting Opponent</Text>
-                </View>
+                <View style={styles.button}><BarIndicator color='#3f8228' size={35}/></View>
                 )
         }else if(((this.state.answered && this.state.oppoAnswered && !this.state.myStatus && this.props.navigation.getParam('type') == 'multiplayer') || (this.state.answered && this.props.navigation.getParam('type') == 'single') ) && this.props.navigation.getParam('round') == 5){
             return(
                 <AwesomeButtonRick
-                    onPress={() => {
-                        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
-                        this.props.navigation.navigate('AppStack'), this.setState({
-                        })}}
+                    onPress={() => {this.goToNextRound()}}
                     type="anchor"
                     style={styles.button}
                     >END GAME
@@ -441,7 +442,26 @@ export default class InsertMarker extends Component {
 
     }
 
-    getModalScoreRender(){
+    renderModalScore(){
+        var msg
+        var finishMsg = <Text>temp</Text>
+        if(this.state.distance <= 20000 && this.state.distance > 10000){
+            msg = <Text>Whaaaat? You shuold study geography bro! You are {this.state.distance}km far!</Text>
+        }else if(this.state.distance <= 10000 && this.state.distance > 5000){
+            msg = <Text>Nice Try! But you can do better!! You wrong by {this.state.distance}km</Text>
+        }else if(this.state.distance <= 5000 && this.state.distance > 1000){    
+            msg= <Text>Yeah! Very Close! Only {this.state.distance}km far</Text>
+        }else if(this.state.distance <= 1000 ){
+            msg= <Text>GREAT!{this.state.distance}km missed, YOU GOTTA THIS BRO </Text>
+        }else{
+            msg = <Text>Errore</Text>
+        }
+
+        if(this.props.navigation.getParam('round')==5){
+            finishMsg=<Text>FINISH SCORE{this.state.score}</Text>
+        }
+
+
         return(
         <Modal
             testID={'modalScore'}
@@ -459,38 +479,16 @@ export default class InsertMarker extends Component {
             hasBackDrop={true}
             onBackdropPress={() => this.setState({modalVisibleScore:false})}>
         <View style={styles.modalView}>     
-                {this.getMyScoreRender()}
+                {finishMsg}
+                {msg}
                 <Text>Score of this round {this.state.tempScore}</Text>
                 <Text>Total score {this.state.score}</Text>
         </View>
       </Modal>)
     }
 
-    getOppoScoreRender(){
-        if(this.props.navigation.getParam('type') == 'single'){
-            return null
-        }else{
-        <Text>your Opponent do {this.state.oppoScore}</Text>
-        }
-    }
-
-    getMyScoreRender(){
-        if(this.state.distance <= 20000 && this.state.distance > 10000){
-            return (<Text>Whaaaat? You shuold study geography bro! You are {this.state.distance}km far!</Text>)
-        }else if(this.state.distance <= 10000 && this.state.distance > 5000){
-            return (<Text>Nice Try! But you can do better!! You wrong by {this.state.distance}km</Text>)
-        }else if(this.state.distance <= 5000 && this.state.distance > 1000){    
-            return (<Text>Yeah! Very Close! Only {this.state.distance}km far</Text>)
-        }else if(this.state.distance <= 1000 ){
-            return (<Text>GREAT!{this.state.distance}km missed, YOU GOTTA THIS BRO </Text>)
-        }else{
-            console.log("something go wrong with the score")
-        }
-    
-    
-    }
-
     setMyPinColor() {
+
         if (this.props.navigation.getParam('player') == 'player1') {
             return 'gold'
         }else if(this.props.navigation.getParam('player') == 'player2'){
@@ -511,9 +509,9 @@ export default class InsertMarker extends Component {
         return (
             <View style={styles.container}>  
 
-            {this.getModalNextRoundRender()}
+            {this.renderModalNextRound()}
             
-            {this.getModalScoreRender()}
+            {this.renderModalScore()}
                     
                     <MapView
                         provider={this.props.provider}
@@ -600,6 +598,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5
-
-      }
+    }
 });

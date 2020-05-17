@@ -18,9 +18,11 @@ import Modal from 'react-native-modal';
 
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
-import firebase from '../services/firebase';
-import { PacmanIndicator } from 'react-native-indicators';
+import firebase from '../services/firebase';import { BarIndicator } from 'react-native-indicators';
 
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 var v = 0;
 
 
@@ -218,7 +220,10 @@ export default class NotificationScreen extends Component {
     renderView() {
         const { req } = this.state;
         if (this.state.loadingInformation == false && this.state.req.length == 3) {
-            return <PacmanIndicator size={100} />
+            return (<View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
+                <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
+                <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+                </View>)
         } else {
             return (
                 <View style={{flex:1}}>

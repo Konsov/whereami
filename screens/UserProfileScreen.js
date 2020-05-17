@@ -12,6 +12,15 @@ import {
     Badge
 } from 'native-base';
 import firebase from '../services/firebase';
+import { BarIndicator } from 'react-native-indicators';
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
+import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+
 import { PacmanIndicator } from 'react-native-indicators';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
@@ -159,7 +168,10 @@ export default class UserProfileScreen extends Component {
 
     renderView() {
         if (this.state.player == '' || this.state.loadingInformation == false) {
-            return <PacmanIndicator size={100} />
+            return (<View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
+                <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
+                <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+                </View>)
         } else {
             return (
                 <View style={styles.container}>

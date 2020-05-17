@@ -16,11 +16,11 @@
 
 # 5_Insert Marker
 # 5.1 Modal proprio score: Sistemarlo Graficamente, togliere Hide Modal ✓
-# 5.2 Sistemare i nomi delle funzioni e dei render.
+# 5.2 Sistemare i nomi delle funzioni e dei render. ✓
 # 5.3 Esce un problema arancione finito il gioco
-# 5.4 Sistemare Waiting Opponent (multiplayer)
-# 5.5 Fare Modale Fine Round (multiplayer)
-# 5.6 Classifica Finale (multiplayer)
+# 5.4 Sistemare Waiting Opponent (multiplayer) ✓
+# 5.5 Fare Modale Fine Round (multiplayer) ✓
+# 5.6 Classifica Finale (multiplayer) ✓
 # 5.7 Rivedere frasi punteggio modal 
 
 # BUG
@@ -30,7 +30,9 @@
 # B.4 Quando abbandono una partita, eliminare da Games in Db (vedi A.5) ✓
 # B.5 Dare un occhio a volumi. Parte quando si esce e torna. Icone dice che è acceso ma non va. (Vedi 4.2) ✓
 # B.6 Si può spostare il marker dopo aver dato la risposta ✓
-
+# B.7 Go to HUB
+# B.8 in friend source.uri not be empty string
+# B.9 Se metto marker lontano mi da un mega punteggio
 
 # Aggiunte
 # A.1 Mettere Username con login da Facebook
