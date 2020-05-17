@@ -9,8 +9,6 @@ import {
     Dimensions
 } from 'react-native';
 import {
-    Input,
-    Item,
     Badge
 } from 'native-base';
 import firebase from '../services/firebase';

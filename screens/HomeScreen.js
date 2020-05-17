@@ -17,6 +17,8 @@ import firebase from '../services/firebase';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 import { LoginManager } from "react-native-fbsdk";
 import Sound from "react-native-sound";
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Setting a timer']);
 
 import NotifService from '../services/NotifService';
 var whoosh;

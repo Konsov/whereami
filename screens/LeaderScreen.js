@@ -68,8 +68,10 @@ export default class LeaderScreen extends Component {
                 var im = profile[val]['userpic'];
                 var avg = profile[val]['statistics']['avgScore'];
                 var max = profile[val]['statistics']['maxScore'];
-                if (profile[user.uid]['friend'][val] != null){
-                    fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val })
+                if (profile[user.uid]['friend'] != null){                   
+                    if (profile[user.uid]['friend'][val] != null){
+                        fri.push({ name: name, img: im, avg: (avg).toFixed(), max: max.toFixed(), uid: val })
+                    }
                 }
                 if (user.uid == val){
                     us_avg = (avg).toFixed();

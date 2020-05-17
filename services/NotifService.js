@@ -1,15 +1,15 @@
 
 import React, {Component} from "react";
 import {
-  View, Modal, Text, StyleSheet, Dimensions
+  View, Text, StyleSheet, Dimensions, Image, ScrollView
 } from 'react-native';
-
+import Modal from 'react-native-modal';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 import PushNotification from "react-native-push-notification";
 import firebase from './firebase'
 
 
-const windowWidth = Dimensions.get('window').width;
+const width = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
@@ -18,7 +18,10 @@ export default class NotifService extends Component {
   
   state = {
     lastId:0,
-    modalVisible: false
+    modalVisible: false,
+    modalVisibleBadge: false,
+    badge:'',
+
   }
 
   componentDidMount(){
@@ -62,9 +65,20 @@ export default class NotifService extends Component {
   }
 
     localNotif(notification) {
-        this.setState({
-          modalVisible:true
-        })
+      console.log(notification)
+        var mess = notification.message.toString().split(" ");
+        if(mess[0]=="badge"){
+          var badge = mess[1].split(",");
+          
+          this.setState({
+            modalVisibleBadge:true,
+            badge:badge
+          })
+        }else {          
+          this.setState({
+            modalVisible:true
+          })
+        }
       
       
     }
@@ -84,7 +98,8 @@ export default class NotifService extends Component {
             backdropTransitionInTiming={600}
             backdropTransitionOutTiming={600}
             transparent = {true}
-            animationType = "slide">
+            animationType = "slide"
+            onBackdropPress={() => this.setState({modalVisibleScore:false})}>
             <View style={styles.content}>
               <View style={styles.modalView}>
                   <Text style={styles.contentTitle}>You have a new friend request!</Text>
@@ -95,6 +110,52 @@ export default class NotifService extends Component {
                       style={{left:5, alignItems:"center"}}
                       >GO TO HUB
                       </AwesomeButtonRick>
+                  </View>
+              </View>
+                
+            </View>
+          </Modal>
+          <Modal
+            testID={'modal2'}
+            visible={this.state.modalVisibleBadge}
+            backdropColor="#B4B3DB"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+            transparent = {true}
+            animationType = "slide"
+            onBackdropPress={() => this.setState({modalVisibleBadge:false})}>
+            <View style={styles.content}>
+              <View style={styles.modalView}>
+                {this.state.modalVisibleBadge == true ? 
+                <ScrollView horizontal={true}>
+                    {this.state.badge.map((value,key) =>{
+                      return (
+                        <View>
+                          {value == 'gold' ? <Image
+                            style={{ width: width / 5, height: width / 5}}
+                            source={require('../files/gold.png')}
+                          />: value == 'silver' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/silver.png')}
+                          />: value == 'bronze' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/bronze.png')}
+                          />: value == 'fire' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/fire.png')}
+                          />: null}
+                        </View>
+                      )})}
+                </ScrollView> : null}
+                
+                  <Text style={styles.contentTitle}>You have a new badge!</Text>
+                  <View style = {{flexDirection:'row'}}>
+                    
                   </View>
               </View>
                 
@@ -115,7 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: windowHeight / 3,
-    marginBottom: windowHeight / 3
+    marginBottom: windowHeight / 4
   },
 
   contentTitle: {
