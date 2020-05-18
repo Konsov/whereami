@@ -54,6 +54,8 @@ export default class UserProfileScreen extends Component {
             var win = profile['statistics']['win']
             var name = profile['username']
             var pic = profile['userpic']
+            var nGames_multi = profile['statistics']['nGames_multi']
+            var nGames_sing = profile['statistics']['nGames_sing']
 
             for (var val in profile['friend']) {
                 if (val == my_user.uid){
@@ -69,7 +71,9 @@ export default class UserProfileScreen extends Component {
                 maxScore: max,
                 userPic: pic,
                 nGame: nGames,
-                win: win
+                win: win,
+                nGames_multi: nGames_multi,
+                nGames_sing: nGames_sing
             })
         }).then(
             this.setState({
@@ -162,7 +166,7 @@ export default class UserProfileScreen extends Component {
                                     <View style={{flexDirection:'column'}}>
                                         <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.nGame > 5 || this.state.nGame == 5 ?<Image
+                                                {this.state.nGames_sing > 5 || this.state.nGames_sing == 5  ?<Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/bronze.png')}
                                                 />: <Image
@@ -173,7 +177,7 @@ export default class UserProfileScreen extends Component {
                                                 <Text style={styles.userInfo}>5 single play</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.8}}>
-                                                {this.state.nGame > 20 || this.state.nGame == 20 ?  <Image
+                                                {this.state.nGames_sing > 20 || this.state.nGames_sing == 20  ?  <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/silver.png')}
                                                 />:  <Image
@@ -183,7 +187,7 @@ export default class UserProfileScreen extends Component {
                                                 <Text style={styles.userInfo}>20 single play</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.8}}>
-                                                {this.state.nGame > 50 || this.state.nGame == 50 ? <Image
+                                                {this.state.nGames_sing > 50 || this.state.nGames_sing == 50  ? <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/gold.png')}
                                                 />: <Image
@@ -191,6 +195,39 @@ export default class UserProfileScreen extends Component {
                                                 source={require('../files/gold.png')}
                                                 />}
                                                 <Text style={styles.userInfo}>50 single play</Text>
+                                            </View>                                            
+                                        </View>
+                                        <View style = {{flexDirection:'row', marginTop:18, marginLeft:18}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                {this.state.nGames_multi > 5 || this.state.nGames_multi == 5 ?<Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/game_1.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/game_1.png')}
+                                                />}
+                                                
+                                                <Text style={styles.userInfo}>5 online play</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/10}}>
+                                                {this.state.nGames_multi > 20 || this.state.nGames_multi == 20 ?  <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/game_2.png')}
+                                                />:  <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/game_2.png')}
+                                                />}                                               
+                                                <Text style={styles.userInfo}>20 online play</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/10}}>
+                                                {this.state.nGames_multi > 50 || this.state.nGames_multi == 50 ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/game_3.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/game_3.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>50 online play</Text>
                                             </View>                                            
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
@@ -217,34 +254,11 @@ export default class UserProfileScreen extends Component {
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
                                                 {this.state.win > 50 || this.state.win == 50 ? <Image
                                                     style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/gold_1.png')}
+                                                    source={require('../files/gold_2.png')}
                                                 />: <Image
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
-                                                source={require('../files/gold_1.png')}
+                                                source={require('../files/gold_2.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>50 online win</Text>
-                                            </View>      
-                                        </View>
-                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                    source={require('../files/bronze_2.png')}
-                                                />
-                                                <Text style={styles.userInfo}>5 online win</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.2}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                    source={require('../files/silver_2.png')}
-                                                />
-                                                <Text style={styles.userInfo}>20 online win</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.2}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                    source={require('../files/gold_1.png')}
-                                                />
                                                 <Text style={styles.userInfo}>50 online win</Text>
                                             </View>      
                                         </View>

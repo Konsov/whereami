@@ -218,7 +218,7 @@ export default class HomeScreen extends Component {
     return (
       <View>        
         <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>   
-        <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: height / 5, alignSelf:'center'}}/>
+        <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop:  height / 15, alignSelf:'center'}}/>
 
 
         <View style={styles.container}> 
@@ -323,9 +323,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: width / 8, 
     height: width / 8,  
-    marginTop: -(height/2.6),
+    marginTop: -(height/2.5),
     flex:1,
-    right: -(width / 5),
+    right: -(width / 4.3),
     alignItems: 'flex-end',
     backgroundColor:'#95d44a',
     borderRadius:50

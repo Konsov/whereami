@@ -43,7 +43,15 @@ export default class EmailSignUpScreen extends Component{
                   nGames:0,
                   avgScore: 0,
                   maxScore: 0,
-                  win:0
+                  win:0,
+                  nGames_sing:0,
+                  nGames_multi:0,
+                  win_in_row:0,
+                  badge : {
+                    fire: false,
+                    center: false,
+                    time: false
+                  }
                   }
             });
             currentUser.updateProfile({

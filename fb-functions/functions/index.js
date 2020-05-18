@@ -170,7 +170,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
     .onUpdate((snapshot, context) => {
 
         return snapshot.after.ref.parent.once('value').then(snapGame => {
-
+            
             var snapGameJson = snapGame.toJSON();
             var playerOneID = snapGameJson['player1']['user']
             var playerOneScore = snapGameJson['player1']['score']
@@ -184,13 +184,17 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     var maxScore = snapStatsJson['maxScore']
                     var avgScore = snapStatsJson['avgScore']
                     var nGames = snapStatsJson['nGames']
+                    var nGames_multi = snapStatsJson['nGames_multi']
                     var win = snapStatsJson['win']
+                    var win_in_row = snapStatsJson['win_in_row']
                     
                     if(snapGameJson['winner'] == playerTwoID){
-                        snpaStats.ref.update({ win: win + 1 })
+                        snpaStats.ref.update({ win: win + 1, win_in_row:win_in_row + 1 })
+                    } else {
+                        snpaStats.ref.update({ win_in_row:0 })
                     }
 
-                    snpaStats.ref.update({ nGames: nGames + 1 })
+                    snpaStats.ref.update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1 })
 
                     if (avgScore == 0) {
                         snpaStats.ref.update({ avgScore: playerTwoScore })
@@ -212,12 +216,19 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 var maxScore = snapStatsJson['maxScore']
                 var avgScore = snapStatsJson['avgScore']
                 var nGames = snapStatsJson['nGames']
+                var nGames_sing = snapStatsJson['nGames_sing']
+                var nGames_multi = snapStatsJson['nGames_multi']
                 var win = snapStatsJson['win']
-
+                var win_in_row = snapStatsJson['win_in_row']
                 if(snapGameJson['winner'] != null){
                     if (snapGameJson['winner'] == playerOneID){
-                        snpaStats.ref.update({ win: win + 1 })
+                        snpaStats.ref.update({ win: win + 1, win_in_row:win_in_row + 1  })
+                    } else {
+                        snpaStats.ref.update({ win_in_row:0 })
                     }
+                    snpaStats.ref.update({ nGames_multi: nGames_multi + 1 })
+                } else {
+                    snpaStats.ref.update({ nGames_sing: nGames_sing + 1 })
                 }
 
                 snpaStats.ref.update({ nGames: nGames + 1 })
