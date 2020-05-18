@@ -38,12 +38,18 @@ export default class HomeScreen extends Component {
   }
 
   handleAppStateChange(currentAppState) {
+    const user = firebase.auth().currentUser;
+    
     if (currentAppState != 'active') {
       this.stop()
+      firebase.database().ref(`/users/${user.uid}`).update({ online:false})
+      
     } else {
       if(this.state.volume == true){        
         this.start()
       }
+      firebase.database().ref(`/users/${user.uid}`).update({ online:true})
+      
     }
   }
   
@@ -128,12 +134,14 @@ export default class HomeScreen extends Component {
   
 
   componentDidMount() {
-    if(this.props.navigation.getParam('volume') == "false"){
-      this.setState({
-        volume:false
-      })
 
-    } 
+    AsyncStorage.getItem('volume').then(value =>
+      //AsyncStorage returns a promise so adding a callback to get the value
+      this.setState({
+        volume:value
+      })
+      //Setting the value in Text
+    );
     AppState.addEventListener('change', this.handleAppStateChange.bind(this));
     const user = firebase.auth().currentUser;
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -173,6 +181,8 @@ export default class HomeScreen extends Component {
   }
 
   logOut() {
+    const user = firebase.auth().currentUser;
+    firebase.database().ref(`/users/${user.uid}`).update({ online:false})
     firebase.auth().signOut();
     this.props.navigation.navigate('AuthStack');
     LoginManager.logOut();

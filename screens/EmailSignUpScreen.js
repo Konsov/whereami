@@ -42,7 +42,8 @@ export default class EmailSignUpScreen extends Component{
                 statistics:{
                   nGames:0,
                   avgScore: 0,
-                  maxScore: 0
+                  maxScore: 0,
+                  win:0
                   }
             });
             currentUser.updateProfile({

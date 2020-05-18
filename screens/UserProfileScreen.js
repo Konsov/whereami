@@ -21,9 +21,6 @@ import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/ric
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 
-import { PacmanIndicator } from 'react-native-indicators';
-import ImagePicker from 'react-native-image-picker';
-import storage from '@react-native-firebase/storage';
 
 
 const { width, height } = Dimensions.get('window');
@@ -46,7 +43,8 @@ export default class UserProfileScreen extends Component {
         maxScore: 0,
         nGame: 0,
         req: [],
-        not: 0
+        not: 0,
+        win: 0
     }
 
     
@@ -73,6 +71,7 @@ export default class UserProfileScreen extends Component {
             var avg = profile['statistics']['avgScore']
             var max = profile['statistics']['maxScore']
             var nGames = profile['statistics']['nGames']
+            var win = profile['statistics']['win']
             var name = profile['username']
             var pic = profile['userpic']
 
@@ -82,7 +81,8 @@ export default class UserProfileScreen extends Component {
                 maxScore: max,
                 userPic: pic,
                 nGame: nGames,
-                not: not
+                not: not,
+                win: win
             })
         }).then(
             this.setState({
@@ -251,18 +251,22 @@ export default class UserProfileScreen extends Component {
                     <View style={styles.body}>
                         <View style={styles.item}>
                             <View style={styles.iconContent}>
-                                <View style = {{ flexDirection: 'column',left: -(width/3), marginTop:10}} >
+                                <View style = {{ flexDirection: 'column',left: -(width/2.7), marginTop:10}} >
                                     <Text style={styles.number}>{this.state.nGame}</Text>
                                     <Text style={styles.userInfo}>Games</Text>
                                 </View>
-                                <View style = {{ flexDirection: 'column', marginTop: -46}} >                                    
+                                <View style = {{ flexDirection: 'column',left: -(width/7), marginTop: -46}} >
+                                    <Text style={styles.number}>{this.state.win}</Text>
+                                    <Text style={styles.userInfo}>Win</Text>
+                                </View>
+                                <View style = {{ flexDirection: 'column', marginTop: -47.5,left: (width/10)}} >                                    
                                     <Text style={styles.number}>{(this.state.avgScore).toFixed()}</Text>                                
                                     <Text style={styles.userInfo}>Avg score</Text>
                                 </View>
-                                <View style = {{ flexDirection: 'column', marginTop: -48, left: (width/3)}}>                                  
+                                <View style = {{ flexDirection: 'column', marginTop: -47.5, left: (width/2.7)}}>                                  
                                     <Text style={styles.number}>{(this.state.maxScore).toFixed()}</Text>
                                     <Text style={styles.userInfo}>Max score</Text> 
-                                </View>   
+                                </View>  
                                 <Text style={{fontSize: 20, fontWeight: 'bold', textAlign:'center', marginTop: 20}}>Badges</Text>  
                                 
                                 
@@ -336,24 +340,33 @@ export default class UserProfileScreen extends Component {
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                {this.state.win > 5 || this.state.win == 5 ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/bronze_2.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
+                                                source={require('../files/bronze_2.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>5 online win</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                {this.state.win > 20 || this.state.win == 20 ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/silver_2.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
+                                                source={require('../files/silver_2.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>20 online win</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                {this.state.win > 50 || this.state.win == 50 ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/gold_1.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
+                                                source={require('../files/gold_1.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>50 online win</Text>
                                             </View>      
                                         </View>

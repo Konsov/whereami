@@ -184,6 +184,11 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     var maxScore = snapStatsJson['maxScore']
                     var avgScore = snapStatsJson['avgScore']
                     var nGames = snapStatsJson['nGames']
+                    var win = snapStatsJson['win']
+                    
+                    if(snapGameJson['winner'] == playerTwoID){
+                        snpaStats.ref.update({ win: win + 1 })
+                    }
 
                     snpaStats.ref.update({ nGames: nGames + 1 })
 
@@ -207,6 +212,13 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 var maxScore = snapStatsJson['maxScore']
                 var avgScore = snapStatsJson['avgScore']
                 var nGames = snapStatsJson['nGames']
+                var win = snapStatsJson['win']
+
+                if(snapGameJson['winner'] != null){
+                    if (snapGameJson['winner'] == playerOneID){
+                        snpaStats.ref.update({ win: win + 1 })
+                    }
+                }
 
                 snpaStats.ref.update({ nGames: nGames + 1 })
 

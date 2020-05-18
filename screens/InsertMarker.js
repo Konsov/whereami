@@ -234,15 +234,18 @@ export default class InsertMarker extends Component {
         
         }else{
             intro = <Text>Final Leaderboard</Text>
-            
+            const user = firebase.auth().currentUser;
             if(this.state.score > this.state.oppoScore){
                 outro = <View>
                             <Text>YOU WIN</Text>
                             <AwesomeButtonRick
                             onPress={() => {
-                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
-                                this.props.navigation.navigate('AppStack'), this.setState({
-                                })}}
+                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).once("value", snapshot => {
+                                    if (snapshot.exists()){
+                                       firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true, winner: user.uid})
+                                    }
+                                 });
+                                this.props.navigation.navigate('AppStack')}}
                             type="anchor"
                             >Go To Home
                             </AwesomeButtonRick>
@@ -252,7 +255,6 @@ export default class InsertMarker extends Component {
                             <Text>YOU LOSE</Text>
                             <AwesomeButtonRick
                                 onPress={() => {
-                                    firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
                                     this.props.navigation.navigate('AppStack')}}
                                 type="anchor"
                                 >Go To Home

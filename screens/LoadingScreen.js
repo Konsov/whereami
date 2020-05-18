@@ -69,11 +69,7 @@ class LoadingScreen extends Component {
   }
 
   navigate(data) {
-    AsyncStorage.getItem('volume').then(value =>
-      //AsyncStorage returns a promise so adding a callback to get the value
-      this.props.navigation.navigate(data, {volume: value})
-      //Setting the value in Text
-    );
+    this.props.navigation.navigate(data)
     
   }
 
