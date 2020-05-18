@@ -148,6 +148,27 @@ export default class NotifService extends Component {
                           />: value == 'fire' ? <Image
                           style={{ width: width / 5, height: width / 5}}
                           source={require('../files/fire.png')}
+                          />: value == 'gold_2' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/gold_2.png')}
+                          />: value == 'silver_2' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/silver_2.png')}
+                          />: value == 'bronze_2' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/bronze_2.png')}
+                          />: value == 'time' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/stopwatch.png')}
+                          />: value == 'game_1' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/game_1.png')}
+                          />: value == 'game_2' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/game_2.png')}
+                          />: value == 'game_3' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/game_3.png')}
                           />: null}
                         </View>
                       )})}

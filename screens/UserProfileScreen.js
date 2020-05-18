@@ -46,7 +46,10 @@ export default class UserProfileScreen extends Component {
         not: 0,
         win: 0,
         nGames_multi:0,
-        nGames_sing:0
+        nGames_sing:0,
+        center: false,
+        time: false,
+        fire: false
     }
 
     
@@ -78,7 +81,9 @@ export default class UserProfileScreen extends Component {
             var pic = profile['userpic']
             var nGames_multi = profile['statistics']['nGames_multi']
             var nGames_sing = profile['statistics']['nGames_sing']
-
+            var center = profile['statistics']['badge']['center']
+            var fire = profile['statistics']['badge']['fire']
+            var time = profile['statistics']['badge']['time']
             this.setState({
                 player: name,
                 avgScore: avg,
@@ -88,7 +93,10 @@ export default class UserProfileScreen extends Component {
                 not: not,
                 win: win,
                 nGames_multi: nGames_multi,
-                nGames_sing: nGames_sing
+                nGames_sing: nGames_sing,
+                center: center,
+                fire: fire,
+                time: time
             })
         }).then(
             this.setState({
@@ -378,24 +386,33 @@ export default class UserProfileScreen extends Component {
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:20, marginLeft:18}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                {this.state.center == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/target.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/target.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>Really close</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                {this.state.time == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/stopwatch.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/stopwatch.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>So fast!</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5, marginTop:-10}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                {this.state.fire == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
                                                     source={require('../files/fire.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/fire.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>On fire</Text>
                                             </View>
                                         </View>

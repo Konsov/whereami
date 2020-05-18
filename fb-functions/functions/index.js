@@ -180,69 +180,183 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 var playerTwoScore = snapGameJson['player2']['score']
 
                 snapGame.ref.parent.parent.child('users').child(playerTwoID).child('statistics').once('value').then(snpaStats => {
+                    var badge = []
                     var snapStatsJson = snpaStats.toJSON()
-                    var maxScore = snapStatsJson['maxScore']
-                    var avgScore = snapStatsJson['avgScore']
-                    var nGames = snapStatsJson['nGames']
-                    var nGames_multi = snapStatsJson['nGames_multi']
-                    var win = snapStatsJson['win']
-                    var win_in_row = snapStatsJson['win_in_row']
+                    var maxScore = snapStatsJson['statistics']['maxScore']
+                    var avgScore = snapStatsJson['statistics']['avgScore']
+                    var nGames = snapStatsJson['statistics']['nGames']
+                    var nGames_multi = snapStatsJson['statistics']['nGames_multi']
+                    var win = snapStatsJson['statistics']['win']
+                    var win_in_row = snapStatsJson['statistics']['win_in_row']
                     
                     if(snapGameJson['winner'] == playerTwoID){
-                        snpaStats.ref.update({ win: win + 1, win_in_row:win_in_row + 1 })
+                        snpaStats.ref.child('statistics').update({ win: win + 1, win_in_row:win_in_row + 1 })
+                        if (win_in_row + 1 == 5 && snapStatsJson['statistics']['badge']['fire'] == false){
+                            badge.push('fire')
+                        }
+                        if (win + 1 == 5){
+                            badge.push('bronze_2')
+                        } else if (win + 1 == 20){
+                            badge.push('silver_2')
+                        }else if (win + 1 == 50){
+                            badge.push('gold_2')
+                        }
+
                     } else {
-                        snpaStats.ref.update({ win_in_row:0 })
+                        snpaStats.ref.child('statistics').update({ win_in_row:0 })
                     }
 
-                    snpaStats.ref.update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1 })
+                    if (nGames_multi + 1 == 5){
+                        badge.push('game_1')
+                    } else if (nGames_multi + 1 == 20){
+                        badge.push('game_2')
+                    }else if (nGames_multi + 1 == 50){
+                        badge.push('game_3')
+                    }
+                    snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1 })
 
                     if (avgScore == 0) {
-                        snpaStats.ref.update({ avgScore: playerTwoScore })
+                        snpaStats.ref.child('statistics').update({ avgScore: playerTwoScore })
                     } else {
                         var newAvg = (avgScore + playerTwoScore) / 2
-                        snpaStats.ref.update({ avgScore: newAvg })
+                        snpaStats.ref.child('statistics').update({ avgScore: newAvg })
                     }
 
                     if (playerTwoScore > maxScore) {
-                        snpaStats.ref.update({ maxScore: playerTwoScore })
+                        snpaStats.ref.child('statistics').update({ maxScore: playerTwoScore })
+                    }
+
+                    if (typeof badge !== 'undefined' && badge.length > 0) {
+                            const message = {
+                    
+                                "name": "prova",
+                                "data": {
+                                "data1": "data1",
+                                
+                                },
+                                "notification": {
+                                    
+                                        "title": "notif_title",
+                                        "body": "notif_body"
+                                    
+                                },
+                                "android": {
+            
+                                    "notification": {
+                                        "title": `New Badge`,
+                                        "body": `badge ${badge.join()}`,
+                                        "event_time": (new Date()).toISOString,
+                                        "notification_priority": "PRIORITY_HIGH",
+                                        "default_sound": true,
+                                        "default_vibrate_timings": true,
+                                        "default_light_settings": true,
+                                        "visibility": "PUBLIC"
+                                        
+                                        
+                                    }
+                                },
+                            
+                                // Union field target can be only one of the following:
+                                "token": snapStatsJson['token'],
+                                // End of list of possible types for union field target.
+                            
+                        }
+            
+                        admin.messaging().send(message);
                     }
 
                 })
             }
 
             snapGame.ref.parent.parent.child('users').child(playerOneID).child('statistics').once('value').then(snpaStats => {
-
+                var badge = []
                 var snapStatsJson = snpaStats.toJSON()
-                var maxScore = snapStatsJson['maxScore']
-                var avgScore = snapStatsJson['avgScore']
-                var nGames = snapStatsJson['nGames']
-                var nGames_sing = snapStatsJson['nGames_sing']
-                var nGames_multi = snapStatsJson['nGames_multi']
-                var win = snapStatsJson['win']
-                var win_in_row = snapStatsJson['win_in_row']
+                var maxScore = snapStatsJson['statistics']['maxScore']
+                var avgScore = snapStatsJson['statistics']['avgScore']
+                var nGames = snapStatsJson['statistics']['nGames']
+                var nGames_sing = snapStatsJson['statistics']['nGames_sing']
+                var nGames_multi = snapStatsJson['statistics']['nGames_multi']
+                var win = snapStatsJson['statistics']['win']
+                var win_in_row = snapStatsJson['statistics']['win_in_row']
                 if(snapGameJson['winner'] != null){
                     if (snapGameJson['winner'] == playerOneID){
-                        snpaStats.ref.update({ win: win + 1, win_in_row:win_in_row + 1  })
+                        snpaStats.ref.child('statistics').update({ win: win + 1, win_in_row:win_in_row + 1  })
+                        if (win_in_row + 1 == 5 && snapStatsJson['statistics']['badge']['fire'] == false){
+                            badge.push('fire')
+                        }
                     } else {
-                        snpaStats.ref.update({ win_in_row:0 })
+                        snpaStats.ref.child('statistics').update({ win_in_row:0 })
                     }
-                    snpaStats.ref.update({ nGames_multi: nGames_multi + 1 })
+                    if (nGames_multi + 1 == 5){
+                        badge.push('game_1')
+                    } else if (nGames_multi + 1 == 20){
+                        badge.push('game_2')
+                    } else if (nGames_multi + 1 == 50){
+                        badge.push('game_3')
+                    }
+                    snpaStats.ref.child('statistics').update({ nGames_multi: nGames_multi + 1 })
                 } else {
-                    snpaStats.ref.update({ nGames_sing: nGames_sing + 1 })
+                    if (nGames_sing + 1 == 5){
+                        badge.push('bronze')
+                    } else if (nGames_sing + 1 == 20){
+                        badge.push('silver')
+                    }else if (nGames_sing + 1 == 50){
+                        badge.push('gold')
+                    }
+                    snpaStats.ref.child('statistics').update({ nGames_sing: nGames_sing + 1 })
                 }
 
-                snpaStats.ref.update({ nGames: nGames + 1 })
+                snpaStats.ref.child('statistics').update({ nGames: nGames + 1 })
 
                 if (avgScore == 0) {
-                    snpaStats.ref.update({ avgScore: playerOneScore })
+                    snpaStats.ref.child('statistics').update({ avgScore: playerOneScore })
                 } else {
                     var newAvg = (avgScore + playerOneScore) / 2
-                    snpaStats.ref.update({ avgScore: newAvg })
+                    snpaStats.ref.child('statistics').update({ avgScore: newAvg })
                 }
 
                 if (playerOneScore > maxScore) {
-                    snpaStats.ref.update({ maxScore: playerOneScore })
+                    snpaStats.ref.child('statistics').update({ maxScore: playerOneScore })
                 }
+
+                if (typeof badge !== 'undefined' && badge.length > 0) {
+                    const message = {
+            
+                        "name": "prova",
+                        "data": {
+                        "data1": "data1",
+                        
+                        },
+                        "notification": {
+                            
+                                "title": "notif_title",
+                                "body": "notif_body"
+                            
+                        },
+                        "android": {
+    
+                            "notification": {
+                                "title": `New Badge`,
+                                "body": `badge ${badge.join()}`,
+                                "event_time": (new Date()).toISOString,
+                                "notification_priority": "PRIORITY_HIGH",
+                                "default_sound": true,
+                                "default_vibrate_timings": true,
+                                "default_light_settings": true,
+                                "visibility": "PUBLIC"
+                                
+                                
+                            }
+                        },
+                    
+                        // Union field target can be only one of the following:
+                        "token": snapStatsJson['token'],
+                        // End of list of possible types for union field target.
+                    
+                }
+    
+                admin.messaging().send(message);
+            }
 
             }).then(snapshot.after.ref.parent.remove())
 
