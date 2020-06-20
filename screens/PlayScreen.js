@@ -293,6 +293,13 @@ renderModalExitGame(){
       return (<View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
         <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
         <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+        <AwesomeButtonRick
+              onPress={() => this.goToMarker()}
+              type="anchor"
+              style={styles.answerButton}
+            >CANCEL
+        </AwesomeButtonRick>
+        {this.renderModalExitGame()}
         </View>)
     } else {
       return (

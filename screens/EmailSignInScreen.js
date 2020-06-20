@@ -4,6 +4,7 @@ import {
   View,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native';
 
 import {
@@ -31,7 +32,7 @@ export default class EmailSignInScreen extends Component {
     try {
       firebase.auth().signInWithEmailAndPassword(email, password)
     } catch (error) {
-      console.log(error.toString())
+      Alert.alert(error.toString())
     }
   }
 

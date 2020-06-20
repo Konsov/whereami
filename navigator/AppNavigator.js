@@ -13,6 +13,7 @@ import FriendScreen from '../screens/FriendScreen'
 import LeaderScreen from '../screens/LeaderScreen'
 import NotifService from '../services/NotifService'
 import PlayerProfileScreen from '../screens/PlayerProfileScreen'
+import UsernameAddScreen from '../screens/UsernameAddScreen'
 
 
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -23,7 +24,8 @@ const AuthStack = createStackNavigator(
   {
   LoginMethodScreen:  {screen: LoginMethodScreen},
   EmailSignInScreen:  {screen: EmailSignInScreen},
-  EmailSignUpScreen: {screen: EmailSignUpScreen}
+  EmailSignUpScreen: {screen: EmailSignUpScreen},
+  UsernameAddScreen: {screen: UsernameAddScreen}, 
   },{
     defaultNavigationOptions: {
       headerShown: false

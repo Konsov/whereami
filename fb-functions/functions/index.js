@@ -179,7 +179,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 var playerTwoID = snapGameJson['player2']['user']
                 var playerTwoScore = snapGameJson['player2']['score']
 
-                snapGame.ref.parent.parent.child('users').child(playerTwoID).child('statistics').once('value').then(snpaStats => {
+                snapGame.ref.parent.parent.child('users').child(playerTwoID).once('value').then(snpaStats => {
                     var badge = []
                     var snapStatsJson = snpaStats.toJSON()
                     var maxScore = snapStatsJson['statistics']['maxScore']
@@ -268,7 +268,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 })
             }
 
-            snapGame.ref.parent.parent.child('users').child(playerOneID).child('statistics').once('value').then(snpaStats => {
+            snapGame.ref.parent.parent.child('users').child(playerOneID).once('value').then(snpaStats => {
                 var badge = []
                 var snapStatsJson = snpaStats.toJSON()
                 var maxScore = snapStatsJson['statistics']['maxScore']

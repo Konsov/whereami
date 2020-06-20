@@ -4,7 +4,8 @@ import {
   View,
   Image,
   Dimensions,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from 'react-native';
 
 import {
@@ -14,6 +15,7 @@ import {
 } from 'native-base';
 
 import AwesomeButton from "react-native-really-awesome-button/src/themes/rick";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,50 +28,94 @@ export default class EmailSignUpScreen extends Component{
     state = {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      showAlert: false,
+      error_text:''
     }
+
+    showAlert = (alert) => {
+      this.setState({
+        showAlert: true,
+        error_text: alert
+      });
+    };
+    
+    hideAlert = () => {
+      this.setState({
+        showAlert: false
+      });
+    };
   
 
   signUpUser = (username,email, password) => {
     try {
-      firebase.auth().createUserWithEmailAndPassword(email,password).then(() => {
-        const { currentUser } = firebase.auth();
-          try {
-            firebase.database().ref(`/users/${currentUser.uid}/`)
-            .set({
-                username: username,
-                userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
-                statistics:{
-                  nGames:0,
-                  avgScore: 0,
-                  maxScore: 0,
-                  win:0,
-                  nGames_sing:0,
-                  nGames_multi:0,
-                  win_in_row:0,
-                  badge : {
-                    fire: false,
-                    center: false,
-                    time: false
-                  }
-                  }
-            });
-            currentUser.updateProfile({
-              displayName: username,
-              photoURL: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png'              
-            })
-            console.log(currentUser.uid)
 
-        } catch (error) {
-          console.log(error);
-        }
-      })
+      let rootRef = firebase.database().ref();
+
+      rootRef
+        .child('users')
+        .orderByChild('username')
+        .equalTo(username)
+        .once('value')
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            let userData = snapshot.val();
+            var taken = "Username already taken";
+            this.showAlert(taken);
+            return userData;
+          } else {
+            firebase.auth().createUserWithEmailAndPassword(email,password).then(() => {
+              const { currentUser } = firebase.auth();
+                try {
+                  firebase.database().ref(`/users/${currentUser.uid}/`)
+                  .set({
+                      username: username,
+                      userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
+                      statistics:{
+                        nGames:0,
+                        avgScore: 0,
+                        maxScore: 0,
+                        win:0,
+                        nGames_sing:0,
+                        nGames_multi:0,
+                        win_in_row:0,
+                        badge : {
+                          fire: false,
+                          center: false,
+                          time: false
+                        }
+                        }
+                  });
+                  currentUser.updateProfile({
+                    displayName: username,
+                    photoURL: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png'              
+                  })
+                  console.log(currentUser.uid)
+      
+              } catch (error) {
+                Alert.alert(error.toString());
+              }
+            }).catch((error) => {
+              // Handle Errors here.
+              var errorMessage = error.message;
+              
+              this.showAlert(errorMessage)
+              // ...
+            });
+          }
+      });
+
+      
     } catch (error) {
-      console.log(error.toString())
+      Alert.alert(error.toString())
     }
   }
 
   render(){
+    
+    const {showAlert} = this.state.showAlert;
+    
+    const {error_text} = this.state.error_text;
     return (
       <View>
         <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
@@ -115,9 +161,25 @@ export default class EmailSignUpScreen extends Component{
               onPress={() => this.signUpUser(this.state.username, this.state.email, this.state.password)}
             >Sign Up
             </AwesomeButton>
-          </View>           
+          </View>
+
+                     
           
           </View>
+          <AwesomeAlert
+            show= {this.state.showAlert}
+            title="Error"
+            message={this.state.error_text}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            confirmButtonColor="#DD6B55"
+            confirmText="DISMISS"
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+           />
      </View>
 
     );

@@ -90,7 +90,7 @@ export default class UserProfileScreen extends Component {
             if (snapshot.exists()) {
                 for (var root in snapshot.toJSON()) {
                     firebase.database().ref(`users/${root}/request/${user.uid}`).set({
-                        name: this.state.player,
+                        name: user.displayName,
                         img: ''
                     })
                 }

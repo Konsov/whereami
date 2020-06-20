@@ -29,6 +29,7 @@
     "random-points-on-polygon": "0.0.4",
     "react": "^16.11.0",
     "react-native": "^0.62.2",
+    "react-native-awesome-alerts": "^1.3.2",
     "react-native-button": "^3.0.1",
     "react-native-countdown-circle": "^3.0.1",
     "react-native-countdown-component": "^2.7.1",

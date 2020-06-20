@@ -38,11 +38,12 @@ export default class NotificationScreen extends Component {
         online: [],
         loadingInformation: false,
         username: '',
-        profPic: '',
+        profPic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
         loadOnl: false,
         val: '',
         modalVisible: false,
-        playreq: ''
+        playreq: '',
+        user: ''
 
     }
 
@@ -206,7 +207,26 @@ export default class NotificationScreen extends Component {
               {rowJSx}
             </TouchableOpacity>
         )  
-    }      
+    }
+    
+    friendRequest(username) {
+        const user = firebase.auth().currentUser;
+        var reff = firebase.database().ref('/users/');
+        reff.orderByChild('username').equalTo(`${username}`).once('value').then(function (snapshot) {
+            if (snapshot.exists()) {
+                for (var root in snapshot.toJSON()) {
+                    firebase.database().ref(`users/${root}/request/${user.uid}`).set({
+                        name: user.displayName,
+                        img: ''
+                    })
+                }
+                alert("Request delivered!")
+            } else {
+                alert("User " + username + " doesn't exist!");
+            }
+        }.bind(this))
+    }
+
     
     onRowPress(data){
         const user = firebase.auth().currentUser;
