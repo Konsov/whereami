@@ -169,6 +169,9 @@ export default class NotifService extends Component {
                           />: value == 'game_3' ? <Image
                           style={{ width: width / 5, height: width / 5}}
                           source={require('../files/game_3.png')}
+                          />: value == 'center' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/target.png')}
                           />: null}
                         </View>
                       )})}

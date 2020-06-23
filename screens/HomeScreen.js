@@ -67,13 +67,13 @@ export default class HomeScreen extends Component {
 
   pause(data){
     if (data == true){
-      AsyncStorage.setItem('volume', 'false');
+      AsyncStorage.setItem('volume', JSON.stringify(false));
       whoosh.stop();    
       this.setState({
         volume: false
       })
     } else {
-      AsyncStorage.setItem('volume', 'true');
+      AsyncStorage.setItem('volume', JSON.stringify(true));
       whoosh.play();   
       this.setState({
         volume:true
@@ -114,12 +114,20 @@ export default class HomeScreen extends Component {
         player1: {
           user: user.uid,
           username: user.displayName,
-          score: 0
+          score: 0,
+          badge: {
+            center: false,
+            time: false
+          }
         },
         player2: {
           user: this.state.oppoUid,
           username: this.state.oppoUsername,
-          score: 0
+          score: 0,
+          badge: {
+            center: false,
+            time: false
+          }
         },
         finished: false,
         type: 'multiplayer'
@@ -135,16 +143,25 @@ export default class HomeScreen extends Component {
 
   componentDidMount() {
 
-    AsyncStorage.getItem('volume').then(value =>
+    AsyncStorage.getItem('volume').then(value => {
+      
+      if (value !=null){
+        this.setState({
+          volume: JSON.parse(value)
+        })
+      } else {
+        AsyncStorage.setItem(
+          'volume',
+          JSON.stringify(true)
+        );
+      }
       //AsyncStorage returns a promise so adding a callback to get the value
-      this.setState({
-        volume:value
-      })
+      
       //Setting the value in Text
-    );
+    });
     AppState.addEventListener('change', this.handleAppStateChange.bind(this));
     const user = firebase.auth().currentUser;
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => { 
       Alert.alert(
         'Confirm exit',
         'Do you want to quit the app?',
@@ -195,7 +212,11 @@ export default class HomeScreen extends Component {
         player1: {
           user: user.uid,
           username: user.displayName,
-          score: 0
+          score: 0,
+          badge: {
+            center: false,
+            time: false
+          }
         },
         finished: false,
         type: 'single'

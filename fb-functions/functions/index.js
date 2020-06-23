@@ -100,12 +100,20 @@ exports.createRandomGame = functions.region('europe-west1').database
                             player1: {
                                 user: playerOne,
                                 username: playersInWaitingRoom[playerOne]['username'],
-                                score: 0
+                                score: 0,
+                                badge: {
+                                    center: false,
+                                    time: false
+                                }
                             },
                             player2: {
                                 user: playerTwo,
                                 username: playersInWaitingRoom[playerTwo]['username'],
-                                score: 0
+                                score: 0,
+                                badge: {
+                                    center: false,
+                                    time: false
+                                }
                             },
                             finished: false,
                             type:'multiplayer'
@@ -174,10 +182,12 @@ exports.delGameUpStats = functions.region('europe-west1').database
             var snapGameJson = snapGame.toJSON();
             var playerOneID = snapGameJson['player1']['user']
             var playerOneScore = snapGameJson['player1']['score']
+            var playerOneBadge = snapGameJson['player1']['badge']
 
             if (snapGame.child('player2').exists()) {
                 var playerTwoID = snapGameJson['player2']['user']
                 var playerTwoScore = snapGameJson['player2']['score']
+                var playerTwoBadge = snapGameJson['player2']['badge']
 
                 snapGame.ref.parent.parent.child('users').child(playerTwoID).once('value').then(snpaStats => {
                     var badge = []
@@ -204,6 +214,11 @@ exports.delGameUpStats = functions.region('europe-west1').database
 
                     } else {
                         snpaStats.ref.child('statistics').update({ win_in_row:0 })
+                    }
+
+                    if (playerTwoBadge['center'] == true && snapStatsJson['statistics']['badge']['center'] == false) {
+                        snpaStats.ref.child('statistics').child('badge').update({ center: true })
+                        badge.push('center')
                     }
 
                     if (nGames_multi + 1 == 5){
@@ -304,6 +319,11 @@ exports.delGameUpStats = functions.region('europe-west1').database
                         badge.push('gold')
                     }
                     snpaStats.ref.child('statistics').update({ nGames_sing: nGames_sing + 1 })
+                }
+
+                if (playerOneBadge['center'] == true && snapStatsJson['statistics']['badge']['center'] == false) {
+                    snpaStats.ref.child('statistics').child('badge').update({ center: true })
+                    badge.push('center')
                 }
 
                 snpaStats.ref.child('statistics').update({ nGames: nGames + 1 })
