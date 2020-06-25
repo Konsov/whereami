@@ -5,7 +5,9 @@ import {
   Image,
   Dimensions,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  BackHandler,
+  Apps
 } from 'react-native';
 
 import {
@@ -32,6 +34,16 @@ export default class EmailSignUpScreen extends Component{
       showAlert: false,
       error_text:''
     }
+
+    componentDidMount() {
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+        this.props.navigation.navigate('EmailSignUpScreen');
+      });
+    }
+    componentWillUnmount() {
+      this.backHandler.remove();
+    }
+  
 
     showAlert = (alert) => {
       this.setState({

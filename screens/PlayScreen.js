@@ -351,7 +351,7 @@ renderModalExitGame(){
               onPress={() => this.goToMarker()}
               type="anchor"
               style={styles.answerButton}
-              width={100}
+              width={150}
             >GIVE ANSWER
             </AwesomeButtonRick>
             
