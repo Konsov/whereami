@@ -11,7 +11,7 @@
 # 3.2 Sistemare Badges e Statistiche (vedi A.3 e A.4)
 
 # 4_PlayScreen
-# 4.1 Coordinate di tutti i continenti
+# 4.1 Coordinate di tutti i continenti  ✓
 # 4.2 Cooprire/togliere Riporta un problema google ✓
 
 # 5_Insert Marker
