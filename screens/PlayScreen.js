@@ -25,7 +25,7 @@ export default class PlayScreen extends Component {
     oppoUsername: '',
     
     gameID: '',
-    
+    disabled: true,
     loadingCoordinate: false,
     latitude_1: 0,
     longitude_1: 0,
@@ -51,6 +51,7 @@ export default class PlayScreen extends Component {
       return true;
     });
     this.getGameInfo();
+    setTimeout(() => {this.setState({disabled:false})}, 5000);
   }
 
   componentWillUnmount() {
@@ -117,10 +118,24 @@ export default class PlayScreen extends Component {
           }
         }
       }.bind(this))     
-  
-      var retry = setTimeout(()=>{
-        return this.getGameInfo()
-      }, 5000)
+      
+      let rootRef = firebase.database().ref();
+      rootRef
+      .child('waitingRoom')
+      .orderByChild('username')
+      .equalTo(user.displayName)
+      .once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          var retry = setTimeout(()=>{
+            return this.getGameInfo()
+          }, 5000)
+        } else { 
+          return null
+        }
+      });
+      
+      
   }
 
 
@@ -242,12 +257,27 @@ export default class PlayScreen extends Component {
 
   eliminateGame(){
     const user = firebase.auth().currentUser;
-    firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-      var game = snapshot.toJSON()
-      if(game[id]['type'] == 'single'){
-        firebase.database().ref(`/Games/${user.uid}`).remove()
+    let rootRef = firebase.database().ref();
+    rootRef
+    .child('waitingRoom')
+    .orderByChild('username')
+    .equalTo(user.displayName)
+    .once('value')
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        firebase.database().ref(`/waitingRoom/${user.uid}`).remove()
+      } else { 
+        firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+          var game = snapshot.toJSON()
+          if(game[id]['type'] == 'single'){
+            firebase.database().ref(`/Games/${user.uid}`).remove()
+          }
+        })
       }
-    })
+    });
+
+
+    
   }
 
 renderModalExitGame(){
@@ -294,9 +324,13 @@ renderModalExitGame(){
         <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
         <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
         <AwesomeButtonRick
-              onPress={() => this.goToMarker()}
+              onPress={() => this.setState({
+                modalVisible:true
+              })}
               type="anchor"
-              style={styles.answerButton}
+              style={styles.cancelButton}
+              width={150}
+              disabled={this.state.disabled}
             >CANCEL
         </AwesomeButtonRick>
         {this.renderModalExitGame()}
@@ -317,6 +351,7 @@ renderModalExitGame(){
               onPress={() => this.goToMarker()}
               type="anchor"
               style={styles.answerButton}
+              width={100}
             >GIVE ANSWER
             </AwesomeButtonRick>
             
@@ -369,7 +404,13 @@ const styles = StyleSheet.create({
   answerButton: {
     position: 'absolute',
     top: windowHeight/25,
-    right: windowWidth/30
+    right: windowWidth/30,
+  },
+
+  cancelButton: {
+    position: 'absolute',
+    top: (windowHeight/2),
+    right: windowWidth/3.2
   },
 
   buttonModalContainer:{

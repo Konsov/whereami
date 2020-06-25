@@ -110,7 +110,11 @@ export default class InsertMarker extends Component {
             this.getOpponentCoordinate()
         }
         
+        if (this.state.tempScore >= 19900){
+            firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).child('badge').update({center:true})
+        } 
         firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).update({ score: this.state.score})
+
     
     }
 
