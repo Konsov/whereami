@@ -15,13 +15,10 @@ import firebase from '../services/firebase';
 import { BarIndicator } from 'react-native-indicators';
 
 
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
+
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-
-
 
 const { width, height } = Dimensions.get('window');
 
