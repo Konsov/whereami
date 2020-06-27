@@ -704,6 +704,14 @@ const styles = StyleSheet.create({
         color:'green'
     },
 
+    endView: {
+        position: 'absolute',
+        backgroundColor: "white",
+        width: windowWidth,
+        height: windowHeight,
+        marginLeft:-19.7,
+    },    
+
     timerText:{
         fontSize: 18,
         textAlign: "center",

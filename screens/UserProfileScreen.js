@@ -328,7 +328,7 @@ export default class UserProfileScreen extends Component {
                                                 <Text style={styles.userInfo}>Veteran</Text>
                                             </View>                                            
                                         </View>
-                                        <View style = {{flexDirection:'row', marginTop:18, marginLeft:18}}>
+                                        <View style = {{flexDirection:'row', marginTop:18, marginLeft:9}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
                                                 {this.state.nGames_multi > 5 || this.state.nGames_multi == 5 ?<Image
                                                     style={{ width: width / 5, height: width / 5}}
@@ -338,9 +338,9 @@ export default class UserProfileScreen extends Component {
                                                 source={require('../files/game_1.png')}
                                                 />}
                                                 
-                                                <Text style={styles.userInfo}>5 online play</Text>
+                                                <Text style={styles.userInfo}>Explore online</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/10}}>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/20}}>
                                                 {this.state.nGames_multi > 20 || this.state.nGames_multi == 20 ?  <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/game_2.png')}
@@ -348,9 +348,9 @@ export default class UserProfileScreen extends Component {
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5}}
                                                 source={require('../files/game_2.png')}
                                                 />}                                               
-                                                <Text style={styles.userInfo}>20 online play</Text>
+                                                <Text style={styles.userInfo}>Online's specialist</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/11.5}}>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/40}}>
                                                 {this.state.nGames_multi > 50 || this.state.nGames_multi == 50 ? <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/game_3.png')}
@@ -358,7 +358,7 @@ export default class UserProfileScreen extends Component {
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5}}
                                                 source={require('../files/game_3.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>50 online play</Text>
+                                                <Text style={styles.userInfo}>Online's master</Text>
                                             </View>                                            
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
@@ -412,7 +412,7 @@ export default class UserProfileScreen extends Component {
                                                 style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
                                                 source={require('../files/stopwatch.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>So fast!</Text>
+                                                <Text style={styles.userInfo}>Binge play </Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7, marginTop:-10}}>
                                                 {this.state.fire == true ? <Image
@@ -460,7 +460,7 @@ export default class UserProfileScreen extends Component {
                                         <View style = {{flexDirection:'row', marginTop:20, marginLeft:18, paddingBottom:10}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
                                                 {this.state.nGames_sing > 50 && this.state.nGames_multi > 50 &&  this.state.win > 50
-                                                    && this.state.center && this.state.time && this.state.fire && this.state.doppelganger
+                                                    && this.state.center && this.state.gamer && this.state.time && this.state.fire && this.state.doppelganger
                                                     && this.state.quit > 30 && this.state.extrovert ? <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/flower.png')}
@@ -498,9 +498,7 @@ export default class UserProfileScreen extends Component {
                                     
                                     
                                        
-                                </ScrollView>
-                             
-                                
+                                </ScrollView>  
                                                          
                             </View>                            
                         </View>

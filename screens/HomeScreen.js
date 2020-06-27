@@ -116,8 +116,7 @@ export default class HomeScreen extends Component {
           username: user.displayName,
           score: 0,
           badge: {
-            center: false,
-            time: false
+            center: false
           }
         },
         player2: {
@@ -125,12 +124,13 @@ export default class HomeScreen extends Component {
           username: this.state.oppoUsername,
           score: 0,
           badge: {
-            center: false,
-            time: false
+            center: false
           }
         },
         finished: false,
-        type: 'multiplayer'
+        type: 'multiplayer',
+        date: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0]
+
       }
     ).then(
       this.setState({ 
@@ -214,12 +214,12 @@ export default class HomeScreen extends Component {
           username: user.displayName,
           score: 0,
           badge: {
-            center: false,
-            time: false
+            center: false
           }
         },
         finished: false,
-        type: 'single'
+        type: 'single',
+        date: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0]
       }
     ).then(this.props.navigation.navigate('GameStack'))
   }

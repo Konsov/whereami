@@ -274,7 +274,6 @@ export default class PlayScreen extends Component {
       } else { 
         firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
           var game = snapshot.toJSON()
-          console.log(game[0])
           if(game[user.uid]['type'] == 'single'){
             firebase.database().ref(`/Games/${user.uid}`).remove()
           }

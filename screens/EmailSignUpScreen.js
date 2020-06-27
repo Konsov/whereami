@@ -86,10 +86,12 @@ export default class EmailSignUpScreen extends Component{
                       last_access: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0],
                       statistics:{
                         day_in_row:1,
+                        last_game: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0],
                         nGames:0,
                         avgScore: 0,
                         maxScore: 0,
                         win:0,
+                        game_in_day:0,
                         nGames_sing:0,
                         nGames_multi:0,
                         win_in_row:0,

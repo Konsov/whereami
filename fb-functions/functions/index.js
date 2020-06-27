@@ -325,7 +325,7 @@ exports.badgeQuit = functions.region('europe-west1').database
                 })
              }
 
-        }
+        } 
 
         return true
 
@@ -420,8 +420,7 @@ exports.createRandomGame = functions.region('europe-west1').database
                                 userpic: playersInWaitingRoom[playerOne]['userpic'],
                                 score: 0,
                                 badge: {
-                                    center: false,
-                                    time: false
+                                    center: false
                                 }
                             },
                             player2: {
@@ -430,12 +429,13 @@ exports.createRandomGame = functions.region('europe-west1').database
                                 userpic: playersInWaitingRoom[playerTwo]['userpic'],
                                 score: 0,
                                 badge: {
-                                    center: false,
-                                    time: false
+                                    center: false
                                 }
                             },
                             finished: false,
-                            type:'multiplayer'
+                            type:'multiplayer',
+                            date: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0]
+
                         });
 
                         snapWaitingRoom.ref.child(playerOne).remove().then(function () {
@@ -543,6 +543,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
             var playerOneID = snapGameJson['player1']['user']
             var playerOneScore = snapGameJson['player1']['score']
             var playerOneBadge = snapGameJson['player1']['badge']
+            var date = snapGameJson['date']
 
             if (snapGame.child('player2').exists()) {
                 var playerTwoID = snapGameJson['player2']['user']
@@ -558,11 +559,23 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     var nGames_multi = snapStatsJson['statistics']['nGames_multi']
                     var win = snapStatsJson['statistics']['win']
                     var win_in_row = snapStatsJson['statistics']['win_in_row']
+                    var lg = snapStatsJson['statistics']['last_game']
+                    var gd = snapStatsJson['statistics']['game_in_day']
+                    var t1 = false;
+                    var t2 = false
                     var w = false;
                     var m = false;
                     var c = false;
                     var f = false;
                     var avg= 0;
+
+                    if (lg == date) {
+                        if (gd + 1 == 15){
+                            badge.push('time')
+                            var t1 = true; 
+                        }
+                        t2 = true
+                    }
                     if(snapGameJson['winner'] == playerTwoID){
                         w= true;
                         if (win_in_row + 1 == 5 && snapStatsJson['statistics']['badge']['fire'] == false){
@@ -577,7 +590,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
                             badge.push('gold_2')
                         }
 
-                    } 
+                    }
 
                     if (playerTwoBadge['center'] == true && snapStatsJson['statistics']['badge']['center'] == false) {
                         c = true;
@@ -594,34 +607,60 @@ exports.delGameUpStats = functions.region('europe-west1').database
 
                     if (avgScore != 0) {
                         avg = (avgScore + playerTwoScore) / 2;
+                    } else {
+                        avg = playerTwoScore
                     }
 
                     if (playerTwoScore > maxScore) {
                         m = true;
                     }
 
-                    if (w & !m) {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                        win: win + 1, win_in_row:win_in_row + 1 })
-                    } else if (!w & m) {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                        win_in_row:0, maxScore: playerTwoScore})
-                    } else if (!w & !m) {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                        win_in_row:0})
+                    if (t2) {                        
+                        if (w & !m) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win: win + 1, win_in_row:win_in_row + 1, game_in_day: gd + 1 })
+                            } else if (!w & m) {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:0, maxScore: playerTwoScore, game_in_day: gd + 1})
+                            } else if (!w & !m) {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:0, game_in_day: gd + 1})
+                            } else {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:win_in_row + 1, maxScore: playerTwoScore, win: win + 1, game_in_day: gd + 1})
+                        }
                     } else {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                        win_in_row:win_in_row + 1, maxScore: playerTwoScore, win: win + 1})
+                        if (w & !m) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win: win + 1, win_in_row:win_in_row + 1, game_in_day: 1, last_game: date })
+                        } else if (!w & m) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win_in_row:0, maxScore: playerTwoScore, game_in_day: 1, last_game: date})
+                        } else if (!w & !m) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win_in_row:0, game_in_day: 1, last_game: date})
+                        } else {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win_in_row:win_in_row + 1, maxScore: playerTwoScore, win: win + 1, game_in_day: 1, last_game: date})
+                        }
                     }
 
-                    if (!f & !c){
+                    if (!f & !c & !t1){
 
-                    } else if (f & !c) {
+                    } else if (f & !c & !t1) {
                         snpaStats.ref.child('statistics').child('badge').update({ fire:true})
-                    } else if (!f & c) {
+                    } else if (!f & c & !t1) {
                         snpaStats.ref.child('statistics').child('badge').update({ center:true})
-                    } else {
+                    } else if (!f & !c & t1) {
+                        snpaStats.ref.child('statistics').child('badge').update({ time:true})
+                    } else if (f & c & !t1) {
                         snpaStats.ref.child('statistics').child('badge').update({ fire:true, center:true})
+                    } else if (f & !c & t1) {
+                        snpaStats.ref.child('statistics').child('badge').update({ fire:true, time:true})
+                    } else if (!f & c & t1) {
+                        snpaStats.ref.child('statistics').child('badge').update({ time:true, center:true})
+                    } else {
+                        snpaStats.ref.child('statistics').child('badge').update({ fire:true, center:true, time: true})
 
                     }
 
@@ -678,24 +717,40 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 var nGames_multi = snapStatsJson['statistics']['nGames_multi']
                 var win = snapStatsJson['statistics']['win']
                 var win_in_row = snapStatsJson['statistics']['win_in_row']
-
+                var lg = snapStatsJson['statistics']['last_game']
+                var gd = snapStatsJson['statistics']['game_in_day']
+                var t1 = false;
+                var t2 = false
                 var w = false;
-                var max = false;
+                var m = false;
                 var c = false;
                 var f = false;
-                var m = false;
-                var avg= 0;
+                var max= false;
+               
+
+                if (lg == date) {
+                    if (gd + 1 == 15){
+                        badge.push('time')
+                        t1 = true; 
+                    }
+                    t2 = true
+                }
 
                 if(snapGameJson['winner'] != null){
                     if (snapGameJson['winner'] == playerOneID){
                         w= true;
                         if (win_in_row + 1 == 5 && snapStatsJson['statistics']['badge']['fire'] == false){
-                            f= true;
+                            f = true;
                             badge.push('fire')
                         }
-                    } else {
-                        snpaStats.ref.child('statistics').update({ win_in_row:0 })
-                    }
+                        if (win + 1 == 5){
+                            badge.push('bronze_2')
+                        } else if (win + 1 == 20){
+                            badge.push('silver_2')
+                        }else if (win + 1 == 50){
+                            badge.push('gold_2')
+                        }
+                    } 
                     if (nGames_multi + 1 == 5){
                         badge.push('game_1')
                     } else if (nGames_multi + 1 == 20){
@@ -727,36 +782,68 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     max = true;
                 }
 
-                if (m) {                    
-                    if (w & !max) {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                        win: win + 1, win_in_row:win_in_row + 1 })
-                    } else if (!w & max) {
+                if (m) {
+                    if (t2){                                            
+                        if (w & !max) {
                             snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                            win_in_row:0, maxScore: playerOneScore})
-                    } else if (!w & !max) {
-                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                            win_in_row:0})
+                            win: win + 1, win_in_row:win_in_row + 1 , game_in_day: gd + 1})
+                        } else if (!w & max) {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:0, maxScore: playerOneScore, game_in_day: gd + 1})
+                        } else if (!w & !max) {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:0, game_in_day: gd + 1})
+                        } else {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:win_in_row + 1, maxScore: playerOneScore, win: win + 1, game_in_day: gd + 1})
+                        }
                     } else {
+                        if (w & !max) {
                             snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
-                            win_in_row:win_in_row + 1, maxScore: playerOneScore, win: win + 1})
+                            win: win + 1, win_in_row:win_in_row + 1 , game_in_day: 1, last_game: date})
+                        } else if (!w & max) {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:0, maxScore: playerOneScore, game_in_day: 1, last_game: date})
+                        } else if (!w & !max) {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:0, game_in_day: 1, last_game: date})
+                        } else {
+                                snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                                win_in_row:win_in_row + 1, maxScore: playerOneScore, win: win + 1, game_in_day: 1, last_game: date})
+                        }
                     }
                 } else {
-                    if (max) {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg, maxScore: playerOneScore})
-                    } else {
-                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg})
+                    if (t2){                        
+                        if (max) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg, maxScore: playerOneScore,  game_in_day: gd + 1})
+                        } else {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg, game_in_day: gd + 1})
+                        }
+                    } else {                        
+                        if (max) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg, maxScore: playerOneScore ,game_in_day: 1, last_game: date})
+                        } else {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg, game_in_day: 1, last_game: date})
+                        }
                     }
                 }
 
-                if (!f & !c){
+                if (!f & !c & !t1){
 
-                } else if (f & !c) {
+                } else if (f & !c & !t1) {
                     snpaStats.ref.child('statistics').child('badge').update({ fire:true})
-                } else if (!f & c) {
+                } else if (!f & c & !t1) {
                     snpaStats.ref.child('statistics').child('badge').update({ center:true})
-                } else {
+                } else if (!f & !c & t1) {
+                    snpaStats.ref.child('statistics').child('badge').update({ time:true})
+                } else if (f & c & !t1) {
                     snpaStats.ref.child('statistics').child('badge').update({ fire:true, center:true})
+                } else if (f & !c & t1) {
+                    snpaStats.ref.child('statistics').child('badge').update({ fire:true, time:true})
+                } else if (!f & c & t1) {
+                    snpaStats.ref.child('statistics').child('badge').update({ time:true, center:true})
+                } else {
+                    snpaStats.ref.child('statistics').child('badge').update({ fire:true, center:true, time: true})
 
                 }
 
