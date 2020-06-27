@@ -226,10 +226,12 @@ export default class HomeScreen extends Component {
 
   playOnline() {
     const user = firebase.auth().currentUser;
+
     firebase.database().ref('waitingRoom/' + user.uid).set(
       {
         user: user.uid,
-        username: user.displayName
+        username: user.displayName,
+        userpic: user.photoURL
       }
     )
     this.props.navigation.navigate('GameStack')

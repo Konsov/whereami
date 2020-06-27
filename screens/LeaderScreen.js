@@ -7,8 +7,7 @@ import {
 import {
     View,
     Image,
-    Dimensions, 
-    Alert
+    Dimensions
 } from 'react-native';
 
 import { ButtonGroup } from 'react-native-elements';

@@ -9,7 +9,6 @@ import firebase from '../services/firebase';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 import Modal from 'react-native-modal';
 import CountDown from 'react-native-countdown-component'
-
 import { BarIndicator } from 'react-native-indicators';
 
 
@@ -22,7 +21,9 @@ export default class PlayScreen extends Component {
   state = {
     player: 'not assigned',
     username: '',
+    userpic: '',
     oppoUsername: '',
+    oppoUserpic: '',
     
     gameID: '',
     disabled: true,
@@ -79,6 +80,7 @@ export default class PlayScreen extends Component {
               player: 'player1',
               type: game[id]['type'],
               username: game[id]['player1']['username'],
+              userpic:game[id]['player1']['userpic']
               })
               
             console.log(`${this.state.username} has loaded the game: `)
@@ -88,7 +90,8 @@ export default class PlayScreen extends Component {
             
             if(game[id]['type'] == 'multiplayer'){
               this.setState({
-                oppoUsername: game[id]['player2']['username']
+                oppoUsername: game[id]['player2']['username'],
+                oppoUserpic:game[id]['player2']['userpic']
               })
               console.log(`${this.state.oppoUsername} is the player 2`)
             }
@@ -99,7 +102,6 @@ export default class PlayScreen extends Component {
       }.bind(this))
     
       firebase.database().ref('/Games').orderByChild('player2/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
-       
         if (snapshot.exists()) {
           var game = snapshot.toJSON()
           for (var id in game) {
@@ -108,7 +110,9 @@ export default class PlayScreen extends Component {
               player: 'player2',
               type: game[id]['type'],
               username: game[id]['player2']['username'],
-              oppoUsername: game[id]['player1']['username']
+              userpic:game[id]['player2']['userpic'],
+              oppoUsername: game[id]['player1']['username'],
+              oppoUserpic:game[id]['player1']['userpic']
               })
               console.log(`${this.state.username} has loaded the game: `)
               console.log(`Game: ${this.state.gameID}`)
@@ -247,7 +251,7 @@ export default class PlayScreen extends Component {
       var score = this.props.navigation.getParam('score')
     }
 
-    this.props.navigation.navigate('InsertMarker', { lat: this.getRoundLatitude(), long: this.getRoundLongitude(), round: this.state.round, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type, username: this.state.username, oppoUsername: this.state.oppoUsername})
+    this.props.navigation.navigate('InsertMarker', { lat: this.getRoundLatitude(), long: this.getRoundLongitude(), round: this.state.round, score: score, gameID: this.state.gameID, player: this.state.player, timerID: timerID, type: this.state.type, username: this.state.username, oppoUsername: this.state.oppoUsername, userpic:this.state.userpic, oppoUserpic:this.state.oppoUserpic})
     
 
     this.setState({
@@ -353,7 +357,6 @@ renderModalExitGame(){
               onPress={() => this.goToMarker()}
               type="anchor"
               style={styles.answerButton}
-              width={150}
             >GIVE ANSWER
             </AwesomeButtonRick>
             

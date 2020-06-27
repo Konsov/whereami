@@ -4,7 +4,6 @@ import {
   View,
   Image,
   Dimensions,
-  KeyboardAvoidingView,
   Alert
 } from 'react-native';
 

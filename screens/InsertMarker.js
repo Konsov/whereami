@@ -3,14 +3,16 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View, Dimensions,
-    BackHandler,Text, Image
+    BackHandler,Text, ImageBackground, Image
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/rick";
 import firebase from '../services/firebase';
-import CountDown from 'react-native-countdown-component'
+import CountDown from 'react-native-countdown-component';
 import Modal from 'react-native-modal';
+import { Icon } from 'react-native-vector-icons/MaterialIcons';
+
 import { BarIndicator } from 'react-native-indicators';
 
 const windowWidth = Dimensions.get('window').width;
@@ -73,7 +75,11 @@ export default class InsertMarker extends Component {
 
         var distance = Math.round((R * c) / 1000);
 
-        var tempScore = (20000 - distance)
+        var tempScore = (20000 - distance) / 10
+
+        tempScore = Math.trunc( tempScore )
+
+
         
         var score = tempScore + this.props.navigation.getParam('score')
        
@@ -234,15 +240,16 @@ export default class InsertMarker extends Component {
         var outro
        
         if(this.props.navigation.getParam('round')<5){
-            intro = <Text>Round: {this.props.navigation.getParam('round')}</Text>
-            outro = <Text>{this.state.counterNextRound} secondi al prossimo round</Text>
+            intro = <View><Text style={styles.title}>Leaderboard</Text></View>
+            outro = <View><Text style={styles.timerText}>{this.state.counterNextRound} secondi al prossimo round</Text></View>
         
         }else{
-            intro = <Text>Final Leaderboard</Text>
+            intro = <View><Text style={styles.title}>Final Leaderboard</Text></View>
             const user = firebase.auth().currentUser;
             if(this.state.score > this.state.oppoScore){
-                outro = <View>
-                            <Text>YOU WIN</Text>
+                outro = <View style={{alignItems:'center'}}>
+
+                            <Text style={styles.winTitle}>YOU WIN</Text>
                             <AwesomeButtonRick
                             onPress={() => {
                                 this.setState({endModal:true});
@@ -257,8 +264,8 @@ export default class InsertMarker extends Component {
                             </AwesomeButtonRick>
                         </View>
             }else{
-                outro = <View>
-                            <Text>YOU LOSE</Text>
+                outro = <View style={{alignItems:'center'}}>
+                            <Text style={styles.loseTitle}>YOU LOSE</Text>
                             <AwesomeButtonRick
                                 onPress={() => {
                                     this.props.navigation.navigate('AppStack')}}
@@ -274,16 +281,67 @@ export default class InsertMarker extends Component {
             return (
                 <View>
                     {intro}
-                    <Text>1st {this.props.navigation.getParam('username')} {this.state.score}</Text>
-                    <Text>2nd {this.props.navigation.getParam('oppoUsername')} { this.state.oppoScore}</Text>
+                    <View style={styles.leaderboardRow}> 
+                        <View style={styles.circle}>
+                            <ImageBackground
+                                source={{ uri: this.props.navigation.getParam('userpic')}} 
+                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
+                            />
+                        </View>
+                        <View>
+                            <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('username')} {this.state.score}</Text>
+                        </View>
+                            {/* <Image 
+                                source={{ uri:this.props.navigation.getParam('userpic')}} 
+                                style={{width: windowWidth/10, height: windowWidth/10, borderRadius: 40/ 2}} 
+                            /> */}
+
+                            {/* <Text style={styles.content}>{this.props.navigation.getParam('username')} {this.state.score}</Text> */}
+                    </View>
+                    <View style={styles.leaderboardRow}> 
+                    <View style={styles.circle}><ImageBackground 
+                                source={{ uri:this.props.navigation.getParam('userpic')}} 
+                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
+                            />
+                        </View>
+                        <View>
+                            <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('oppoUsername')} {this.state.oppoScore}</Text>
+                        </View>
+                    </View>
+                    {/* <Icon name='looks-two' type='material' color='#5bbd3a'/> */}
+{/*                    
+                        <Image 
+                            source={{ uri:this.props.navigation.getParam('oppoUserpic')}} 
+                            style={{width: windowWidth/10, height: windowWidth/10, borderRadius: 40/ 2}} 
+                        />
+                        <Text style={styles.content}>{this.props.navigation.getParam('oppoUsername')} { this.state.oppoScore}</Text> */}
+                  
                     {outro}
                 </View>)
         }else{
             return (
                 <View>
                     {intro}
-                    <Text>1st {this.props.navigation.getParam('oppoUsername')} {this.state.oppoScore}</Text>
-                    <Text>2nd {this.props.navigation.getParam('username')} {this.state.score}</Text>
+                    <View style={styles.leaderboardRow}> 
+                    <View style={styles.circle}><ImageBackground 
+                                source={{ uri:this.props.navigation.getParam('userpic')}} 
+                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
+                            />
+                        </View>
+                        <View>
+                            <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('oppoUsername')} {this.state.oppoScore}</Text>
+                        </View> 
+                    </View>
+                    <View style={styles.leaderboardRow}> 
+                    <View style={styles.circle}><ImageBackground
+                                source={{ uri:this.props.navigation.getParam('userpic')}} 
+                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
+                            />
+                        </View>
+                        <View>
+                            <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('username')} {this.state.score}</Text>
+                        </View>
+                    </View>
                     {outro}
                 </View>)
         }
@@ -469,21 +527,21 @@ export default class InsertMarker extends Component {
 
     renderModalScore(){
         var msg
-        var finishMsg = <Text>temp</Text>
+        var finishMsg = <Text style={styles.title}>Round { this.props.navigation.getParam('round') } </Text>
         if(this.state.distance <= 20000 && this.state.distance > 10000){
-            msg = <Text>Whaaaat? You shuold study geography bro! You are {this.state.distance}km far!</Text>
+            msg = <Text style={styles.content}>Whaaaat? You shuold study geography bro! You are {this.state.distance}km far!</Text>
         }else if(this.state.distance <= 10000 && this.state.distance > 5000){
-            msg = <Text>Nice Try! But you can do better!! You wrong by {this.state.distance}km</Text>
+            msg = <Text style={styles.content}>Nice Try! But you can do better!! You wrong by {this.state.distance}km</Text>
         }else if(this.state.distance <= 5000 && this.state.distance > 1000){    
-            msg= <Text>Yeah! Very Close! Only {this.state.distance}km far</Text>
+            msg= <Text style={styles.content}>Yeah! Very Close! Only {this.state.distance}km far</Text>
         }else if(this.state.distance <= 1000 ){
-            msg= <Text>GREAT!{this.state.distance}km missed, YOU GOTTA THIS BRO </Text>
+            msg= <Text style={styles.content}>GREAT!{this.state.distance}km missed, YOU GOTTA THIS BRO </Text>
         }else{
-            msg = <Text>Errore</Text>
+            msg = <Text style={styles.content}>Errore</Text>
         }
 
         if(this.props.navigation.getParam('round')==5){
-            finishMsg=<Text>FINISH SCORE{this.state.score}</Text>
+            finishMsg=<Text style={styles.title}>FINISH</Text>
         }
 
 
@@ -506,8 +564,10 @@ export default class InsertMarker extends Component {
         <View style={styles.modalView}>     
                 {finishMsg}
                 {msg}
-                <Text>Score of this round {this.state.tempScore}</Text>
-                <Text>Total score {this.state.score}</Text>
+                <View style={styles.score}>
+                    <Text style={styles.scoretext}>Score of this Round <Text style={styles.scorepoint}>{this.state.tempScore}</Text></Text>
+                    <Text style={styles.scoretext}>Total Score <Text style={styles.scorepoint}>{this.state.score}</Text></Text>
+                </View>
         </View>
       </Modal>)
     }
@@ -613,8 +673,11 @@ const styles = StyleSheet.create({
 
     modalView: {
         backgroundColor: "white",
+        borderColor: "#5bbd3a",
+        borderWidth: 4,
         borderRadius: 20,
-        padding: 35,
+        paddingHorizontal: 35,
+        paddingVertical:30,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
@@ -624,11 +687,71 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5
     },
-    endView: {
-        position: 'absolute',
-        backgroundColor: "white",
-        width: windowWidth,
-        height: windowHeight,
-        marginLeft:-19.7,
+
+    title:{
+        fontSize: 29,
+        textAlign: "center",
+        fontWeight: 'bold',
+        marginBottom:25,
+    },
+
+    winTitle:{
+        fontSize: 27,
+        textAlign: "center",
+        fontWeight: 'bold',
+        marginBottom:25,
+        marginTop:10,
+        color:'green'
+    },
+
+    timerText:{
+        fontSize: 18,
+        textAlign: "center",
+        marginTop:25,
+    },
+
+    loseTitle:{
+        fontSize: 27,
+        textAlign: "center",
+        fontWeight: 'bold',
+        marginTop:10,
+        marginBottom:25, 
+        color:'red'
+    },
+
+    textLeaderboard:{
+        fontSize: 20,
+        textAlignVertical: "center",
+        flex:1,
+        marginLeft:10
+    },
+
+    content:{
+        fontSize: 18,
+        textAlign: "center",
+    },
+    score:{
+        alignItems: "center",
+        marginTop: 20,
+    },
+    scoretext:{
+        fontSize: 19
+    },
+    scorepoint:{
+        fontSize: 19,
+        fontWeight: 'bold',
+
+    },
+    circle: {
+        width: windowHeight/10,
+        height: windowHeight/10,
+        borderRadius: 50/2,
+        borderColor:'#5bbd3a',
+        borderWidth:4,
+    },
+    leaderboardRow:{
+        flexDirection:'row',
+        marginBottom:10
     }
+
 });
