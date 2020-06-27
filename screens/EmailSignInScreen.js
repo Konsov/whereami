@@ -5,6 +5,8 @@ import {
   Image,
   Dimensions,
   Alert,
+  BackHandler,
+  AppState
 } from 'react-native';
 
 import {
@@ -27,6 +29,16 @@ export default class EmailSignInScreen extends Component {
     email: '',
     password: ''
   }
+
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.navigate('AuthStack');
+    });
+  }
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
   
   loginUser = (email, password) => {
     try {

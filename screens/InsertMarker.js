@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View, Dimensions,
-    BackHandler,Text, ImageBackground
+    BackHandler,Text, ImageBackground, Image
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
@@ -41,7 +41,8 @@ export default class InsertMarker extends Component {
         oppoRoundScore: 0,
         oppoScore: 0,
         myStatus: false,
-        runTimer: true
+        runTimer: true,
+        endModal:false
     }
 
     componentDidMount() {
@@ -252,12 +253,13 @@ export default class InsertMarker extends Component {
                             <Text style={styles.winTitle}>YOU WIN</Text>
                             <AwesomeButtonRick
                             onPress={() => {
-                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).once("value", snapshot => {
+                                this.setState({endModal:true});
+                                setTimeout(() => {this.props.navigation.navigate('AppStack')}, 3000);
+                                firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).once("value", snapshot => {                                    
                                     if (snapshot.exists()){
                                        firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true, winner: user.uid})
                                     }
-                                 });
-                                this.props.navigation.navigate('AppStack')}}
+                                 });}}
                             type="anchor"
                             >Go To Home
                             </AwesomeButtonRick>
@@ -388,6 +390,22 @@ export default class InsertMarker extends Component {
             } 
         }, 1000)
     }
+
+    endModal(){
+        return(
+            <Modal
+                testID={'modalExit'}
+                isVisible={this.state.endModal}
+                coverScreen = {true}
+                hasBackDrop={false}>
+                <View style={styles.endView}>     
+                    <View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
+                        <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
+                        <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+                    </View>
+                </View>
+          </Modal>)
+    }
     
     goToNextRound(){
         
@@ -401,7 +419,8 @@ export default class InsertMarker extends Component {
                 })
                 }else{
                     firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).update({ finished: true })
-                    this.props.navigation.navigate('AppStack')
+                    this.setState({endModal:true})
+                    setTimeout(() => {this.props.navigation.navigate('AppStack')}, 3000);
                 }
             }else{
                 if(this.props.navigation.getParam('player') == 'player1'){
@@ -577,7 +596,7 @@ export default class InsertMarker extends Component {
             <View style={styles.container}>  
 
             {this.renderModalNextRound()}
-            
+            {this.endModal()}
             {this.renderModalScore()}
                     
                     <MapView

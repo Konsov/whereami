@@ -179,8 +179,9 @@ exports.delGameUpStats = functions.region('europe-west1').database
     .ref('/Games/{gameID}/finished')
     .onUpdate((snapshot, context) => {
 
+        
         return snapshot.after.ref.parent.once('value').then(snapGame => {
-            
+            snapshot.after.ref.parent.remove()
             var snapGameJson = snapGame.toJSON();
             var playerOneID = snapGameJson['player1']['user']
             var playerOneScore = snapGameJson['player1']['score']
@@ -200,10 +201,15 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     var nGames_multi = snapStatsJson['statistics']['nGames_multi']
                     var win = snapStatsJson['statistics']['win']
                     var win_in_row = snapStatsJson['statistics']['win_in_row']
-                    
+                    var w = false;
+                    var m = false;
+                    var c = false;
+                    var f = false;
+                    var avg= 0;
                     if(snapGameJson['winner'] == playerTwoID){
-                        snpaStats.ref.child('statistics').update({ win: win + 1, win_in_row:win_in_row + 1 })
+                        w= true;
                         if (win_in_row + 1 == 5 && snapStatsJson['statistics']['badge']['fire'] == false){
+                            f = true;
                             badge.push('fire')
                         }
                         if (win + 1 == 5){
@@ -214,12 +220,10 @@ exports.delGameUpStats = functions.region('europe-west1').database
                             badge.push('gold_2')
                         }
 
-                    } else {
-                        snpaStats.ref.child('statistics').update({ win_in_row:0 })
-                    }
+                    } 
 
                     if (playerTwoBadge['center'] == true && snapStatsJson['statistics']['badge']['center'] == false) {
-                        snpaStats.ref.child('statistics').child('badge').update({ center: true })
+                        c = true;
                         badge.push('center')
                     }
 
@@ -230,18 +234,40 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     }else if (nGames_multi + 1 == 50){
                         badge.push('game_3')
                     }
-                    snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1 })
 
-                    if (avgScore == 0) {
-                        snpaStats.ref.child('statistics').update({ avgScore: playerTwoScore })
-                    } else {
-                        var newAvg = (avgScore + playerTwoScore) / 2
-                        snpaStats.ref.child('statistics').update({ avgScore: newAvg })
+                    if (avgScore != 0) {
+                        avg = (avgScore + playerTwoScore) / 2;
                     }
 
                     if (playerTwoScore > maxScore) {
-                        snpaStats.ref.child('statistics').update({ maxScore: playerTwoScore })
+                        m = true;
                     }
+
+                    if (w & !m) {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                        win: win + 1, win_in_row:win_in_row + 1 })
+                    } else if (!w & m) {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                        win_in_row:0, maxScore: playerTwoScore})
+                    } else if (!w & !m) {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                        win_in_row:0})
+                    } else {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                        win_in_row:win_in_row + 1, maxScore: playerTwoScore, win: win + 1})
+                    }
+
+                    if (!f & !c){
+
+                    } else if (f & !c) {
+                        snpaStats.ref.child('statistics').child('badge').update({ fire:true})
+                    } else if (!f & c) {
+                        snpaStats.ref.child('statistics').child('badge').update({ center:true})
+                    } else {
+                        snpaStats.ref.child('statistics').child('badge').update({ fire:true, center:true})
+
+                    }
+
 
                     if (typeof badge !== 'undefined' && badge.length > 0) {
                             const message = {
@@ -295,10 +321,19 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 var nGames_multi = snapStatsJson['statistics']['nGames_multi']
                 var win = snapStatsJson['statistics']['win']
                 var win_in_row = snapStatsJson['statistics']['win_in_row']
+
+                var w = false;
+                var max = false;
+                var c = false;
+                var f = false;
+                var m = false;
+                var avg= 0;
+
                 if(snapGameJson['winner'] != null){
                     if (snapGameJson['winner'] == playerOneID){
-                        snpaStats.ref.child('statistics').update({ win: win + 1, win_in_row:win_in_row + 1  })
+                        w= true;
                         if (win_in_row + 1 == 5 && snapStatsJson['statistics']['badge']['fire'] == false){
+                            f= true;
                             badge.push('fire')
                         }
                     } else {
@@ -311,7 +346,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     } else if (nGames_multi + 1 == 50){
                         badge.push('game_3')
                     }
-                    snpaStats.ref.child('statistics').update({ nGames_multi: nGames_multi + 1 })
+                    m= true;
                 } else {
                     if (nGames_sing + 1 == 5){
                         badge.push('bronze')
@@ -320,25 +355,52 @@ exports.delGameUpStats = functions.region('europe-west1').database
                     }else if (nGames_sing + 1 == 50){
                         badge.push('gold')
                     }
-                    snpaStats.ref.child('statistics').update({ nGames_sing: nGames_sing + 1 })
                 }
 
                 if (playerOneBadge['center'] == true && snapStatsJson['statistics']['badge']['center'] == false) {
-                    snpaStats.ref.child('statistics').child('badge').update({ center: true })
+                    c = true;
                     badge.push('center')
                 }
 
-                snpaStats.ref.child('statistics').update({ nGames: nGames + 1 })
-
-                if (avgScore == 0) {
-                    snpaStats.ref.child('statistics').update({ avgScore: playerOneScore })
-                } else {
-                    var newAvg = (avgScore + playerOneScore) / 2
-                    snpaStats.ref.child('statistics').update({ avgScore: newAvg })
+                if (avgScore != 0) {
+                    avg = (avgScore + playerOneScore) / 2;
                 }
 
                 if (playerOneScore > maxScore) {
-                    snpaStats.ref.child('statistics').update({ maxScore: playerOneScore })
+                    max = true;
+                }
+
+                if (m) {                    
+                    if (w & !max) {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                        win: win + 1, win_in_row:win_in_row + 1 })
+                    } else if (!w & max) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win_in_row:0, maxScore: playerOneScore})
+                    } else if (!w & !max) {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win_in_row:0})
+                    } else {
+                            snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_multi: nGames_multi + 1, avgScore: avg,
+                            win_in_row:win_in_row + 1, maxScore: playerOneScore, win: win + 1})
+                    }
+                } else {
+                    if (max) {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg, maxScore: playerOneScore})
+                    } else {
+                        snpaStats.ref.child('statistics').update({ nGames: nGames + 1, nGames_sing: nGames_sing + 1, avgScore: avg})
+                    }
+                }
+
+                if (!f & !c){
+
+                } else if (f & !c) {
+                    snpaStats.ref.child('statistics').child('badge').update({ fire:true})
+                } else if (!f & c) {
+                    snpaStats.ref.child('statistics').child('badge').update({ center:true})
+                } else {
+                    snpaStats.ref.child('statistics').child('badge').update({ fire:true, center:true})
+
                 }
 
                 if (typeof badge !== 'undefined' && badge.length > 0) {
@@ -380,7 +442,7 @@ exports.delGameUpStats = functions.region('europe-west1').database
                 admin.messaging().send(message);
             }
 
-            }).then(snapshot.after.ref.parent.remove())
+            })
 
         })
 
