@@ -100,6 +100,7 @@ exports.createRandomGame = functions.region('europe-west1').database
                             player1: {
                                 user: playerOne,
                                 username: playersInWaitingRoom[playerOne]['username'],
+                                userpic: playersInWaitingRoom[playerOne]['userpic'],
                                 score: 0,
                                 badge: {
                                     center: false,
@@ -109,6 +110,7 @@ exports.createRandomGame = functions.region('europe-west1').database
                             player2: {
                                 user: playerTwo,
                                 username: playersInWaitingRoom[playerTwo]['username'],
+                                userpic: playersInWaitingRoom[playerTwo]['userpic'],
                                 score: 0,
                                 badge: {
                                     center: false,

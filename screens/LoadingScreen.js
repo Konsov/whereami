@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {
   View,
-  Image,
-  AsyncStorage
+  Image
 } from 'react-native';
 
 import firebase from '../services/firebase'
