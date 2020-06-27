@@ -12,7 +12,6 @@ import firebase from '../services/firebase';
 import CountDown from 'react-native-countdown-component';
 import Modal from 'react-native-modal';
 import { Icon } from 'react-native-vector-icons/MaterialIcons';
-import { Image } from 'react-native'
 
 import { BarIndicator } from 'react-native-indicators';
 
