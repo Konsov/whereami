@@ -29,7 +29,11 @@ export default class UserProfileScreen extends Component {
         nGame: 0,
         not: 0,
         check: false,
-        win:0
+        win:0,        
+        gamer: false,
+        extrovert: false,
+        doppelganger: false
+        
     }
 
 
@@ -55,8 +59,14 @@ export default class UserProfileScreen extends Component {
             var name = profile['username']
             var pic = profile['userpic']
             var nGames_multi = profile['statistics']['nGames_multi']
+            var quit = profile['statistics']['quit']
             var nGames_sing = profile['statistics']['nGames_sing']
-
+            var center = profile['statistics']['badge']['center']
+            var fire = profile['statistics']['badge']['fire']
+            var time = profile['statistics']['badge']['time']
+            var gamer = profile['statistics']['badge']['gamer']
+            var doppelganger = profile['statistics']['badge']['doppelganger']
+            var extrovert = profile['statistics']['badge']['extrovert']
             for (var val in profile['friend']) {
                 if (val == my_user.uid){
                     this.setState({
@@ -73,7 +83,14 @@ export default class UserProfileScreen extends Component {
                 nGame: nGames,
                 win: win,
                 nGames_multi: nGames_multi,
-                nGames_sing: nGames_sing
+                nGames_sing: nGames_sing,
+                center: center,
+                fire: fire,
+                time: time,
+                gamer: gamer,
+                extrovert: extrovert,
+                doppelganger: doppelganger,
+                quit:quit
             })
         }).then(
             this.setState({
@@ -164,9 +181,9 @@ export default class UserProfileScreen extends Component {
 
                                 <ScrollView>
                                     <View style={{flexDirection:'column'}}>
-                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
+                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:23}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.nGames_sing > 5 || this.state.nGames_sing == 5  ?<Image
+                                                {this.state.nGames_sing > 5 || this.state.nGames_sing == 5 ?<Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/bronze.png')}
                                                 />: <Image
@@ -174,27 +191,27 @@ export default class UserProfileScreen extends Component {
                                                 source={require('../files/bronze.png')}
                                                 />}
                                                 
-                                                <Text style={styles.userInfo}>5 single play</Text>
+                                                <Text style={styles.userInfo}>First steps</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.8}}>
-                                                {this.state.nGames_sing > 20 || this.state.nGames_sing == 20  ?  <Image
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7}}>
+                                                {this.state.nGames_sing > 20 || this.state.nGames_sing == 20 ?  <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/silver.png')}
                                                 />:  <Image
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5}}
                                                 source={require('../files/silver.png')}
                                                 />}                                               
-                                                <Text style={styles.userInfo}>20 single play</Text>
+                                                <Text style={styles.userInfo}>Expert</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9.8}}>
-                                                {this.state.nGames_sing > 50 || this.state.nGames_sing == 50  ? <Image
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7.3}}>
+                                                {this.state.nGames_sing > 50 || this.state.nGames_sing == 50 ? <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/gold.png')}
                                                 />: <Image
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5}}
                                                 source={require('../files/gold.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>50 single play</Text>
+                                                <Text style={styles.userInfo}>Veteran</Text>
                                             </View>                                            
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:18, marginLeft:18}}>
@@ -219,7 +236,7 @@ export default class UserProfileScreen extends Component {
                                                 />}                                               
                                                 <Text style={styles.userInfo}>20 online play</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/10}}>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/11.5}}>
                                                 {this.state.nGames_multi > 50 || this.state.nGames_multi == 50 ? <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/game_3.png')}
@@ -239,9 +256,9 @@ export default class UserProfileScreen extends Component {
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
                                                 source={require('../files/bronze_2.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>5 online win</Text>
+                                                <Text style={styles.userInfo}>Great</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5}}>
                                                 {this.state.win > 20 || this.state.win == 20 ? <Image
                                                     style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/silver_2.png')}
@@ -249,9 +266,9 @@ export default class UserProfileScreen extends Component {
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
                                                 source={require('../files/silver_2.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>20 online win</Text>
+                                                <Text style={styles.userInfo}>Champion</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9}}>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7.5}}>
                                                 {this.state.win > 50 || this.state.win == 50 ? <Image
                                                     style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/gold_2.png')}
@@ -259,32 +276,108 @@ export default class UserProfileScreen extends Component {
                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
                                                 source={require('../files/gold_2.png')}
                                                 />}
-                                                <Text style={styles.userInfo}>50 online win</Text>
+                                                <Text style={styles.userInfo}>GOAT</Text>
                                             </View>      
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:20, marginLeft:18}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                {this.state.center == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/target.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/target.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>Really close</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                {this.state.time == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/stopwatch.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/stopwatch.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>So fast!</Text>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5, marginTop:-10}}>
-                                                <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7, marginTop:-10}}>
+                                                {this.state.fire == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
                                                     source={require('../files/fire.png')}
-                                                />
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/fire.png')}
+                                                />}
                                                 <Text style={styles.userInfo}>On fire</Text>
                                             </View>
                                         </View>
+                                        <View style = {{flexDirection:'row', marginTop:20, marginLeft:18}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                {this.state.extrovert == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/group.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/group.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>Extrovert</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7, marginTop:-10}}>
+                                                {this.state.gamer == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
+                                                    source={require('../files/joystick.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/joystick.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>Real Gamer</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9, marginTop:-10}}>
+                                                {this.state.doppelganger == true ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
+                                                    source={require('../files/lens.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/lens.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>Doppelganger</Text>
+                                            </View>
+                                        </View>
+                                        <View style = {{flexDirection:'row', marginTop:20, marginLeft:18, paddingBottom:10}}>
+                                            <View style={{flexDirection:'column', alignItems:'center'}}>
+                                                {this.state.nGames_sing > 50 && this.state.nGames_multi > 50 &&  this.state.win > 50
+                                                    && this.state.center && this.state.gamer && this.state.time && this.state.fire && this.state.doppelganger
+                                                    && this.state.quit > 30 && this.state.extrovert ? <Image
+                                                    style={{ width: width / 5, height: width / 5}}
+                                                    source={require('../files/flower.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
+                                                source={require('../files/flower.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>All Badges</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
+                                                {this.state.quit > 10 ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
+                                                    source={require('../files/yellow-card.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/yellow-card.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>Quitter</Text>
+                                            </View>
+                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5, marginTop:-10}}>
+                                                {this.state.quit > 30 ? <Image
+                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
+                                                    source={require('../files/red-card.png')}
+                                                />: <Image
+                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
+                                                source={require('../files/red-card.png')}
+                                                />}
+                                                <Text style={styles.userInfo}>Real quitter</Text>
+                                            </View>
+                                        </View>
+
 
                                         
                                     </View>

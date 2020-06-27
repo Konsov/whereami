@@ -83,7 +83,9 @@ export default class EmailSignUpScreen extends Component{
                   .set({
                       username: username,
                       userpic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
+                      last_access: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0],
                       statistics:{
+                        day_in_row:1,
                         nGames:0,
                         avgScore: 0,
                         maxScore: 0,
@@ -94,7 +96,10 @@ export default class EmailSignUpScreen extends Component{
                         badge : {
                           fire: false,
                           center: false,
-                          time: false
+                          time: false,
+                          gamer:false,
+                          extrovert:false,
+                          doppelganger:false
                         }
                         }
                   });

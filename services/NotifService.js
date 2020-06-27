@@ -135,7 +135,8 @@ export default class NotifService extends Component {
                 <ScrollView horizontal={true}>
                     {this.state.badge.map((value,key) =>{
                       return (
-                        <View>
+                        <View key={key}>
+                          {console.log(value.toString())}
                           {value == 'gold' ? <Image
                             style={{ width: width / 5, height: width / 5}}
                             source={require('../files/gold.png')}
@@ -172,6 +173,24 @@ export default class NotifService extends Component {
                           />: value == 'center' ? <Image
                           style={{ width: width / 5, height: width / 5}}
                           source={require('../files/target.png')}
+                          />: value == 'flower' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/flower.png')}
+                          />: value == 'extrovert' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/group.png')}
+                          />: value == 'gamer' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/joystick.png')}
+                          />: value == 'doppelganger' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/lens.png')}
+                          />: value == 'red-card' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/red-card.png')}
+                          />: value == 'yellow-card' ? <Image
+                          style={{ width: width / 5, height: width / 5}}
+                          source={require('../files/yellow-card.png')}
                           />: null}
                         </View>
                       )})}

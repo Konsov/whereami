@@ -71,8 +71,9 @@ export default class PlayScreen extends Component {
        
         if (snapshot.exists()) {
           var game = snapshot.toJSON()
-          console.log(game)
+          
           for (var id in game) {
+            console.log(game[id]['player1'])
             this.setState({
               gameID: id,
               player: 'player1',
@@ -269,7 +270,8 @@ export default class PlayScreen extends Component {
       } else { 
         firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
           var game = snapshot.toJSON()
-          if(game[id]['type'] == 'single'){
+          console.log(game[0])
+          if(game[user.uid]['type'] == 'single'){
             firebase.database().ref(`/Games/${user.uid}`).remove()
           }
         })

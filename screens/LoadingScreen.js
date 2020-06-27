@@ -30,6 +30,7 @@ class LoadingScreen extends Component {
           this.isOnline()
           if (user.providerData[0]["providerId"] == "facebook.com"){
             var ct =new Date(Math.floor(user.metadata["a"] / 1000) * 1000).toISOString().split("T");
+            console.log(ct)
             var compare = new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T");
             if(ct[0] == compare[0]){
               if (ct[1].split(":")[0] == compare[1].split(":")[0] && ct[1].split(":")[1] == compare[1].split(":")[1]){

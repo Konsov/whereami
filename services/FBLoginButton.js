@@ -43,6 +43,7 @@ export default class FBLoginButton extends Component {
                                         ref.set({
                                             username: name,
                                             userpic: fbImage,
+                                            last_access: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T")[0],
                                             statistics:{
                                                 nGames:0,
                                                 avgScore: 0,
@@ -51,10 +52,14 @@ export default class FBLoginButton extends Component {
                                                 nGames_sing:0,
                                                 nGames_multi:0,
                                                 win_in_row:0,
+                                                day_in_row:1,
                                                 badge : {
                                                     fire: false,
                                                     center: false,
-                                                    time: false
+                                                    time: false,
+                                                    gamer:false,
+                                                    extrovert:false,
+                                                    doppelganger:false
                                                 }
                                             }
                                         });
