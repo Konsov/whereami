@@ -282,12 +282,8 @@ export default class InsertMarker extends Component {
                 <View>
                     {intro}
                     <View style={styles.leaderboardRow}> 
-                        <View style={styles.circle}>
-                            <ImageBackground
-                                source={{ uri: this.props.navigation.getParam('userpic')}} 
-                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
-                            />
-                        </View>
+                    <Image style={styles.circle}
+                                source={{ uri:this.props.navigation.getParam('userpic') }} />
                         <View>
                             <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('username')} {this.state.score}</Text>
                         </View>
@@ -299,11 +295,8 @@ export default class InsertMarker extends Component {
                             {/* <Text style={styles.content}>{this.props.navigation.getParam('username')} {this.state.score}</Text> */}
                     </View>
                     <View style={styles.leaderboardRow}> 
-                    <View style={styles.circle}><ImageBackground 
-                                source={{ uri:this.props.navigation.getParam('userpic')}} 
-                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
-                            />
-                        </View>
+                    <Image style={styles.circle}
+                                source={{ uri:this.props.navigation.getParam('oppoUserpic') }} />
                         <View>
                             <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('oppoUsername')} {this.state.oppoScore}</Text>
                         </View>
@@ -323,21 +316,15 @@ export default class InsertMarker extends Component {
                 <View>
                     {intro}
                     <View style={styles.leaderboardRow}> 
-                    <View style={styles.circle}><ImageBackground 
-                                source={{ uri:this.props.navigation.getParam('userpic')}} 
-                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
-                            />
-                        </View>
+                    <Image style={styles.circle}
+                                source={{ uri:this.props.navigation.getParam('oppoUserpic') }} />
                         <View>
                             <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('oppoUsername')} {this.state.oppoScore}</Text>
                         </View> 
                     </View>
                     <View style={styles.leaderboardRow}> 
-                    <View style={styles.circle}><ImageBackground
-                                source={{ uri:this.props.navigation.getParam('userpic')}} 
-                                style={{justifyContent: "center", resizeMode:'cover',flex: 1}} 
-                            />
-                        </View>
+                    <Image style={styles.circle}
+                                source={{ uri:this.props.navigation.getParam('userpic') }} />
                         <View>
                             <Text style={styles.textLeaderboard}>{this.props.navigation.getParam('username')} {this.state.score}</Text>
                         </View>
@@ -760,6 +747,5 @@ const styles = StyleSheet.create({
     leaderboardRow:{
         flexDirection:'row',
         marginBottom:10
-    }
-
+    },
 });

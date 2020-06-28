@@ -26,6 +26,7 @@
     "firebase-functions": "^3.7.0",
     "fs": "0.0.1-security",
     "install": "^0.13.0",
+    "jetifier": "^1.6.6",
     "native-base": "https://github.com/LucaBianco94/NativeBase.git",
     "path": "^0.12.7",
     "random-points-on-polygon": "0.0.4",

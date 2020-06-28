@@ -345,9 +345,9 @@ export default class UserProfileScreen extends Component {
                                         </View>
                                         <View style = {{flexDirection:'row', marginTop:20, marginLeft:18, paddingBottom:10}}>
                                             <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.nGames_sing > 50 && this.state.nGames_multi > 50 &&  this.state.win > 50
+                                                {this.state.nGames_sing >= 50 && this.state.nGames_multi >= 50 &&  this.state.win >= 50
                                                     && this.state.center && this.state.gamer && this.state.time && this.state.fire && this.state.doppelganger
-                                                    && this.state.quit > 30 && this.state.extrovert ? <Image
+                                                    && this.state.quit >= 30 && this.state.extrovert ? <Image
                                                     style={{ width: width / 5, height: width / 5}}
                                                     source={require('../files/flower.png')}
                                                 />: <Image
@@ -357,7 +357,7 @@ export default class UserProfileScreen extends Component {
                                                 <Text style={styles.userInfo}>All Badges</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
-                                                {this.state.quit > 10 ? <Image
+                                                {this.state.quit >= 10 ? <Image
                                                     style={{ width: width / 5, height: width / 5, marginTop:10}}
                                                     source={require('../files/yellow-card.png')}
                                                 />: <Image
@@ -367,7 +367,7 @@ export default class UserProfileScreen extends Component {
                                                 <Text style={styles.userInfo}>Quitter</Text>
                                             </View>
                                             <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5, marginTop:-10}}>
-                                                {this.state.quit > 30 ? <Image
+                                                {this.state.quit >= 30 ? <Image
                                                     style={{ width: width / 5, height: width / 5, marginTop:10 }}
                                                     source={require('../files/red-card.png')}
                                                 />: <Image

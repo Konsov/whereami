@@ -88,7 +88,7 @@ export default class HomeScreen extends Component {
   sound(){
     if (whoosh == null) {
         Sound.setCategory("Playback"); 
-        whoosh = new Sound('game_music.mp3', Sound.MAIN_BUNDLE, (error) => {
+        whoosh = new Sound('blazer_rail.wav', Sound.MAIN_BUNDLE, (error) => {
         if (error) {
           console.log('failed to load the sound', error);
           return;
@@ -96,6 +96,8 @@ export default class HomeScreen extends Component {
         // loaded successfully
         console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
         
+        whoosh.setVolume(0.3);
+
         whoosh.setNumberOfLoops(-1);
         // Play the sound with an onEnd callback
         if (this.state.volume== true){
