@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
-  View, Dimensions, BackHandler,TouchableHighlight,Image, Text,
+  View, Dimensions, BackHandler,TouchableHighlight,Image, Text, AppState
 } from 'react-native';
 import StreetView from 'react-native-streetview';
 import firebase from '../services/firebase';
@@ -42,9 +42,12 @@ export default class PlayScreen extends Component {
     round: 0,
     type: '',
     modalVisible: false,
+    counter:0,
+    modalVisibleQuit:false
   }
 
   componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange.bind(this));
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       this.setState({
         modalVisible:true
@@ -53,10 +56,66 @@ export default class PlayScreen extends Component {
     });
     this.getGameInfo();
     setTimeout(() => {this.setState({disabled:false})}, 5000);
+    setTimeout(() => {this.checkOpponent()}, 10000)
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange.bind(this));
+  }
+
+  handleAppStateChange(currentAppState) {
+    const user = firebase.auth().currentUser;
+    
+    if (currentAppState != 'active') {
+      firebase.database().ref(`/users/${user.uid}`).update({ online:false})
+      
+    } else {
+      firebase.database().ref(`/users/${user.uid}`).update({ online:true})
+      
+    }
   }
 
   componentWillUnmount() {
     this.backHandler.remove();
+  }
+
+  checkOpponent(){
+    if (this.state.oppoUsername == ''){
+      setTimeout(() => {this.checkOpponent()}, 10000)
+      return
+    }
+    let rootRef = firebase.database().ref();
+
+    rootRef.child('Games').child(this.state.gameID).once('value').then(ex => {
+      if (ex.exists()){
+        rootRef
+        .child('users')
+        .orderByChild('username')
+        .equalTo(this.state.oppoUsername)
+        .once('value')
+        .then(snapshot => {
+            var snap = snapshot.toJSON()
+            if (!snap['online']){
+              console.log(this.state.counter)
+              if (this.state.counter + 1 > 3){
+                this.setState({modalVisibleQuit:true})            
+                setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
+              } else {
+                setTimeout(() => {this.checkOpponent()}, 10000)
+                this.setState({counter: this.state.counter + 1})
+              }
+            } else {
+              setTimeout(() => {this.checkOpponent()}, 10000)
+            } 
+        })
+      } else {
+        this.props.navigation.navigate('AppStack')
+      }
+    })
+
+    
+    
+    
   }
 
   getGameInfo(){
@@ -260,7 +319,7 @@ export default class PlayScreen extends Component {
 
   }
 
-  eliminateGame(){
+  eliminateGame(data){
     const user = firebase.auth().currentUser;
     let rootRef = firebase.database().ref();
     rootRef
@@ -272,10 +331,22 @@ export default class PlayScreen extends Component {
       if (snapshot.exists()) {
         firebase.database().ref(`/waitingRoom/${user.uid}`).remove()
       } else { 
-        firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${user.uid}`).once('value').then(function (snapshot) {
+        firebase.database().ref('/Games').orderByChild(`${this.state.player}/user/`).equalTo(`${user.uid}`).once('value').then((snapshot) => {
           var game = snapshot.toJSON()
-          if(game[user.uid]['type'] == 'single'){
-            firebase.database().ref(`/Games/${user.uid}`).remove()
+          if(game[this.state.gameID]['type'] == 'single'){
+            firebase.database().ref(`/Games/${this.state.gameID}`).remove()
+          } else {
+            if (data){
+              firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:user.uid})
+              firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
+            } else {
+              if (this.state.player == 'player1'){                
+                firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player2']['user']})
+              } else {                
+                firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player1']['user']})
+              }
+              firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
+            }
           }
         })
       }
@@ -285,6 +356,29 @@ export default class PlayScreen extends Component {
     
   }
 
+renderModalQuitGame(){
+  return(
+    <Modal
+      testID={'modal1'}
+      visible={this.state.modalVisibleQuit}
+      backdropColor="#B4B3DB"
+      backdropOpacity={0.8}
+      animationIn="zoomInDown"
+      animationOut="zoomOutUp"
+      animationInTiming={600}
+      animationOutTiming={600}
+      backdropTransitionInTiming={600}
+      backdropTransitionOutTiming={600}
+      transparent = {true}
+      animationType = "slide">
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>{this.state.oppoUsername} left the game.</Text>
+          <Text style={styles.modalText}>You will be redirected in the home page</Text>
+          <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+        </View>
+    </Modal> 
+  )
+}  
 renderModalExitGame(){
   return(
     <Modal
@@ -304,7 +398,7 @@ renderModalExitGame(){
           <Text style={styles.modalText}>Are you sure to leave the game?</Text>
           <View style = {styles.buttonModalContainer}>
             <TouchableHighlight
-              onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),this.eliminateGame()}}
+              onPress={() => {this.setState({ modalVisible:false}), this.props.navigation.navigate("HomeScreen"),this.eliminateGame(true)}}
               underlayColor="transparent"
               activeOpacity= {0.7}  
               ><Image source={require('../files/success.png')} style={{width:windowWidth/9, height:windowWidth/9}}/>
@@ -385,6 +479,7 @@ renderModalExitGame(){
     return (
       <View style={styles.container}>
         {this.renderView()}
+        {this.renderModalQuitGame()}
         
       </View>
     );

@@ -8,6 +8,7 @@ import {
     TouchableHighlight,
     Dimensions
 } from 'react-native';
+import Modal from 'react-native-modal'
 import firebase from '../services/firebase';
 import { BarIndicator } from 'react-native-indicators';
 
@@ -32,7 +33,10 @@ export default class UserProfileScreen extends Component {
         win:0,        
         gamer: false,
         extrovert: false,
-        doppelganger: false
+        doppelganger: false,
+        modalVisible: false,
+        value: '',
+        text: ''
         
     }
 
@@ -98,6 +102,100 @@ export default class UserProfileScreen extends Component {
             })
         )
     }
+
+    renderModal() {
+        return (
+            <Modal
+                testID={'modal2'}
+                visible={this.state.modalVisible}
+                backdropColor="#B4B3DB"
+                backdropOpacity={0.8}
+                animationIn="zoomInDown"
+                animationOut="zoomOutUp"
+                animationInTiming={600}
+                animationOutTiming={600}
+                backdropTransitionInTiming={600}
+                backdropTransitionOutTiming={600}
+                transparent={true}
+                animationType="slide"
+                hasBackdrop={true}
+                onBackdropPress={() => this.setState({ modalVisible: false })}>
+                <View style={styles.content}>
+                    <View style={styles.modalView}>
+                        {this.state.modalVisible == true ?                         
+                           
+                            <ScrollView horizontal={true}>
+                                <View>
+                                    {this.state.value == 'gold' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/gold.png')}
+                                    /> : this.state.value == 'silver' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/silver.png')}
+                                    /> : this.state.value == 'bronze' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/bronze.png')}
+                                    /> : this.state.value == 'fire' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/fire.png')}
+                                    /> : this.state.value == 'gold_2' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/gold_2.png')}
+                                    /> : this.state.value == 'silver_2' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/silver_2.png')}
+                                    /> : this.state.value == 'bronze_2' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/bronze_2.png')}
+                                    /> : this.state.value == 'time' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/stopwatch.png')}
+                                    /> : this.state.value == 'game_1' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/game_1.png')}
+                                    /> : this.state.value == 'game_2' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/game_2.png')}
+                                    /> : this.state.value == 'game_3' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/game_3.png')}
+                                    /> : this.state.value == 'center' ? <Image
+                                        style={{ width: width / 4, height: width / 4}}
+                                        source={require('../files/target.png')}
+                                    /> : this.state.value == 'flower' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/flower.png')}
+                                    /> : this.state.value == 'extrovert' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/group.png')}
+                                    /> : this.state.value == 'gamer' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/joystick.png')}
+                                    /> : this.state.value == 'doppelganger' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/lens.png')}
+                                    /> : this.state.value == 'red-card' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/red-card.png')}
+                                    /> : this.state.value == 'yellow-card' ? <Image
+                                        style={{ width: width / 4, height: width / 4 }}
+                                        source={require('../files/yellow-card.png')}
+                                    /> : null}
+                                </View>
+
+                            </ScrollView> : null}
+
+                        <Text style={styles.contentTitle}>{this.state.text}</Text>
+                        <View style={{ flexDirection: 'row' }}>
+
+                        </View>
+                    </View>
+
+                </View>
+            </Modal>
+        )
+    }
+
 
 
     friendRequest(username) {
@@ -180,212 +278,357 @@ export default class UserProfileScreen extends Component {
                                 
 
                                 <ScrollView>
-                                    <View style={{flexDirection:'column'}}>
-                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:23}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.nGames_sing > 5 || this.state.nGames_sing == 5 ?<Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/bronze.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/bronze.png')}
-                                                />}
-                                                
-                                                <Text style={styles.userInfo}>First steps</Text>
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 23 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 5 single player game.", value: "bronze" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.nGames_sing > 5 || this.state.nGames_sing == 5 ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/bronze.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/bronze.png')}
+                                                            />}
+
+                                                        <Text style={styles.userInfo}>First steps</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7}}>
-                                                {this.state.nGames_sing > 20 || this.state.nGames_sing == 20 ?  <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/silver.png')}
-                                                />:  <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/silver.png')}
-                                                />}                                               
-                                                <Text style={styles.userInfo}>Expert</Text>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 7 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 20 single player game.", value: "silver" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+
+                                                        {this.state.nGames_sing > 20 || this.state.nGames_sing == 20 ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/silver.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/silver.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Expert</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7.3}}>
-                                                {this.state.nGames_sing > 50 || this.state.nGames_sing == 50 ? <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/gold.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/gold.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Veteran</Text>
-                                            </View>                                            
-                                        </View>
-                                        <View style = {{flexDirection:'row', marginTop:18, marginLeft:9}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.nGames_multi > 5 || this.state.nGames_multi == 5 ?<Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/game_1.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/game_1.png')}
-                                                />}
-                                                
-                                                <Text style={styles.userInfo}>Explore online</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/20}}>
-                                                {this.state.nGames_multi > 20 || this.state.nGames_multi == 20 ?  <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/game_2.png')}
-                                                />:  <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/game_2.png')}
-                                                />}                                               
-                                                <Text style={styles.userInfo}>Online's specialist</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/40}}>
-                                                {this.state.nGames_multi > 50 || this.state.nGames_multi == 50 ? <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/game_3.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/game_3.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Online's master</Text>
-                                            </View>                                            
-                                        </View>
-                                        <View style = {{flexDirection:'row', marginTop:10, marginLeft:18}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.win > 5 || this.state.win == 5 ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/bronze_2.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
-                                                source={require('../files/bronze_2.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Great</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5}}>
-                                                {this.state.win > 20 || this.state.win == 20 ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/silver_2.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
-                                                source={require('../files/silver_2.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Champion</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7.5}}>
-                                                {this.state.win > 50 || this.state.win == 50 ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/gold_2.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop:10}}
-                                                source={require('../files/gold_2.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>GOAT</Text>
-                                            </View>      
-                                        </View>
-                                        <View style = {{flexDirection:'row', marginTop:20, marginLeft:18}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.center == true ? <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/target.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/target.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Really close</Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
-                                                {this.state.time == true ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/stopwatch.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                source={require('../files/stopwatch.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Binge play </Text>
-                                            </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7, marginTop:-10}}>
-                                                {this.state.fire == true ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
-                                                    source={require('../files/fire.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                source={require('../files/fire.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>On fire</Text>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 7.3 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 50 single player game.", value: "gold" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.nGames_sing > 50 || this.state.nGames_sing == 50 ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/gold.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/gold.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Veteran</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
                                         </View>
-                                        <View style = {{flexDirection:'row', marginTop:20, marginLeft:18}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.extrovert == true ? <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/group.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/group.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Extrovert</Text>
+                                        <View style={{ flexDirection: 'row', marginTop: 18, marginLeft: 9 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 5 multiplayer game.", value: "game_1" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.nGames_multi > 5 || this.state.nGames_multi == 5 ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/game_1.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/game_1.png')}
+                                                            />}
+
+                                                        <Text style={styles.userInfo}>Explore online</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/7, marginTop:-10}}>
-                                                {this.state.gamer == true ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/joystick.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                source={require('../files/joystick.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Real Gamer</Text>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 20 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 20 multiplayer game.", value: "game_2" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.nGames_multi > 20 || this.state.nGames_multi == 20 ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/game_2.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/game_2.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Online's specialist</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/9, marginTop:-10}}>
-                                                {this.state.doppelganger == true ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
-                                                    source={require('../files/lens.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                source={require('../files/lens.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Doppelganger</Text>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 40 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 50 multiplayer game.", value: "game_3" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.nGames_multi > 50 || this.state.nGames_multi == 50 ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/game_3.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/game_3.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Online's master</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
                                         </View>
-                                        <View style = {{flexDirection:'row', marginTop:20, marginLeft:18, paddingBottom:10}}>
-                                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                                {this.state.nGames_sing >= 50 && this.state.nGames_multi >= 50 &&  this.state.win >= 50
-                                                    && this.state.center && this.state.gamer && this.state.time && this.state.fire && this.state.doppelganger
-                                                    && this.state.quit >= 30 && this.state.extrovert ? <Image
-                                                    style={{ width: width / 5, height: width / 5}}
-                                                    source={require('../files/flower.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, opacity: 0.5}}
-                                                source={require('../files/flower.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>All Badges</Text>
+                                        <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 18 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Win 5 multiplayer game.", value: "bronze_2" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.win > 5 || this.state.win == 5 ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/bronze_2.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop: 10 }}
+                                                                source={require('../files/bronze_2.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Great</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/8, marginTop:-10}}>
-                                                {this.state.quit >= 10 ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10}}
-                                                    source={require('../files/yellow-card.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                source={require('../files/yellow-card.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Quitter</Text>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 6.5 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Win 20 multiplayer game.", value: "silver_2" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.win > 20 || this.state.win == 20 ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/silver_2.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop: 10 }}
+                                                                source={require('../files/silver_2.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Champion</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
-                                            <View style={{flexDirection:'column', alignItems:'center', marginLeft:width/6.5, marginTop:-10}}>
-                                                {this.state.quit >= 30 ? <Image
-                                                    style={{ width: width / 5, height: width / 5, marginTop:10 }}
-                                                    source={require('../files/red-card.png')}
-                                                />: <Image
-                                                style={{ width: width / 5, height: width / 5, marginTop:10, opacity: 0.5 }}
-                                                source={require('../files/red-card.png')}
-                                                />}
-                                                <Text style={styles.userInfo}>Real quitter</Text>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 7.5 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Win 50 multiplayer game.", value: "gold_2" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.win > 50 || this.state.win == 50 ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/gold_2.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5, marginTop: 10 }}
+                                                                source={require('../files/gold_2.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>GOAT</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 18 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Below 100km from target.", value: "center" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.center == true ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/target.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/target.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Really close</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 8, marginTop: -10 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play 15 game in a day.", value: "time" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.time == true ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/stopwatch.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, marginTop: 10, opacity: 0.5 }}
+                                                                source={require('../files/stopwatch.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Binge play </Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 7, marginTop: -10 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Win 5 game in a row.", value: "fire" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.fire == true ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/fire.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, marginTop: 10, opacity: 0.5 }}
+                                                                source={require('../files/fire.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>On fire</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 18 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Have 5 or more friend.", value: "extrovert" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.extrovert == true ? <Image
+                                                            style={{ width: width / 5, height: width / 5 }}
+                                                            source={require('../files/group.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/group.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Extrovert</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 7, marginTop: -10 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Play every day for 30 days.", value: "gamer" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.gamer == true ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/joystick.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, marginTop: 10, opacity: 0.5 }}
+                                                                source={require('../files/joystick.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Real Gamer</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 9, marginTop: -10 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Change your profile picture.", value: "doppelganger" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.doppelganger == true ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/lens.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, marginTop: 10, opacity: 0.5 }}
+                                                                source={require('../files/lens.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Doppelganger</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 18, paddingBottom: 10 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Collect all the other badge.", value: "flower" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.nGames_sing >= 50 && this.state.nGames_multi >= 50 && this.state.win >= 50
+                                                            && this.state.center && this.state.gamer && this.state.time && this.state.fire && this.state.doppelganger
+                                                            && this.state.quit >= 30 && this.state.extrovert ? <Image
+                                                                style={{ width: width / 5, height: width / 5 }}
+                                                                source={require('../files/flower.png')}
+                                                            /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
+                                                                source={require('../files/flower.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>All Badges</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 8, marginTop: -10 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Quit from 10 games", value: "yellow-card" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.quit >= 10 ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/yellow-card.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, marginTop: 10, opacity: 0.5 }}
+                                                                source={require('../files/yellow-card.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Quitter</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 6.5, marginTop: -10 }}>
+                                                <TouchableHighlight
+                                                    onPress={() => this.setState({ modalVisible: true, text: "Quit from 30 games.", value: "red-card" })}
+                                                    underlayColor="transparent"
+                                                    activeOpacity={0.7}>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                                        {this.state.quit >= 30 ? <Image
+                                                            style={{ width: width / 5, height: width / 5, marginTop: 10 }}
+                                                            source={require('../files/red-card.png')}
+                                                        /> : <Image
+                                                                style={{ width: width / 5, height: width / 5, marginTop: 10, opacity: 0.5 }}
+                                                                source={require('../files/red-card.png')}
+                                                            />}
+                                                        <Text style={styles.userInfo}>Real quitter</Text>
+                                                    </View>
+
+                                                </TouchableHighlight>
                                             </View>
                                         </View>
 
 
-                                        
+
                                     </View>
-                                    
-                                    
-                                       
-                                </ScrollView>  
-                                
+
+
+
+                                </ScrollView>
+
                                 
                                                          
                             </View>                            
@@ -402,6 +645,7 @@ export default class UserProfileScreen extends Component {
         return (
             <View style={styles.container}>
                 {this.renderView()}
+                {this.renderModal()}
             </View>
         )
 
@@ -513,5 +757,31 @@ const styles = StyleSheet.create({
         fontSize: width / 21.81,
         marginTop: width / 19.6,
         color: "#FFFFFF",
-    }
+    },
+    content: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: windowHeight / 3,
+        marginBottom: windowHeight / 4
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    contentTitle: {
+        fontSize: 20,
+        marginBottom: 12,
+    },
 });

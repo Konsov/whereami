@@ -8,7 +8,7 @@
 
 # 3_UserProfileScreen
 # 3.1 Spostare Pulsante friend Request ✓
-# 3.2 Sistemare Badges e Statistiche (vedi A.3 e A.4)
+# 3.2 Sistemare Badges e Statistiche (vedi A.3 e A.4) ✓
 
 # 4_PlayScreen
 # 4.1 Coordinate di tutti i continenti  ✓
@@ -21,7 +21,7 @@
 # 5.4 Sistemare Waiting Opponent (multiplayer) ✓
 # 5.5 Fare Modale Fine Round (multiplayer) ✓
 # 5.6 Classifica Finale (multiplayer) ✓
-# 5.7 Rivedere frasi punteggio modal 
+# 5.7 Rivedere frasi punteggio modal ✓
 
 # BUG
 # B.1 Tastiera copre schermate 
@@ -32,12 +32,12 @@
 # B.6 Si può spostare il marker dopo aver dato la risposta ✓
 # B.7 Go to HUB ✓
 # B.8 in friend source.uri not be empty string ✓
-# B.9 Se metto marker lontano mi da un mega punteggio 
+# B.9 Se metto marker lontano mi da un mega punteggio ?
 # B.10 Logout not online ✓
 
 # Aggiunte
 # A.1 Mettere Username con login da Facebook ✓
 # A.2 Possibilità di scegliere Foto da UserprofileScreen. Esempio Archiviazione/Serie di Avatar ✓
-# A.3 Scegliere bene Badges da mettere (vedi A.4) 
+# A.3 Scegliere bene Badges da mettere (vedi A.4) ✓
 # A.4 Modale/Notifiche quando vengono sbloccati in game con notifiche (vedi A.3) ✓
-# A.5 Gestire Abbandono di un giocatore in Multyplayer (vedi B.4) 
+# A.5 Gestire Abbandono di un giocatore in Multyplayer (vedi B.4) ✓
