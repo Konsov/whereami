@@ -198,58 +198,58 @@ export default class UserProfileScreen extends Component {
                             <ScrollView horizontal={true}>
                                 <View>
                                     {this.state.value == 'gold' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/gold.png')}
                                     /> : this.state.value == 'silver' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/silver.png')}
                                     /> : this.state.value == 'bronze' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/bronze.png')}
                                     /> : this.state.value == 'fire' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/fire.png')}
                                     /> : this.state.value == 'gold_2' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/gold_2.png')}
                                     /> : this.state.value == 'silver_2' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/silver_2.png')}
                                     /> : this.state.value == 'bronze_2' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/bronze_2.png')}
                                     /> : this.state.value == 'time' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/stopwatch.png')}
                                     /> : this.state.value == 'game_1' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/game_1.png')}
                                     /> : this.state.value == 'game_2' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/game_2.png')}
                                     /> : this.state.value == 'game_3' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/game_3.png')}
                                     /> : this.state.value == 'center' ? <Image
-                                        style={{ width: width / 4, height: width / 4}}
+                                        style={{ width: height / 6.4, height: height / 6.4}}
                                         source={require('../files/target.png')}
                                     /> : this.state.value == 'flower' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/flower.png')}
                                     /> : this.state.value == 'extrovert' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/group.png')}
                                     /> : this.state.value == 'gamer' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/joystick.png')}
                                     /> : this.state.value == 'doppelganger' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/lens.png')}
                                     /> : this.state.value == 'red-card' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/red-card.png')}
                                     /> : this.state.value == 'yellow-card' ? <Image
-                                        style={{ width: width / 4, height: width / 4 }}
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
                                         source={require('../files/yellow-card.png')}
                                     /> : null}
                                 </View>
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: windowHeight / 3,
+        marginTop: windowHeight / 4,
         marginBottom: windowHeight / 4
     },
     modalView: {

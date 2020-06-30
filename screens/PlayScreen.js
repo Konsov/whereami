@@ -88,25 +88,28 @@ export default class PlayScreen extends Component {
 
     rootRef.child('Games').child(this.state.gameID).once('value').then(ex => {
       if (ex.exists()){
-        rootRef
+        firebase.database().ref()
         .child('users')
         .orderByChild('username')
         .equalTo(this.state.oppoUsername)
         .once('value')
         .then(snapshot => {
             var snap = snapshot.toJSON()
-            if (!snap['online']){
-              console.log(this.state.counter)
-              if (this.state.counter + 1 > 3){
-                this.setState({modalVisibleQuit:true})            
-                setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
+            for (var pp in snap) {
+              if (!snap[pp]['online']){
+                console.log(this.state.counter)
+                if (this.state.counter + 1 > 3){
+                  this.setState({modalVisibleQuit:true})            
+                  setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
+                } else {
+                  setTimeout(() => {this.checkOpponent()}, 10000)
+                  this.setState({counter: this.state.counter + 1})
+                }
               } else {
                 setTimeout(() => {this.checkOpponent()}, 10000)
-                this.setState({counter: this.state.counter + 1})
-              }
-            } else {
-              setTimeout(() => {this.checkOpponent()}, 10000)
-            } 
+              } 
+            }
+            
         })
       } else {
         this.props.navigation.navigate('AppStack')

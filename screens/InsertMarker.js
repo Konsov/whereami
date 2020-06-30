@@ -79,10 +79,13 @@ export default class InsertMarker extends Component {
 
         tempScore = Math.trunc( tempScore )
 
-
+        
         
         var score = tempScore + this.props.navigation.getParam('score')
-       
+        console.log(this.props.navigation.getParam('player'))
+        console.log("distance"+ distance)
+        console.log("score"+ score)
+        console.log("tempscore"+ score)
         this.setState({
             score: score,
             distance: distance,
@@ -107,7 +110,7 @@ export default class InsertMarker extends Component {
         
         if(this.props.navigation.getParam('type') == 'multiplayer'){
 
- 
+            console.log(this.state.tempScore)
             if(this.props.navigation.getParam('player') == 'player1'){
                 firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates`).child(`round_${this.props.navigation.getParam('round')}`).update({ player1_answer: {coordinates: this.state.marker, score: this.state.tempScore, ready: false}})
             }else{
@@ -194,46 +197,57 @@ export default class InsertMarker extends Component {
     
     getOpponentCoordinate() {
 
-            if(this.props.navigation.getParam('player')== 'player1'){
-                firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}`).once('value').then((snapshot) => {
+        if(this.props.navigation.getParam('player')== 'player1'){
+            firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player2_answer`).once('value').then(function (snapshot){
+            
+                var oppoAns = snapshot.toJSON();
+                if(oppoAns != null){
 
-                    if(snapshot.exists()){
-                        var oppoAns = snapshot.toJSON();
-                        if(this.props.navigation.getParam('player')== 'player1'){  
+                    
+                    this.setState({
+                        oppoLat: oppoAns['coordinates']['latitude'],
+                        oppoLon: oppoAns['coordinates']['longitude'],
+                        oppoRoundScore: oppoAns['score'],
+                        oppoAnswered: true
+                    })
+                    this.getOpponentScore()
+                }else {
+                    firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}`).once('value').then(snap => {
+                        if (!snap.exists()){
 
-                            if(oppoAns['player2_answer'] != null){
-                                
-                                this.setState({
-                                    oppoLat: oppoAns['player2_answer']['coordinates']['latitude'],
-                                    oppoLon: oppoAns['player2_answer']['coordinates']['longitude'],
-                                    oppoRoundScore: oppoAns['player2_answer']['score'],
-                                    oppoAnswered: true
-                                })
-                                this.getOpponentScore()
-                            }else{
-                                setTimeout(() => {this.getOpponentCoordinate(), console.log('oppo not answered yet') }, 2000) 
-                            } 
-                        } else if(this.props.navigation.getParam('player')== 'player2'){
-
-                            if(oppoAns['player1_answer'] != null){
-                            
-                                this.setState({
-                                    oppoLat: oppoAns['player1_answer']['coordinates']['latitude'],
-                                    oppoLon: oppoAns['player1_answer']['coordinates']['longitude'],
-                                    oppoRoundScore: oppoAns['player1_answer']['score'],
-                                    oppoAnswered: true
-                                })
-                                
-                                this.getOpponentScore()
-                            }else{
-                                setTimeout(() => {this.getOpponentCoordinate(), console.log('oppo not answered yet') }, 2000)
-                            }
+                        } else {
+                            setTimeout(() => {this.getOpponentCoordinate(), console.log('oppo not answered yet') }, 2000)
                         }
-                    }
-                                   
-                });
-            }
-    }
+                    })
+                }                
+            }.bind(this));
+        }else if(this.props.navigation.getParam('player')== 'player2'){
+
+            firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player1_answer`).once('value').then(function (snapshot){
+
+                var oppoAns = snapshot.toJSON();
+                if(oppoAns != null){
+
+                    this.setState({
+                        oppoLat: oppoAns['coordinates']['latitude'],
+                        oppoLon: oppoAns['coordinates']['longitude'],
+                        oppoRoundScore: oppoAns['score'],
+                        oppoAnswered: true
+                    })
+
+                    this.getOpponentScore()
+                } else {
+                    firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}`).once('value').then(snap => {
+                        if (!snap.exists()){
+
+                        } else {
+                            setTimeout(() => {this.getOpponentCoordinate(), console.log('oppo not answered yet') }, 2000)
+                        }
+                    })
+                } 
+            }.bind(this));
+        }
+    }    
 
     renderLeaderbordText(){
 
@@ -425,56 +439,65 @@ export default class InsertMarker extends Component {
     }
 
     getOpponentStatus(){
-            firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}`).once('value').then((snapshot) => {
-            
-                if (snapshot.exists()){
-                    var oppoStatus = snapshot.toJSON();
-                    if(this.props.navigation.getParam('player')== 'player1'){
-                        if(oppoStatus['player2_answer']['ready'] != null){
+        if(this.props.navigation.getParam('player')== 'player1'){
+            firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player2_answer/ready`).once('value').then(function (snapshot){
+                var oppoStatus = snapshot.toJSON();
+                if(oppoStatus != null){
 
-                            if(oppoStatus['player2_answer']['ready'] == true){ 
-                                this.setState({
-                                    modalVisibleNextRound: true,
-                                    answered: false,
-                                    oppoAnswered: false
-                                }) 
-                                
-                                if(this.props.navigation.getParam('round')<5){
-                                    this.startCounterNextRound()
-                                }
-        
-                            }else{
-                                setTimeout(() => {this.getOpponentStatus(), console.log('oppo not ready') }, 2000) 
-                            }
-                        }else{
-                            console.log('something go wrong')
-                        }
-                    } else {
-                        if(oppoStatus['player1_answer']['ready'] != null){
-                            if(oppoStatus['player1_answer']['ready'] == true){ 
-                                this.setState({
-                                    modalVisibleNextRound: true,
-                                    answered: false,
-                                    oppoAnswered: false
-                                })   
-                                
-                                if(this.props.navigation.getParam('round')<5){
-                                    this.startCounterNextRound()
-                                }
+                    if(oppoStatus == true){ 
+                        this.setState({
+                            modalVisibleNextRound: true,
+                            answered: false,
+                            oppoAnswered: false
+                        }) 
 
-                            }else{
-                                setTimeout(() => {this.getOpponentStatus(), console.log('oppo not ready') }, 2000) 
-                            }
-                        }else{
-                            console.log('something go wrong')
+                        if(this.props.navigation.getParam('round')<5){
+                            this.startCounterNextRound()
                         }
+                    }else{
+                        setTimeout(() => {this.getOpponentStatus(), console.log('oppo not ready') }, 2000) 
                     }
+                }else{
+                    firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}`).once('value').then(snap => {
+                        if (!snap.exists()){
+
+                        } else {
+                            console.log("something went wrong")
+                        }
+                    })
                 }
-                
-                
-            });
-        
-    }
+            }.bind(this));
+        }else if(this.props.navigation.getParam('player')== 'player2'){
+            firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates/round_${this.props.navigation.getParam('round')}/player1_answer/ready`).once('value').then(function (snapshot){
+
+                var oppoStatus = snapshot.toJSON();
+                if(oppoStatus != null){
+                    if(oppoStatus == true){ 
+                        this.setState({
+                            modalVisibleNextRound: true,
+                            answered: false,
+                            oppoAnswered: false
+                        })   
+
+                        if(this.props.navigation.getParam('round')<5){
+                            this.startCounterNextRound()
+                        }
+
+                    }else{
+                        setTimeout(() => {this.getOpponentStatus(), console.log('oppo not ready') }, 2000) 
+                    }
+                }else{
+                    firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}`).once('value').then(snap => {
+                        if (!snap.exists()){
+
+                        } else {
+                            console.log("something went wrong")
+                        }
+                    })
+                }
+            }.bind(this));
+        }
+    }    
 
     renderButton() {
         if (!this.state.answered){
