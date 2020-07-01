@@ -145,6 +145,9 @@ export default class HomeScreen extends Component {
 
   componentDidMount() {
 
+
+
+
     AsyncStorage.getItem('volume').then(value => {
       
       if (value !=null){

@@ -43,7 +43,8 @@ export default class PlayScreen extends Component {
     type: '',
     modalVisible: false,
     counter:0,
-    modalVisibleQuit:false
+    modalVisibleQuit:false,
+    modalVisibleEnd:false
   }
 
   componentDidMount() {
@@ -112,7 +113,8 @@ export default class PlayScreen extends Component {
             
         })
       } else {
-        this.props.navigation.navigate('AppStack')
+        this.setState({modalVisibleEnd:true})            
+        setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
       }
     })
 
@@ -335,31 +337,51 @@ export default class PlayScreen extends Component {
         firebase.database().ref(`/waitingRoom/${user.uid}`).remove()
       } else { 
         firebase.database().ref('/Games').orderByChild(`${this.state.player}/user/`).equalTo(`${user.uid}`).once('value').then((snapshot) => {
-          var game = snapshot.toJSON()
-          if(game[this.state.gameID]['type'] == 'single'){
-            firebase.database().ref(`/Games/${this.state.gameID}`).remove()
+          var game = snapshot.toJSON()          
+          if (data){
+            firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:user.uid})
+            firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
           } else {
-            if (data){
-              firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:user.uid})
-              firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
-            } else {
-              if (this.state.player == 'player1'){                
-                firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player2']['user']})
-              } else {                
-                firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player1']['user']})
-              }
-              firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
+            if (this.state.player == 'player1'){                
+              firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player2']['user']})
+            } else {                
+              firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player1']['user']})
             }
+            firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
           }
+          
         })
       }
-    });
-
-
-    
+    });    
   }
 
+
+endGame(){
+  return(
+    <Modal
+      testID={'modal3'}
+      visible={this.state.modalVisibleEnd}
+      backdropColor="#B4B3DB"
+      backdropOpacity={0.8}
+      animationIn="zoomInDown"
+      animationOut="zoomOutUp"
+      animationInTiming={600}
+      animationOutTiming={600}
+      backdropTransitionInTiming={600}
+      backdropTransitionOutTiming={600}
+      transparent = {true}
+      animationType = "slide">
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>The game has ended</Text>
+          <Text style={styles.modalText}>You will be redirected in the home page</Text>
+          <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+        </View>
+    </Modal>
+     
+  )
+}  
 renderModalQuitGame(){
+  this.endGame()
   return(
     <Modal
       testID={'modal1'}
@@ -379,7 +401,8 @@ renderModalQuitGame(){
           <Text style={styles.modalText}>You will be redirected in the home page</Text>
           <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
         </View>
-    </Modal> 
+    </Modal>
+     
   )
 }  
 renderModalExitGame(){

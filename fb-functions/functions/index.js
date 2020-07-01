@@ -89,14 +89,14 @@ exports.badgeGamer = functions.region('europe-west1').database
         }else {
             var date1 = ct.split('-');
             var date2 = compare[0].split('-')
-            if(date1[0] == date2[0] && date1[1] == date2[1] && date1[2] == (date2[2] - 1)){
+            if(Date.parse(date2) - Date.parse(date1) === 86400000){
                 var dir = dbuser['statistics']['day_in_row'];
                 
                 val.ref.child('statistics').update({day_in_row: dir+1})
                 val.ref.update({last_access:compare[0]})
                 if ((dir+1) == 30 && dbuser['statistics']['badge']['gamer'] == false){
                     var badge = "gamer"
-                    val.child('statistics').child('badge').update({gamer: true})
+                    val.ref.child('statistics').child('badge').update({gamer: true})
                     const message = {
                 
                         "name": "prova",
@@ -135,8 +135,8 @@ exports.badgeGamer = functions.region('europe-west1').database
                 admin.messaging().send(message);
                 }
             } else {
-                val.child('statistics').update({day_in_row: 1})
-                val.update({last_access:compare[0]})
+                val.ref.child('statistics').update({day_in_row: 1})
+                val.ref.update({last_access:compare[0]})
             }
         }}
         catch (err) {
@@ -155,186 +155,97 @@ exports.badgeQuit = functions.region('europe-west1').database
 
         var game = snaposhot.toJSON()
         if(!game['finished']){
-             if (game['quit'] != null){
-                snaposhot.ref.parent.parent.child('users').child(game['quit']).once('value').then(snapPlayer => {
-                    var player = snapPlayer.toJSON()
-                    var q = player['statistics']['quit']
-                    snapPlayer.ref.child('statistics').update({quit: (q + 1)})
-                    if ((q + 1) == 10){
-                       var badge = "yellow-card"
-                       const message = {
-                   
-                           "name": "prova",
-                           "data": {
-                             "data1": "data1",
-                             
-                           },
-                           "notification": {
-                               
-                                   "title": "notif_title",
-                                   "body": "notif_body"
-                                 
-                           },
-                           "android": {
-       
-                               "notification": {
-                                   "title": `New Badge`,
-                                   "body": `badge ${badge}`,
-                                   "event_time": (new Date()).toISOString,
-                                   "notification_priority": "PRIORITY_HIGH",
-                                   "default_sound": true,
-                                   "default_vibrate_timings": true,
-                                   "default_light_settings": true,
-                                   "visibility": "PUBLIC"
-                                   
-                                   
-                               }
-                           },
-                         
-                           // Union field target can be only one of the following:
-                           "token": player['token'],
-                           // End of list of possible types for union field target.
-                         
-                   }
-       
-                   admin.messaging().send(message);
-   
-                    } else if((q + 1) == 30){
-                       var badge = "red-card"
-                       const message = {
-                   
-                           "name": "prova",
-                           "data": {
-                             "data1": "data1",
-                             
-                           },
-                           "notification": {
-                               
-                                   "title": "notif_title",
-                                   "body": "notif_body"
-                                 
-                           },
-                           "android": {
-       
-                               "notification": {
-                                   "title": `New Badge`,
-                                   "body": `badge ${badge}`,
-                                   "event_time": (new Date()).toISOString,
-                                   "notification_priority": "PRIORITY_HIGH",
-                                   "default_sound": true,
-                                   "default_vibrate_timings": true,
-                                   "default_light_settings": true,
-                                   "visibility": "PUBLIC"
-                                   
-                                   
-                               }
-                           },
-                         
-                           // Union field target can be only one of the following:
-                           "token": player['token'],
-                           // End of list of possible types for union field target.
-                         
-                   }
-       
-                   admin.messaging().send(message);
-                    }
-                })
-             }
-             else {
-                snaposhot.ref.parent.parent.child('users').child(game['player1']['user']).once('value').then(snapPlayer => {
-                        var player = snapPlayer.toJSON()
-                        var q = player['statistics']['quit']
-                        snapPlayer.ref.child('statistics').update({quit: (q + 1)})
-                        if ((q + 1) == 10){
-                           var badge = "yellow-card"
-                           const message = {
-                       
-                               "name": "prova",
-                               "data": {
-                                 "data1": "data1",
-                                 
-                               },
-                               "notification": {
-                                   
-                                       "title": "notif_title",
-                                       "body": "notif_body"
-                                     
-                               },
-                               "android": {
-           
-                                   "notification": {
-                                       "title": `New Badge`,
-                                       "body": `badge ${badge}`,
-                                       "event_time": (new Date()).toISOString,
-                                       "notification_priority": "PRIORITY_HIGH",
-                                       "default_sound": true,
-                                       "default_vibrate_timings": true,
-                                       "default_light_settings": true,
-                                       "visibility": "PUBLIC"
-                                       
-                                       
-                                   }
-                               },
-                             
-                               // Union field target can be only one of the following:
-                               "token": player['token'],
-                               // End of list of possible types for union field target.
-                             
-                       }
-           
-                       admin.messaging().send(message);
-       
-                        } else if((q + 1) == 30){
-                           var badge = "red-card"
-                           const message = {
-                       
-                               "name": "prova",
-                               "data": {
-                                 "data1": "data1",
-                                 
-                               },
-                               "notification": {
-                                   
-                                       "title": "notif_title",
-                                       "body": "notif_body"
-                                     
-                               },
-                               "android": {
-           
-                                   "notification": {
-                                       "title": `New Badge`,
-                                       "body": `badge ${badge}`,
-                                       "event_time": (new Date()).toISOString,
-                                       "notification_priority": "PRIORITY_HIGH",
-                                       "default_sound": true,
-                                       "default_vibrate_timings": true,
-                                       "default_light_settings": true,
-                                       "visibility": "PUBLIC"
-                                       
-                                       
-                                   }
-                               },
-                             
-                               // Union field target can be only one of the following:
-                               "token": player['token'],
-                               // End of list of possible types for union field target.
-                             
-                       }
-           
-                       admin.messaging().send(message);
-                        }
-                    })
-                 
-             }
+            snaposhot.ref.parent.parent.child('users').child(game['quit']).once('value').then(snapPlayer => {
+                var player = snapPlayer.toJSON()
+                var q = player['statistics']['quit']
+                snapPlayer.ref.child('statistics').update({quit: (q + 1)})
+                if ((q + 1) == 10){
+                    var badge = "yellow-card"
+                    const message = {
+                
+                        "name": "prova",
+                        "data": {
+                            "data1": "data1",
+                            
+                        },
+                        "notification": {
+                            
+                                "title": "notif_title",
+                                "body": "notif_body"
+                                
+                        },
+                        "android": {
+
+                            "notification": {
+                                "title": `New Badge`,
+                                "body": `badge ${badge}`,
+                                "event_time": (new Date()).toISOString,
+                                "notification_priority": "PRIORITY_HIGH",
+                                "default_sound": true,
+                                "default_vibrate_timings": true,
+                                "default_light_settings": true,
+                                "visibility": "PUBLIC"
+                                
+                                
+                            }
+                        },
+                        
+                        // Union field target can be only one of the following:
+                        "token": player['token'],
+                        // End of list of possible types for union field target.
+                        
+                }
+
+                admin.messaging().send(message);
+
+                } else if((q + 1) == 30){
+                    var badge = "red-card"
+                    const message = {
+                
+                        "name": "prova",
+                        "data": {
+                            "data1": "data1",
+                            
+                        },
+                        "notification": {
+                            
+                                "title": "notif_title",
+                                "body": "notif_body"
+                                
+                        },
+                        "android": {
+
+                            "notification": {
+                                "title": `New Badge`,
+                                "body": `badge ${badge}`,
+                                "event_time": (new Date()).toISOString,
+                                "notification_priority": "PRIORITY_HIGH",
+                                "default_sound": true,
+                                "default_vibrate_timings": true,
+                                "default_light_settings": true,
+                                "visibility": "PUBLIC"
+                                
+                                
+                            }
+                        },
+                        
+                        // Union field target can be only one of the following:
+                        "token": player['token'],
+                        // End of list of possible types for union field target.
+                        
+                }
+
+                admin.messaging().send(message);
+                }
+            })
+        } 
              
 
-             
+            
+        return true   
 
         } 
-
-        return true
-
-    })
+    )
 
 
 exports.badgeExtrovert = functions.region('europe-west1').database

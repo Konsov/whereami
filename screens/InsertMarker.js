@@ -91,7 +91,9 @@ export default class InsertMarker extends Component {
             distance: distance,
             tempScore: tempScore
         })
-        this.getAnswer()
+        setTimeout(() => {this.getAnswer() }, 200)
+
+        
     }
 
     getAnswer() {
@@ -107,10 +109,12 @@ export default class InsertMarker extends Component {
             answered: true
         })
 
+        console.log(this.state.tempScore)
+        console.log(this.state.score)
         
         if(this.props.navigation.getParam('type') == 'multiplayer'){
 
-            console.log(this.state.tempScore)
+            
             if(this.props.navigation.getParam('player') == 'player1'){
                 firebase.database().ref(`Games/${this.props.navigation.getParam('gameID')}/roundCoordinates`).child(`round_${this.props.navigation.getParam('round')}`).update({ player1_answer: {coordinates: this.state.marker, score: this.state.tempScore, ready: false}})
             }else{
@@ -283,7 +287,8 @@ export default class InsertMarker extends Component {
                             <Text style={styles.loseTitle}>YOU LOSE</Text>
                             <AwesomeButtonRick
                                 onPress={() => {
-                                    this.props.navigation.navigate('AppStack')}}
+                                    this.setState({endModal:true});
+                                    setTimeout(() => {this.props.navigation.navigate('AppStack')}, 3000);}}
                                 type="anchor"
                                 >Go To Home
                             </AwesomeButtonRick>
