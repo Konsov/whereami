@@ -9,6 +9,8 @@ import {
   AppState
 } from 'react-native';
 
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 import {
   Item,
   Label,
@@ -27,8 +29,22 @@ export default class EmailSignInScreen extends Component {
   
   state={
     email: '',
-    password: ''
+    password: '',
+    showAlert: false
   }
+
+  showAlert = (alert) => {
+    this.setState({
+      showAlert: true,
+      error_text: alert
+    });
+  };
+  
+  hideAlert = () => {
+    this.setState({
+      showAlert: false
+    });
+  };
 
   componentDidMount() {
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -42,7 +58,13 @@ export default class EmailSignInScreen extends Component {
   
   loginUser = (email, password) => {
     try {
-      firebase.auth().signInWithEmailAndPassword(email, password)
+      firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
+        // Handle Errors here.
+        var errorMessage = error.message;
+        
+        this.showAlert(errorMessage)
+        // ...
+      });
     } catch (error) {
       Alert.alert(error.toString())
     }
@@ -78,7 +100,8 @@ export default class EmailSignInScreen extends Component {
                 onChangeText={(password) => this.setState({ password })}
               />
             </Item>
-          </View >
+          </View>
+          
           <View style={styles.containerButtons}>
             <AwesomeButton
               type="secondary"
@@ -95,7 +118,22 @@ export default class EmailSignInScreen extends Component {
               > Not already register? Sign Up!
             </AwesomeButton>
           </View>
-     </View>
+      </View>
+      <AwesomeAlert
+            show= {this.state.showAlert}
+            title="Error"
+            message={this.state.error_text}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            alertContainerStyle={styles.alert}
+            confirmButtonColor="#DD6B55"
+            confirmText="DISMISS"
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
   </View> 
     );
   }
@@ -108,13 +146,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width:windowWidth/1.3,
   },
+  alert: {
+    zIndex: 10
+  },
   containerButtons:{
     alignSelf: 'center',
     width: windowWidth/2,
     marginTop:windowHeight/20,
   },
   button:{
-    marginTop: windowHeight/50
+    marginTop: windowHeight/50,
+    elevation:0
   },
   item:{
     marginTop: windowHeight/50

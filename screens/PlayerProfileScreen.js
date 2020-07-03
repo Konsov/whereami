@@ -14,10 +14,7 @@ import { BarIndicator } from 'react-native-indicators';
 
 
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default class UserProfileScreen extends Component {
 
@@ -124,66 +121,66 @@ export default class UserProfileScreen extends Component {
                     <View style={styles.modalView}>
                         {this.state.modalVisible == true ?                         
                            
-                           <ScrollView horizontal={true}>
-                           <View>
-                               {this.state.value == 'gold' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/gold.png')}
-                               /> : this.state.value == 'silver' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/silver.png')}
-                               /> : this.state.value == 'bronze' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/bronze.png')}
-                               /> : this.state.value == 'fire' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/fire.png')}
-                               /> : this.state.value == 'gold_2' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/gold_2.png')}
-                               /> : this.state.value == 'silver_2' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/silver_2.png')}
-                               /> : this.state.value == 'bronze_2' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/bronze_2.png')}
-                               /> : this.state.value == 'time' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/stopwatch.png')}
-                               /> : this.state.value == 'game_1' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/game_1.png')}
-                               /> : this.state.value == 'game_2' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/game_2.png')}
-                               /> : this.state.value == 'game_3' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/game_3.png')}
-                               /> : this.state.value == 'center' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4}}
-                                   source={require('../files/target.png')}
-                               /> : this.state.value == 'flower' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/flower.png')}
-                               /> : this.state.value == 'extrovert' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/group.png')}
-                               /> : this.state.value == 'gamer' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/joystick.png')}
-                               /> : this.state.value == 'doppelganger' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/lens.png')}
-                               /> : this.state.value == 'red-card' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/red-card.png')}
-                               /> : this.state.value == 'yellow-card' ? <Image
-                                   style={{ width: height / 6.4, height: height / 6.4 }}
-                                   source={require('../files/yellow-card.png')}
-                               /> : null}
-                           </View>
+                            <ScrollView horizontal={true}>
+                                <View>
+                                    {this.state.value == 'gold' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/gold.png')}
+                                    /> : this.state.value == 'silver' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/silver.png')}
+                                    /> : this.state.value == 'bronze' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/bronze.png')}
+                                    /> : this.state.value == 'fire' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/fire.png')}
+                                    /> : this.state.value == 'gold_2' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/gold_2.png')}
+                                    /> : this.state.value == 'silver_2' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/silver_2.png')}
+                                    /> : this.state.value == 'bronze_2' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/bronze_2.png')}
+                                    /> : this.state.value == 'time' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/stopwatch.png')}
+                                    /> : this.state.value == 'game_1' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/game_1.png')}
+                                    /> : this.state.value == 'game_2' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/game_2.png')}
+                                    /> : this.state.value == 'game_3' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/game_3.png')}
+                                    /> : this.state.value == 'center' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4}}
+                                        source={require('../files/target.png')}
+                                    /> : this.state.value == 'flower' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/flower.png')}
+                                    /> : this.state.value == 'extrovert' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/group.png')}
+                                    /> : this.state.value == 'gamer' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/joystick.png')}
+                                    /> : this.state.value == 'doppelganger' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/lens.png')}
+                                    /> : this.state.value == 'red-card' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/red-card.png')}
+                                    /> : this.state.value == 'yellow-card' ? <Image
+                                        style={{ width: height / 6.4, height: height / 6.4 }}
+                                        source={require('../files/yellow-card.png')}
+                                    /> : null}
+                                </View>
 
-                       </ScrollView> : null}
+                            </ScrollView> : null}
 
                         <Text style={styles.contentTitle}>{this.state.text}</Text>
                         <View style={{ flexDirection: 'row' }}>
@@ -195,6 +192,7 @@ export default class UserProfileScreen extends Component {
             </Modal>
         )
     }
+
 
 
 
@@ -219,9 +217,9 @@ export default class UserProfileScreen extends Component {
 
     renderView() {
         if (this.state.player == '' || this.state.loadingInformation == false) {
-            return (<View style={{ marginTop:windowHeight/3.5, height: windowHeight/3.5}}>
+            return (<View style={{ marginTop:height/3.5, height: height/3.5}}>
                 <Image source={require('../files/logo2.png')} style={{width: '100%', height: '100%',resizeMode: 'stretch'}}/>
-                <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
+                <BarIndicator style={{marginTop:height/23}} size={40} />
                 </View>)
         } else {
             return (
@@ -357,7 +355,7 @@ export default class UserProfileScreen extends Component {
 
                                                 </TouchableHighlight>
                                             </View>
-                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 20 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 17 }}>
                                                 <TouchableHighlight
                                                     onPress={() => this.setState({ modalVisible: true, text: "Play 20 multiplayer game.", value: "game_2" })}
                                                     underlayColor="transparent"
@@ -370,12 +368,12 @@ export default class UserProfileScreen extends Component {
                                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
                                                                 source={require('../files/game_2.png')}
                                                             />}
-                                                        <Text style={styles.userInfo}>Online's specialist</Text>
+                                                        <Text style={styles.userInfo}>Online specialist</Text>
                                                     </View>
 
                                                 </TouchableHighlight>
                                             </View>
-                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 40 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 16 }}>
                                                 <TouchableHighlight
                                                     onPress={() => this.setState({ modalVisible: true, text: "Play 50 multiplayer game.", value: "game_3" })}
                                                     underlayColor="transparent"
@@ -388,7 +386,7 @@ export default class UserProfileScreen extends Component {
                                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
                                                                 source={require('../files/game_3.png')}
                                                             />}
-                                                        <Text style={styles.userInfo}>Online's master</Text>
+                                                        <Text style={styles.userInfo}>Online master</Text>
                                                     </View>
 
                                                 </TouchableHighlight>
@@ -543,7 +541,7 @@ export default class UserProfileScreen extends Component {
 
                                                 </TouchableHighlight>
                                             </View>
-                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 9, marginTop: -10 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 10, marginTop: -10 }}>
                                                 <TouchableHighlight
                                                     onPress={() => this.setState({ modalVisible: true, text: "Change your profile picture.", value: "doppelganger" })}
                                                     underlayColor="transparent"
@@ -762,8 +760,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: windowHeight / 3,
-        marginBottom: windowHeight / 4
+        marginTop: height/ 4,
+        marginBottom: height / 4
     },
     modalView: {
         margin: 20,

@@ -470,7 +470,7 @@ export default class UserProfileScreen extends Component {
 
                                                 </TouchableHighlight>
                                             </View>
-                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 20 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 17 }}>
                                                 <TouchableHighlight
                                                     onPress={() => this.setState({ modalVisible: true, text: "Play 20 multiplayer game.", value: "game_2" })}
                                                     underlayColor="transparent"
@@ -483,12 +483,12 @@ export default class UserProfileScreen extends Component {
                                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
                                                                 source={require('../files/game_2.png')}
                                                             />}
-                                                        <Text style={styles.userInfo}>Online's specialist</Text>
+                                                        <Text style={styles.userInfo}>Online specialist</Text>
                                                     </View>
 
                                                 </TouchableHighlight>
                                             </View>
-                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 40 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 16 }}>
                                                 <TouchableHighlight
                                                     onPress={() => this.setState({ modalVisible: true, text: "Play 50 multiplayer game.", value: "game_3" })}
                                                     underlayColor="transparent"
@@ -501,7 +501,7 @@ export default class UserProfileScreen extends Component {
                                                                 style={{ width: width / 5, height: width / 5, opacity: 0.5 }}
                                                                 source={require('../files/game_3.png')}
                                                             />}
-                                                        <Text style={styles.userInfo}>Online's master</Text>
+                                                        <Text style={styles.userInfo}>Online master</Text>
                                                     </View>
 
                                                 </TouchableHighlight>
@@ -656,7 +656,7 @@ export default class UserProfileScreen extends Component {
 
                                                 </TouchableHighlight>
                                             </View>
-                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 9, marginTop: -10 }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: width / 10, marginTop: -10 }}>
                                                 <TouchableHighlight
                                                     onPress={() => this.setState({ modalVisible: true, text: "Change your profile picture.", value: "doppelganger" })}
                                                     underlayColor="transparent"

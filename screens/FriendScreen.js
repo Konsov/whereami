@@ -150,7 +150,8 @@ export default class NotificationScreen extends Component {
         firebase.database().ref('users/' + data + '/playRequest/' + user.uid).set(
             {
                 user: this.state.username,
-                uid: user.uid
+                uid: user.uid,
+                userpic: user.photoURL
             }
         ).then(this.setState({
             playreq: data,

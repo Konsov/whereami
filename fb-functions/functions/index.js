@@ -155,7 +155,7 @@ exports.badgeQuit = functions.region('europe-west1').database
 
         var game = snaposhot.toJSON()
         if(!game['finished']){
-            snaposhot.ref.parent.parent.child('users').child(game['quit']).once('value').then(snapPlayer => {
+            snaposhot.ref.parent.parent.child('users').child(game['quit']['quitter']).once('value').then(snapPlayer => {
                 var player = snapPlayer.toJSON()
                 var q = player['statistics']['quit']
                 snapPlayer.ref.child('statistics').update({quit: (q + 1)})
@@ -429,12 +429,12 @@ exports.updateImgProfile = functions.region('europe-west1').database
 
                 admin.messaging().send(message)
             }
-            admin.database().ref('/users').once('value').then(snap => {
-                
+            admin.database().ref('/users').once('value').then(snap => {            
                                 
                 var profile = snap.toJSON();
 
                 for (users in profile){
+
                     for (var prof in profile[users]['friend']) {
                         if (prof == uid){
                             admin.database().ref(`/users/${users}/friend/${uid}`).update({

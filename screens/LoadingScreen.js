@@ -80,7 +80,25 @@ class LoadingScreen extends Component {
   }
 
   navigate(data) {
-    this.props.navigation.navigate(data)
+
+    if (data == 'AuthStack'){      
+      this.props.navigation.navigate(data)
+    } else {
+      var uid = firebase.auth().currentUser.uid;
+      firebase.database().ref('/Games').orderByChild('player1/user').equalTo(`${uid}`).once('value').then((snapshot) => {       
+        if (!snapshot.exists()) {
+          firebase.database().ref('/Games').orderByChild('player2/user').equalTo(`${uid}`).once('value').then((snapshot) => {       
+            if (!snapshot.exists()) {
+              this.props.navigation.navigate(data)
+            } else {
+              this.props.navigation.navigate('GameStack')
+            }
+          })
+        } else {
+          this.props.navigation.navigate('GameStack')
+        }
+      })
+    }
     
   }
 

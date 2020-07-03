@@ -95,6 +95,7 @@ export default class EmailSignUpScreen extends Component{
                         nGames_sing:0,
                         nGames_multi:0,
                         win_in_row:0,
+                        quit:0,
                         badge : {
                           fire: false,
                           center: false,

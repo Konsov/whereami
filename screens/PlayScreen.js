@@ -24,6 +24,7 @@ export default class PlayScreen extends Component {
     userpic: '',
     oppoUsername: '',
     oppoUserpic: '',
+    oppoUid:'',
     
     gameID: '',
     disabled: true,
@@ -43,8 +44,7 @@ export default class PlayScreen extends Component {
     type: '',
     modalVisible: false,
     counter:0,
-    modalVisibleQuit:false,
-    modalVisibleEnd:false
+    modalVisibleQuit:false
   }
 
   componentDidMount() {
@@ -57,7 +57,8 @@ export default class PlayScreen extends Component {
     });
     this.getGameInfo();
     setTimeout(() => {this.setState({disabled:false})}, 5000);
-    setTimeout(() => {this.checkOpponent()}, 10000)
+    this.checkOpponent()
+    
   }
 
   componentWillUnmount() {
@@ -82,43 +83,45 @@ export default class PlayScreen extends Component {
 
   checkOpponent(){
     if (this.state.oppoUsername == ''){
-      setTimeout(() => {this.checkOpponent()}, 10000)
+      setTimeout(() => {this.checkOpponent()}, 2000)
       return
     }
-    let rootRef = firebase.database().ref();
 
-    rootRef.child('Games').child(this.state.gameID).once('value').then(ex => {
-      if (ex.exists()){
-        firebase.database().ref()
-        .child('users')
-        .orderByChild('username')
-        .equalTo(this.state.oppoUsername)
-        .once('value')
-        .then(snapshot => {
-            var snap = snapshot.toJSON()
-            for (var pp in snap) {
-              if (!snap[pp]['online']){
-                console.log(this.state.counter)
-                if (this.state.counter + 1 > 3){
-                  this.setState({modalVisibleQuit:true})            
-                  setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
-                } else {
-                  setTimeout(() => {this.checkOpponent()}, 10000)
-                  this.setState({counter: this.state.counter + 1})
-                }
-              } else {
-                setTimeout(() => {this.checkOpponent()}, 10000)
-              } 
-            }
-            
-        })
-      } else {
-        this.setState({modalVisibleEnd:true})            
-        setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
+    firebase.database().ref('/Games').child(`${this.state.gameID}`).child('quit').on('child_added', (value) => {
+      
+      var p = value.toJSON() 
+      if (p == this.state.oppoUid){        
+        this.setState({modalVisibleQuit:true})            
+        setTimeout(() => {this.props.navigation.navigate('AppStack')}, 4000);
+      } else {        
+        setTimeout(() => {this.props.navigation.navigate('AppStack')}, 4000);
       }
     })
 
-    
+    firebase.database().ref('/users').child(`${this.state.oppoUid}`).on('child_changed', (value) => { 
+      var changed = value.toJSON();
+      if (!changed){
+        setTimeout(() => {
+          firebase.database().ref()
+          .child('users')
+          .orderByChild('username')
+          .equalTo(this.state.oppoUsername)
+          .once('value')
+          .then(snapshot => {
+              var snap = snapshot.toJSON()
+              for (var pp in snap) {
+                if (!snap[pp]['online']){
+                  firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:{quitter:this.state.oppoUid}})
+                  this.setState({modalVisibleQuit:true})
+                  setTimeout(() => {this.eliminateGame(false),this.props.navigation.navigate('AppStack')}, 4000);
+                } 
+              }
+              
+          })
+        }, 20000);
+
+      }
+    }) 
     
     
   }
@@ -155,10 +158,13 @@ export default class PlayScreen extends Component {
             if(game[id]['type'] == 'multiplayer'){
               this.setState({
                 oppoUsername: game[id]['player2']['username'],
-                oppoUserpic:game[id]['player2']['userpic']
+                oppoUserpic:game[id]['player2']['userpic'],
+                oppoUid: game[id]['player2']['user']
               })
               console.log(`${this.state.oppoUsername} is the player 2`)
             }
+
+
             
             return this.loadCoordinate()
           }
@@ -176,7 +182,8 @@ export default class PlayScreen extends Component {
               username: game[id]['player2']['username'],
               userpic:game[id]['player2']['userpic'],
               oppoUsername: game[id]['player1']['username'],
-              oppoUserpic:game[id]['player1']['userpic']
+              oppoUserpic:game[id]['player1']['userpic'],
+              oppoUid: game[id]['player1']['user']
               })
               console.log(`${this.state.username} has loaded the game: `)
               console.log(`Game: ${this.state.gameID}`)
@@ -335,53 +342,21 @@ export default class PlayScreen extends Component {
     .then(snapshot => {
       if (snapshot.exists()) {
         firebase.database().ref(`/waitingRoom/${user.uid}`).remove()
-      } else { 
-        firebase.database().ref('/Games').orderByChild(`${this.state.player}/user/`).equalTo(`${user.uid}`).once('value').then((snapshot) => {
-          var game = snapshot.toJSON()          
+      } else {                 
           if (data){
-            firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:user.uid})
-            firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
+            firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:{quitter: user.uid}}).then(              
+              firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
+            )
           } else {
-            if (this.state.player == 'player1'){                
-              firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player2']['user']})
-            } else {                
-              firebase.database().ref(`/Games/${this.state.gameID}/`).update({quit:game[this.state.gameID]['player1']['user']})
-            }
-            firebase.database().ref(`/Games/${this.state.gameID}/`).remove()
+            firebase.database().ref(`/Games/${this.state.gameID}/`).remove()            
           }
-          
-        })
       }
     });    
   }
 
 
-endGame(){
-  return(
-    <Modal
-      testID={'modal3'}
-      visible={this.state.modalVisibleEnd}
-      backdropColor="#B4B3DB"
-      backdropOpacity={0.8}
-      animationIn="zoomInDown"
-      animationOut="zoomOutUp"
-      animationInTiming={600}
-      animationOutTiming={600}
-      backdropTransitionInTiming={600}
-      backdropTransitionOutTiming={600}
-      transparent = {true}
-      animationType = "slide">
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>The game has ended</Text>
-          <Text style={styles.modalText}>You will be redirected in the home page</Text>
-          <BarIndicator style={{marginTop:windowHeight/23}} size={40} />
-        </View>
-    </Modal>
-     
-  )
-}  
+
 renderModalQuitGame(){
-  this.endGame()
   return(
     <Modal
       testID={'modal1'}

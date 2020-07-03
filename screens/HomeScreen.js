@@ -30,7 +30,8 @@ export default class HomeScreen extends Component {
   state = {
     modalVisible: false,
     oppoUsername: '',
-    volume: true
+    volume: true,
+    oppoPic:''
   }
 
   componentWillUnmount() {
@@ -88,7 +89,7 @@ export default class HomeScreen extends Component {
   sound(){
     if (whoosh == null) {
         Sound.setCategory("Playback"); 
-        whoosh = new Sound('blazer_rail.wav', Sound.MAIN_BUNDLE, (error) => {
+        whoosh = new Sound('game_music.mp3', Sound.MAIN_BUNDLE, (error) => {
         if (error) {
           console.log('failed to load the sound', error);
           return;
@@ -116,6 +117,7 @@ export default class HomeScreen extends Component {
         player1: {
           user: user.uid,
           username: user.displayName,
+          userpic: user.photoURL,
           score: 0,
           badge: {
             center: false
@@ -124,6 +126,7 @@ export default class HomeScreen extends Component {
         player2: {
           user: this.state.oppoUid,
           username: this.state.oppoUsername,
+          userpic: this.state.oppoPic,
           score: 0,
           badge: {
             center: false
@@ -185,7 +188,8 @@ export default class HomeScreen extends Component {
       var oppo = value.toJSON()
       this.setState({
         oppoUid: oppo["uid"],
-        oppoUsername: oppo["user"]
+        oppoUsername: oppo["user"],
+        oppoPic: oppo["userpic"]
       })
       this.setState({ 
         modalVisible: true

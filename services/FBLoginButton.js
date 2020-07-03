@@ -55,6 +55,7 @@ export default class FBLoginButton extends Component {
                                                 win_in_row:0,
                                                 game_in_day:0,
                                                 day_in_row:1,
+                                                quit:0,
                                                 badge : {
                                                     fire: false,
                                                     center: false,
