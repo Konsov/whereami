@@ -65,7 +65,7 @@ export default class UsernameAddScreen extends Component{
                     currentUser.updateProfile({
                         displayName: username            
                     })
-                    this.props.navigation.navigate('HomeScreen')
+                    this.props.navigation.navigate('WelcomeScreen')
                 } catch (error) {
                 Alert.alert(error.toString());
                 }

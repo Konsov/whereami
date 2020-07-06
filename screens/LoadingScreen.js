@@ -27,19 +27,21 @@ class LoadingScreen extends Component {
         
         if(user){
           this.isOnline()
-          if (user.providerData[0]["providerId"] == "facebook.com"){
-            var ct =new Date(Math.floor(user.metadata["a"] / 1000) * 1000).toISOString().split("T");
-            console.log(ct)
-            var compare = new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T");
-            if(ct[0] == compare[0]){
-              if (ct[1].split(":")[0] == compare[1].split(":")[0] && ct[1].split(":")[1] == compare[1].split(":")[1]){
+
+          var ct =new Date(Math.floor(user.metadata["a"] / 1000) * 1000).toISOString().split("T");
+          var compare = new Date(Math.floor(Date.now() / 1000) * 1000).toISOString().split("T");
+          if(ct[0] == compare[0]){
+            if (ct[1].split(":")[0] == compare[1].split(":")[0] && ct[1].split(":")[1] == compare[1].split(":")[1]){
+              if (user.providerData[0]["providerId"] == "facebook.com"){                  
                 this.navigate('UsernameAddScreen')
-                return
+                //comparare le date e se le date sono uguali e il minutaggio è uguale o minore di 1 redirect alla pagina di creazione nick
+              } else {
+                this.navigate('WelcomeScreen')
               }
+              return
             }
-            //comparare le date e se le date sono uguali e il minutaggio è uguale o minore di 1 redirect alla pagina di creazione nick
-            
           }
+          
         }
         this.navigate(user ? 'HomeScreen' : 'AuthStack')
 

@@ -75,6 +75,10 @@ export default class InsertMarker extends Component {
 
         var distance = Math.round((R * c) / 1000);
 
+        if (distance < 150) {
+            distance = 0
+        }
+
         var tempScore = (20000 - distance) / 10
 
         tempScore = Math.trunc( tempScore )
