@@ -31,6 +31,7 @@ export default class LoginMethodScreen extends Component {
                 onPress={() => {this.props.navigation.navigate('EmailSignInScreen')}}
                 type="secondary"
                 stretch = {true}
+                id="Login"
             >Email Login
             </AwesomeButtonRick>       
 

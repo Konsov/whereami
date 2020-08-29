@@ -6,7 +6,7 @@ import {
   Dimensions,
   Alert,
   BackHandler,
-  AppState
+  AppState, KeyboardAvoidingView
 } from 'react-native';
 
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -78,10 +78,11 @@ export default class EmailSignInScreen extends Component {
          
         <View style={styles.container}>
        
-          <View style= {styles.containerItems}>
+          <KeyboardAvoidingView style= {styles.containerItems} behavior="heoght">
             <Item floatingLabel>
               <Label style = {{color: "#FFFFFF"}}>Email</Label>
               <Input
+                id = "email"
                 autoCorrect={false}
                 autoCapitalize="none"
                 style={{color:'white', fontWeight:'bold'}}
@@ -92,6 +93,7 @@ export default class EmailSignInScreen extends Component {
             <Item floatingLabel style={styles.item}>
               <Label style = {{color: "#FFFFFF"}}>Password</Label>
               <Input
+                id="password"
                 secureTextEntry={true}
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -100,10 +102,11 @@ export default class EmailSignInScreen extends Component {
                 onChangeText={(password) => this.setState({ password })}
               />
             </Item>
-          </View>
+          </KeyboardAvoidingView>
           
           <View style={styles.containerButtons}>
             <AwesomeButton
+              id="buttonLogin"
               type="secondary"
               stretch = {true}
               onPress={() => this.loginUser(this.state.email, this.state.password)}
@@ -165,7 +168,7 @@ const styles = StyleSheet.create({
     borderColor:'#0F52BA',
     borderWidth: 3,
     borderRadius:20,
-    paddingTop: windowHeight/20,
+    paddingTop: windowHeight/15,
     paddingBottom: windowHeight/15,
     paddingHorizontal: windowWidth/20,
     backgroundColor:  '#0F52BA99',
