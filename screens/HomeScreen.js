@@ -141,7 +141,7 @@ export default class HomeScreen extends Component {
         // loaded successfully
         console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
         
-        whoosh.setVolume(0.3);
+        whoosh.setVolume(0.2);
 
         whoosh.setNumberOfLoops(-1);
         // Play the sound with an onEnd callback
@@ -191,9 +191,6 @@ export default class HomeScreen extends Component {
   
 
   componentDidMount() {
-
-
-
 
     AsyncStorage.getItem('volume').then(value => {
       

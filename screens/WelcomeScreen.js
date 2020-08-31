@@ -77,8 +77,9 @@ const styles = StyleSheet.create({
     },
     text1: {
       color: '#fff',
-      fontSize: 50,
+      fontSize: 45,
       fontWeight: 'bold',
+      marginTop:100
     },
     text2: {
         color: '#fff',
