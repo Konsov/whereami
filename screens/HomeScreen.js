@@ -9,7 +9,8 @@ import {
   Image,
   AppState,
   AsyncStorage,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native';
 
 import Modal from 'react-native-modal'
@@ -28,6 +29,7 @@ const { width, height } = Dimensions.get('window');
 export default class HomeScreen extends Component {
 
   state = {
+    modalVisible2: false,
     modalVisible: false,
     oppoUsername: '',
     volume: true,
@@ -37,6 +39,48 @@ export default class HomeScreen extends Component {
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange.bind(this));
   }
+
+  deleteData(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref(`users/${user.uid}/add_badge/data`).once("value", snapshot => {
+      if (snapshot.exists()){
+         snapshot.ref.remove();
+      }
+   });
+  }
+
+  renderModal() {
+    return (
+        <Modal
+            testID={'modal2'}
+            visible={this.state.modalVisible2}
+            backdropColor="#B4B3DB"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+            transparent={true}
+            animationType="slide"
+            hasBackdrop={true}
+            onBackdropPress={() => {this.setState({ modalVisible2: false }), this.deleteData()}}>
+            <View style={styles.content2}>
+                <View style={styles.modalView}>                   
+                    <Image
+                    style={{ width: height / 6.4, height: height / 6.4 }}
+                    source={require('../files/badge.png')}></Image>   
+                    <Text style={styles.contentTitle}>You have a new badge!</Text>
+                    <View style={{ flexDirection: 'row' }}>
+
+                    </View>
+                </View>
+
+            </View>
+        </Modal>
+    )
+}
 
   handleAppStateChange(currentAppState) {
     const user = firebase.auth().currentUser;
@@ -184,6 +228,19 @@ export default class HomeScreen extends Component {
 
     this.sound();
 
+    firebase.database().ref('/users').child(`${user.uid}`).child('statistics').child('badge').on('child_changed', (value) => {
+      if (!this.state.modalVisible2){        
+        this.setState({ modalVisible2: true})
+      }
+    })
+
+    firebase.database().ref('/users').child(`${user.uid}`).child('add_badge').on('child_added', (value) => {
+      if (!this.state.modalVisible2){        
+        this.setState({ modalVisible2: true})
+      }
+    })
+
+
     firebase.database().ref('/users').child(`${user.uid}`).child('playRequest').on('child_added', (value) => {
       var oppo = value.toJSON()
       this.setState({
@@ -252,7 +309,7 @@ export default class HomeScreen extends Component {
         <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>   
         <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop:  height / 15, alignSelf:'center'}}/>
 
-
+        {this.renderModal()}
         <View style={styles.container}> 
         <TouchableHighlight
               style={styles.button1}
@@ -384,10 +441,35 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
+
+  content2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: height / 4,
+    marginBottom: height / 4
+  },
+
+
   contentTitle: {
     fontSize: 20,
     marginBottom: 12,
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  }
 
 
 

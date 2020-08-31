@@ -137,7 +137,7 @@ export default class EmailSignUpScreen extends Component{
     
     const {error_text} = this.state.error_text;
     return (
-      <View>
+      <KeyboardAvoidingView behavior="height">
         <Image source={require('../files/nuv3.gif')} style={{width: "100%", height: '100%' }}/>
         <Image source={require('../files/logo.png')} style={{position:'absolute', marginTop: windowHeight / 15, alignSelf:'center'}}/>
         
@@ -200,7 +200,7 @@ export default class EmailSignUpScreen extends Component{
               this.hideAlert();
             }}
            />
-     </View>
+     </KeyboardAvoidingView>
 
     );
   }

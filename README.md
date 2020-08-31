@@ -17,7 +17,7 @@
 # 5_Insert Marker
 # 5.1 Modal proprio score: Sistemarlo Graficamente, togliere Hide Modal ✓
 # 5.2 Sistemare i nomi delle funzioni e dei render. ✓
-# 5.3 Esce un problema arancione finito il gioco 
+# 5.3 Esce un problema arancione finito il gioco  
 # 5.4 Sistemare Waiting Opponent (multiplayer) ✓
 # 5.5 Fare Modale Fine Round (multiplayer) ✓
 # 5.6 Classifica Finale (multiplayer) ✓
@@ -41,3 +41,9 @@
 # A.3 Scegliere bene Badges da mettere (vedi A.4) ✓
 # A.4 Modale/Notifiche quando vengono sbloccati in game con notifiche (vedi A.3) ✓
 # A.5 Gestire Abbandono di un giocatore in Multyplayer (vedi B.4) ✓
+
+# Ultime cosa da fare
+# 1. Vari bug grafici
+# 1.1 Modificare scritte tutorial
+# 1.2 Pulsante aggiungi amici
+# 2 Report
