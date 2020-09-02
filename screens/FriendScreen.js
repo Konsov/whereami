@@ -247,8 +247,8 @@ export default class NotificationScreen extends Component {
                 </View>)
         } else {
             return (
-                <KeyboardAvoidingView style={{flex:1}} behavior="height">
-                    <View colors={[, '#1da2c6', '#1695b7']}
+                <KeyboardAvoidingView style={{flex:1, backgroundColor: '#f2f5f7'}} behavior="height">
+                    <View colors={[ '#1da2c6', '#1695b7']}
                         style={{ backgroundColor: '#98cbe4', padding: 15, alignItems: 'center',flex:0.05 }}>
                         <Text style={{ fontSize: 25, color: 'white', }}>Friend List</Text>
                         <View style={{position:'absolute', marginLeft: width / 18, marginTop:width / 35 ,alignSelf:'flex-start'}}>
@@ -262,18 +262,19 @@ export default class NotificationScreen extends Component {
                     
                     
                     </View>
-                    <View style={{flex:0.70}}>
+                    <View style={{flex:0.67}}>
                         <FlatList
                             data={req}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={data => this.renderItem(data)}
                         />
                     </View>
-                    <View style={{flex:0.25, borderTopWidth: 1, borderColor: "#d6d7da"}}>
-                        <Text style={{fontSize: width / 24.54, fontWeight: '600', marginTop:width / 9.8, alignSelf:"center"}}>Add friend</Text> 
-                        <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 15.7)}}>
+                    <View style={{flex:0.28, backgroundColor:'#98cbe4'}}>
+                        <Text style={{fontSize: 22,fontWeight:"900", marginTop:width / 30, alignSelf:"center", color: 'white'}}>Add friend</Text> 
+                        <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 20.7)}}>
                             <Input autoCorrect={false}
                                 autoCapitalize="none"
+                                style= {{fontSize: 18,fontWeight:"900", color: 'white'}}
                                 onChangeText={(user) => this.setState({ user })} />
                         </Item>
                         <View style={{width:width / 2.8, alignSelf:"center", marginBottom:10, borderWidth:0}}>

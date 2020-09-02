@@ -159,7 +159,7 @@ export default class LeaderScreen extends Component {
                 <View style={{position:'absolute', marginLeft: width / 13, marginTop: width / 13, alignSelf:'flex-start'}}>
                     <Button transparent onPress={() => this.props.navigation.navigate('UserProfileScreen')}>
                                 <Image
-                                        style={{ width: width / 15, height: width / 15 }}
+                                        style={{ width: width / 11, height: width / 11 }}
                                         source={require('../files/back.png')}
                                     />
                     </Button>
