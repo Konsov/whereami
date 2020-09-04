@@ -33,7 +33,7 @@ export default class NotificationScreen extends Component {
         img: [],
         loadingInformation: false,
         username: '',
-        profPic: ''
+        profPic: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png'
     }
 
     componentDidMount() {

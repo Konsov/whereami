@@ -247,7 +247,7 @@ export default class NotificationScreen extends Component {
                 </View>)
         } else {
             return (
-                <KeyboardAvoidingView style={{flex:1, backgroundColor: '#f2f5f7'}} behavior="height">
+                <View style={{flex:1, backgroundColor: '#f2f5f7'}}>
                     <View colors={[ '#1da2c6', '#1695b7']}
                         style={{ backgroundColor: '#98cbe4', padding: 15, alignItems: 'center',flex:0.05 }}>
                         <Text style={{ fontSize: 25, color: 'white', }}>Friend List</Text>
@@ -262,14 +262,14 @@ export default class NotificationScreen extends Component {
                     
                     
                     </View>
-                    <View style={{flex:0.67}}>
+                    <View style={{flex:0.73}}>
                         <FlatList
                             data={req}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={data => this.renderItem(data)}
                         />
                     </View>
-                    <View style={{flex:0.28, backgroundColor:'#98cbe4'}}>
+                    <View style={{flex:0.22, backgroundColor:'#98cbe4'}}>
                         <Text style={{fontSize: 22,fontWeight:"900", marginTop:width / 30, alignSelf:"center", color: 'white'}}>Add friend</Text> 
                         <Item floatingLabel style= {{width:width / 2.6, alignSelf:"center", marginTop:-(width / 20.7)}}>
                             <Input autoCorrect={false}
@@ -284,7 +284,7 @@ export default class NotificationScreen extends Component {
                             >FRIEND REQUEST</AwesomeButtonRick>
                         </View>
                     </View>
-            </KeyboardAvoidingView>
+            </View>
             );
         }
     }
