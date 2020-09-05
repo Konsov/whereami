@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View, Dimensions,
-    BackHandler,Text, ImageBackground, Image
+    BackHandler,Text, Image
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker, ProviderPropType, Polyline } from 'react-native-maps';
@@ -11,7 +11,6 @@ import AwesomeButtonRick from "react-native-really-awesome-button/src/themes/ric
 import firebase from '../services/firebase';
 import CountDown from 'react-native-countdown-component';
 import Modal from 'react-native-modal';
-import { Icon } from 'react-native-vector-icons/MaterialIcons';
 
 import { BarIndicator } from 'react-native-indicators';
 
@@ -262,7 +261,7 @@ export default class InsertMarker extends Component {
        
         if(this.props.navigation.getParam('round')<5){
             intro = <View><Text style={styles.title}>Leaderboard</Text></View>
-            outro = <View><Text style={styles.timerText}>{this.state.counterNextRound} secondi al prossimo round</Text></View>
+            outro = <View><Text style={styles.timerText}>{this.state.counterNextRound} seconds to next round</Text></View>
         
         }else{
             intro = <View><Text style={styles.title}>Final Leaderboard</Text></View>

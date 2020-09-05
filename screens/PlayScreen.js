@@ -129,7 +129,6 @@ export default class PlayScreen extends Component {
   getGameInfo(){
     const user = firebase.auth().currentUser;
     
-    
     if(this.state.player != 'not assigned'){
       return null
     }
