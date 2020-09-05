@@ -249,30 +249,33 @@ export default class PlayScreen extends Component {
   }
 
   loadCoordinate() {
-    firebase.database().ref(`/Games`).orderByChild(`${this.state.gameID}`).once('value').then(function (snapshot) {
+
+    console.log(`Gasadasdasdasdasdasdme: ${this.state.gameID}`)
+
+    firebase.database().ref(`/Games/${this.state.gameID}`).once('value').then(function (snapshot) {
 
     var game = snapshot.toJSON()
 
-      for(id in game){
-        if (game[id]['roundCoordinates'] == null){
-          console.log("Loading Coordinates..")
-          return this.loadCoordinate();
-        }
-        
-        var gameID = id;
-        var x1 = game[id]['roundCoordinates']['round_1']['latitude'];
-        var y1 = game[id]['roundCoordinates']['round_1']['longitude'];
-        var x2 = game[id]['roundCoordinates']['round_2']['latitude'];
-        var y2 = game[id]['roundCoordinates']['round_2']['longitude'];
-        var x3 = game[id]['roundCoordinates']['round_3']['latitude'];
-        var y3 = game[id]['roundCoordinates']['round_3']['longitude'];
-        var x4 = game[id]['roundCoordinates']['round_4']['latitude'];
-        var y4 = game[id]['roundCoordinates']['round_4']['longitude'];
-        var x5 = game[id]['roundCoordinates']['round_5']['latitude'];
-        var y5 = game[id]['roundCoordinates']['round_5']['longitude']
+    console.log(game)
+    console.log(game['date'])
+    console.log(game['roundCoordinates'])
 
-        break;
+    
+    if (game['roundCoordinates'] == null){
+      console.log("Loading Coordinates..")
+      return this.loadCoordinate();
     }
+        
+      var x1 = game['roundCoordinates']['round_1']['latitude'];
+      var y1 = game['roundCoordinates']['round_1']['longitude'];
+      var x2 = game['roundCoordinates']['round_2']['latitude'];
+      var y2 = game['roundCoordinates']['round_2']['longitude'];
+      var x3 = game['roundCoordinates']['round_3']['latitude'];
+      var y3 = game['roundCoordinates']['round_3']['longitude'];
+      var x4 = game['roundCoordinates']['round_4']['latitude'];
+      var y4 = game['roundCoordinates']['round_4']['longitude'];
+      var x5 = game['roundCoordinates']['round_5']['latitude'];
+      var y5 = game['roundCoordinates']['round_5']['longitude'];    
 
     this.props.navigation.setParams({runTimer: true });
 
@@ -284,23 +287,22 @@ export default class PlayScreen extends Component {
     console.log('round 5: ',x5,y5)
   
     this.setState({
-        gameID: gameID,
+              
+      latitude_1: x1,
+      longitude_1: y1,
+      latitude_2: x2,
+      longitude_2: y2,
+      latitude_3: x3,
+      longitude_3: y3,
+      latitude_4: x4,
+      longitude_4: y4,
+      latitude_5: x5,
+      longitude_5: y5,
         
-        latitude_1: x1,
-        longitude_1: y1,
-        latitude_2: x2,
-        longitude_2: y2,
-        latitude_3: x3,
-        longitude_3: y3,
-        latitude_4: x4,
-        longitude_4: y4,
-        latitude_5: x5,
-        longitude_5: y5,
-        
-        round: 1,
+      round: 1,
 
-        loadingCoordinate: true,
-      })
+      loadingCoordinate: true,
+    })
 
     }.bind(this));
 
