@@ -125,7 +125,7 @@ export default class InsertMarker extends Component {
             this.getOpponentCoordinate()
         }
         
-        if (this.state.tempScore >= 19900){
+        if (this.state.tempScore >= 1990){
             firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).child('badge').update({center:true})
         } 
         firebase.database().ref('Games/').child(this.props.navigation.getParam('gameID')).child(this.props.navigation.getParam('player')).update({ score: this.state.score})
@@ -553,7 +553,7 @@ export default class InsertMarker extends Component {
         }else if(this.state.distance <= 5000 && this.state.distance > 1000){    
             msg= <Text style={styles.content}>Yeah! Very Close! Only {this.state.distance}km far</Text>
         }else if(this.state.distance <= 1000 ){
-            msg= <Text style={styles.content}>GREAT!{this.state.distance}km missed, YOU GOTTA THIS BRO </Text>
+            msg= <Text style={styles.content}>GREAT! {this.state.distance}km missed, YOU GOTTA THIS BRO </Text>
         }else{
             msg = <Text style={styles.content}>Errore</Text>
         }
