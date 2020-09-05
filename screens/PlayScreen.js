@@ -163,8 +163,6 @@ export default class PlayScreen extends Component {
               })
               console.log(`${this.state.oppoUsername} is the player 2`)
             }
-
-
             
             return this.loadCoordinate()
           }
@@ -250,16 +248,9 @@ export default class PlayScreen extends Component {
 
   loadCoordinate() {
 
-    console.log(`Gasadasdasdasdasdasdme: ${this.state.gameID}`)
-
     firebase.database().ref(`/Games/${this.state.gameID}`).once('value').then(function (snapshot) {
 
     var game = snapshot.toJSON()
-
-    console.log(game)
-    console.log(game['date'])
-    console.log(game['roundCoordinates'])
-
     
     if (game['roundCoordinates'] == null){
       console.log("Loading Coordinates..")
@@ -287,7 +278,7 @@ export default class PlayScreen extends Component {
     console.log('round 5: ',x5,y5)
   
     this.setState({
-              
+
       latitude_1: x1,
       longitude_1: y1,
       latitude_2: x2,

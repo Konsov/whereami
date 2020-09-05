@@ -106,8 +106,6 @@ export default class InsertMarker extends Component {
             modalVisibleScore: true,
             runTimer: false,
         })
-          
-        
   
         this.setState({
             answered: true
