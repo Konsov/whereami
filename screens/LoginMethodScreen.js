@@ -35,7 +35,7 @@ export default class LoginMethodScreen extends Component {
             >Email Login
             </AwesomeButtonRick>       
 
-            <FBLoginButton navigation={this.props.navigation} />
+            <FBLoginButton />
           
           </View>
       </View> 
