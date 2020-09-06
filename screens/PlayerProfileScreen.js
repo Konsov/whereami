@@ -11,6 +11,7 @@ import {
 import Modal from 'react-native-modal'
 import firebase from '../services/firebase';
 import { BarIndicator } from 'react-native-indicators';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 
 
@@ -33,7 +34,9 @@ export default class UserProfileScreen extends Component {
         doppelganger: false,
         modalVisible: false,
         value: '',
-        text: ''
+        text: '',
+        showAlert: false,
+        error_text:''
         
     }
 
@@ -46,6 +49,19 @@ export default class UserProfileScreen extends Component {
     componentWillUnmount() {
         this.focusListener.remove();        
     }
+
+    showAlert = (alert) => {
+        this.setState({
+          showAlert: true,
+          error_text: alert
+        });
+      };
+      
+    hideAlert = () => {
+        this.setState({
+          showAlert: false
+        });
+    };
 
     loadInfo() {
         const my_user = firebase.auth().currentUser;
@@ -199,7 +215,7 @@ export default class UserProfileScreen extends Component {
     friendRequest(username) {
         const user = firebase.auth().currentUser;
         var reff = firebase.database().ref('/users/');
-        reff.orderByChild('username').equalTo(`${username}`).once('value').then(function (snapshot) {
+        reff.orderByChild('username').equalTo(`${username}`).once('value').then((snapshot) => {
             if (snapshot.exists()) {
                 for (var root in snapshot.toJSON()) {
                     firebase.database().ref(`users/${root}/request/${user.uid}`).set({
@@ -207,11 +223,11 @@ export default class UserProfileScreen extends Component {
                         img: ''
                     })
                 }
-                alert("Request delivered!")
+                this.showAlert("Request delivered!")
             } else {
-                alert("User " + username + " doesn't exist!");
+                this.showAlert("User " + username + " doesn't exist!")
             }
-        }.bind(this))
+        })
     }
 
 
@@ -634,7 +650,20 @@ export default class UserProfileScreen extends Component {
 
                         
                     </View>
-                    
+                    <AwesomeAlert
+                        show= {this.state.showAlert}
+                        message={this.state.error_text}
+                        closeOnTouchOutside={false}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={false}
+                        showConfirmButton={true}
+                        alertContainerStyle={styles.alert}
+                        confirmButtonColor="#DD6B55"
+                        confirmText="DISMISS"
+                        onConfirmPressed={() => {
+                        this.hideAlert();
+                        }}
+                    /> 
                 </View>
             )
         }

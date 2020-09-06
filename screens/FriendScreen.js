@@ -16,6 +16,8 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
 
 import firebase from '../services/firebase';import { BarIndicator } from 'react-native-indicators';
@@ -43,7 +45,9 @@ export default class NotificationScreen extends Component {
         val: '',
         modalVisible: false,
         playreq: '',
-        user: ''
+        user: '',
+        showAlert: false,
+        error_text:''
 
     }
 
@@ -51,8 +55,23 @@ export default class NotificationScreen extends Component {
         return firebase.database().ref('/users').child(`${this.state.req[val]['uid']}`).child('online').once('value')
     }
 
-    componentDidMount() {
+    
 
+    showAlert = (alert) => {
+        this.setState({
+          showAlert: true,
+          error_text: alert
+        });
+      };
+      
+    hideAlert = () => {
+        this.setState({
+          showAlert: false
+        });
+    };
+
+    componentDidMount() {
+        
         this.loadInfo();
 
     }
@@ -213,7 +232,8 @@ export default class NotificationScreen extends Component {
     friendRequest(username) {
         const user = firebase.auth().currentUser;
         var reff = firebase.database().ref('/users/');
-        reff.orderByChild('username').equalTo(`${username}`).once('value').then(function (snapshot) {
+        var text = '';
+        reff.orderByChild('username').equalTo(`${username}`).once('value').then((snapshot) => {
             if (snapshot.exists()) {
                 for (var root in snapshot.toJSON()) {
                     firebase.database().ref(`users/${root}/request/${user.uid}`).set({
@@ -221,11 +241,13 @@ export default class NotificationScreen extends Component {
                         img: ''
                     })
                 }
-                alert("Request delivered!")
+                this.showAlert("Request delivered!")
             } else {
-                alert("User " + username + " doesn't exist!");
+                this.showAlert("User " + username + " doesn't exist!")
             }
-        }.bind(this))
+
+        }).then(console.log(text)).then(this.showAlert(text));
+        
     }
 
     
@@ -236,6 +258,7 @@ export default class NotificationScreen extends Component {
         } else {
             this.props.navigation.navigate('PlayerProfileScreen', {uid : data.uid})
         }
+        
     }
 
     renderView() {
@@ -320,6 +343,20 @@ export default class NotificationScreen extends Component {
                         </View>
                     </View>
                 </Modal>
+                <AwesomeAlert
+                    show= {this.state.showAlert}
+                    message={this.state.error_text}
+                    closeOnTouchOutside={false}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    alertContainerStyle={styles.alert}
+                    confirmButtonColor="#DD6B55"
+                    confirmText="DISMISS"
+                    onConfirmPressed={() => {
+                    this.hideAlert();
+                    }}
+                />
             </View>
         )
 
