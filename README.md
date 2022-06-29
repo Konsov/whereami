@@ -1,49 +1,11 @@
 # whereami
 
-# 1_Login Method Screen
-# 1.1 Scritta where am i nuova. ✓
+Whereami is a mobile game developed as academic project for DESIGN AND IMPLEMENTATION OF MOBILE APPLICATIONS 2019/2020
 
-# 2_EmailSingIN / EmailSingOUT
-# 2.1 Provare a sistemare grafica form email e password, esempio: mettere dietro view opaca ✓
+The game is base on the most famous webisitegame GeoGuessr.
+Two players are taken to a random spot in the world via google API. And through google street view they have the opportunity to explore the surrounding area. The aim is to identify as accurately as possible where you are. Whoever comes closest within 5 rounds wins.
 
-# 3_UserProfileScreen
-# 3.1 Spostare Pulsante friend Request ✓
-# 3.2 Sistemare Badges e Statistiche (vedi A.3 e A.4) ✓
+Tools and Programming Language used in this application:
+React Native, Android Studio, Google Cloud Platform (Firebase and google maps Api)
 
-# 4_PlayScreen
-# 4.1 Coordinate di tutti i continenti  ✓
-# 4.2 Cooprire/togliere Riporta un problema google ✓
-
-# 5_Insert Marker
-# 5.1 Modal proprio score: Sistemarlo Graficamente, togliere Hide Modal ✓
-# 5.2 Sistemare i nomi delle funzioni e dei render. ✓
-# 5.3 Esce un problema arancione finito il gioco  
-# 5.4 Sistemare Waiting Opponent (multiplayer) ✓
-# 5.5 Fare Modale Fine Round (multiplayer) ✓
-# 5.6 Classifica Finale (multiplayer) ✓
-# 5.7 Rivedere frasi punteggio modal ✓
-
-# BUG
-# B.1 Tastiera copre schermate 
-# B.2 Problema aggiungere amici omonimi facebook (Vedi A.1) ✓
-# B.3 Loop back > Notification in UserProfileScreen ✓
-# B.4 Quando abbandono una partita, eliminare da Games in Db (vedi A.5) ✓
-# B.5 Dare un occhio a volumi. Parte quando si esce e torna. Icone dice che è acceso ma non va. (Vedi 4.2) ✓
-# B.6 Si può spostare il marker dopo aver dato la risposta ✓
-# B.7 Go to HUB ✓
-# B.8 in friend source.uri not be empty string ✓
-# B.9 Se metto marker lontano mi da un mega punteggio ?
-# B.10 Logout not online ✓
-
-# Aggiunte
-# A.1 Mettere Username con login da Facebook ✓
-# A.2 Possibilità di scegliere Foto da UserprofileScreen. Esempio Archiviazione/Serie di Avatar ✓
-# A.3 Scegliere bene Badges da mettere (vedi A.4) ✓
-# A.4 Modale/Notifiche quando vengono sbloccati in game con notifiche (vedi A.3) ✓
-# A.5 Gestire Abbandono di un giocatore in Multyplayer (vedi B.4) ✓
-
-# Ultime cosa da fare
-# 1. Vari bug grafici
-# 1.1 Modificare scritte tutorial
-# 1.2 Pulsante aggiungi amici
-# 2 Report
+you are welcome to see [Design Document](https://github.com/Konsov/whereami/blob/master/Documento_Mobile%20finale%20.pdf) and [PW Presentation](https://github.com/Konsov/whereami/blob/master/Presentazione%20DIMA%201.2.pptx) for more details
